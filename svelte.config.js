@@ -16,7 +16,7 @@ const config = {
 		
 		// Add this paths object
 		paths: {
-			base: '/trickortreat' // Replace with your actual subdirectory name
+			//base: '/trickortreat' // Replace with your actual subdirectory name
 		}
 	}
 };

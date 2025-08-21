@@ -2,8 +2,9 @@ import { writable } from 'svelte/store';
 
 // Default state for a new game
 const defaultState = {
-  currentView: 'intro', // Can be 'intro', 'walking', 'puzzle1', 'conclusion'
+  currentView: 'intro', // Can be 'intro', 'walking', 'puzzle1', 'puzzle2', 'conclusion'
   puzzle1Solved: false,
+  puzzle2Solved: false,
 };
 
 // Function to create our custom store
@@ -35,7 +36,10 @@ function createGameStore() {
         const newState = { ...state };
         if (puzzleId === 'puzzle1') {
           newState.puzzle1Solved = true;
-          newState.currentView = 'conclusion'; 
+          newState.currentView = 'puzzle2'; 
+        } else if (puzzleId === 'puzzle2') {
+          newState.puzzle2Solved = true;
+          newState.currentView = 'conclusion';
         }
         return newState;
       });
