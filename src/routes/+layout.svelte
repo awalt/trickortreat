@@ -1,6 +1,7 @@
 <script>
 	import favicon from '$lib/assets/favicon.svg';
-    import "../app.css";
+  import "../app.css";
+  import DebugMenu from '$lib/DebugMenu.svelte'; // Import the new component
 
 	let { children } = $props();
 
@@ -12,3 +13,5 @@
 </svelte:head>
 
 {@render children?.()}
+
+<DebugMenu />

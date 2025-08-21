@@ -3,16 +3,18 @@
   import { gameStore } from '$lib/gameStore.js';
   import { clickSound, successSound, errorSound } from '$lib/audio.js';
   import { tick } from 'svelte';
+  import { fade } from 'svelte/transition';
 
   let userInput = '';
   let errorMessage = '';
-  const correctAnswer = '482'; // The secret code for this puzzle
+  const correctAnswer = '889'; // The secret code for this puzzle
 
   async function checkAnswer() {
+    console.log(correctAnswer, userInput)
     clickSound.play();
     errorMessage = ''; // Reset error message
 
-    if (userInput === correctAnswer) {
+    if (userInput == correctAnswer) {
       successSound.play();
       // Wait a moment before changing the view
       setTimeout(() => {
@@ -33,10 +35,11 @@
   }
 </script>
 
-<div class="w-full h-full flex flex-col items-center justify-center p-8 text-center bg-gray-900">
+<div class="w-full h-full flex flex-col items-center justify-center p-8 text-center bg-gray-900"
+in:fade={{ duration: 1000 }} >
   <h2 class="text-3xl font-bold mb-4">The First Clue</h2>
   <p class="text-gray-400 mb-8 max-w-md">
-    A dusty note on the wall reads: "I am the number of sides on a square, multiplied by the number of planets in the sky, divided by the number of lives a cat has... minus one." What is the three-digit code?
+    A dusty note on the wall reads: "I am the number of sides on a square, the number of planets in the sky, and the number of lives a cat has." What is the three-digit code?
   </p>
   
   <div class="flex flex-col items-center">
