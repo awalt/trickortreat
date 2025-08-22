@@ -4,14 +4,17 @@
     import Puzzle2 from '$lib/components/Puzzle2.svelte';
     import Conclusion from '$lib/components/Conclusion.svelte';
     import VideoTransition from '$lib/components/VideoTransition.svelte';
+    import Splash from '$lib/components/Splash.svelte'; // Import Splash component
     import { gameStore } from '$lib/gameStore.js';
 </script>
 
 <main class="h-screen w-screen bg-gray-900 text-white">
-    {#if $gameStore.currentView === 'intro'}
+    {#if $gameStore.currentView === 'splash'}
+        <Splash />
+    {:else if $gameStore.currentView === 'intro'}
         <Intro />
-    {:else if $gameStore.currentView === 'walking'} 
-        <VideoTransition /> 
+    {:else if $gameStore.currentView === 'walking'}
+        <VideoTransition />
     {:else if $gameStore.currentView === 'puzzle1'}
         <Puzzle1 />
     {:else if $gameStore.currentView === 'puzzle2'}

@@ -10,3 +10,14 @@ body, html {
   user-select: none; /* Standard syntax */
   overscroll-behavior-y: contain;
 }
+
+.font-creepster {
+  visibility: hidden;
+}
+
+/* Once the 'font-loaded' class is added to the body, 
+  we make the text with the 'font-creepster' class visible.
+*/
+.font-loaded .font-creepster {
+  visibility: visible;
+}

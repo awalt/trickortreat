@@ -56,7 +56,7 @@
   in:fade={{ duration: 1000 }}>
 
   <h1 class="text-6xl mb-4 font-creepster text-red-500" >
-    The Window
+    Title Here
   </h1>
 
   <div class="w-full sm:max-w-md">
