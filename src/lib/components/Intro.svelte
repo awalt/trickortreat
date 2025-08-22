@@ -1,8 +1,12 @@
 <script>
-  import { gameStore } from '$lib/gameStore.js';
+  import { gameStore, videoLoaded } from '$lib/gameStore.js';
   import { moodMusic, clickSound } from '$lib/audio.js';
   import { fade } from 'svelte/transition';
   import { onMount } from 'svelte';
+
+  function handleVideoLoad() {
+    videoLoaded.set(true);
+  }
 
   function handleStart() {
     clickSound.play();
@@ -25,12 +29,13 @@
     gameStore.startGame();
   }
 
-  // `onMount` runs only in the browser, after the component has been rendered.
   onMount(() => {
-    // Disable scrolling when the component is shown
-    document.body.style.overflow = 'hidden';
+    // Preload the transition video
+    const video = document.createElement('video');
+    video.src = '/runninghouse.mp4';
+    video.preload = 'auto';
 
-    // The function returned from onMount runs when the component is destroyed.
+    document.body.style.overflow = 'hidden';
     return () => {
       document.body.style.overflow = 'auto';
     };
@@ -63,6 +68,7 @@
     autoplay 
     muted 
     playsinline
+    on:canplaythrough={handleVideoLoad}
   >
     Your browser does not support the video tag.
   </video>
@@ -73,13 +79,12 @@
     class="relative z-10 flex flex-col items-center w-full max-w-4xl p-8"
     in:fade={{ delay: 800,duration: 2000 }}
   >
-    <!-- Mobile landscape: horizontal layout, Portrait/Desktop: vertical layout -->
     <div class="flex flex-col landscape:flex-row landscape:items-center landscape:gap-8 landscape:justify-center items-center w-full">
       
-      <!-- Title section -->
       <div class="flex flex-col items-center landscape:items-center">
         <div class="w-1/3 h-px bg-gradient-to-r from-transparent via-orange-700 to-transparent mb-4 landscape:hidden"></div>
 
+  
         <h1 
           class="text-6xl md:text-8xl landscape:text-5xl font-bold mb-4 landscape:mb-0 tracking-wider uppercase" 
           style="font-family: 'Creepster', cursive; text-shadow: 0 0 15px #ff6600, 0 0 25px #ff6600;"
@@ -90,10 +95,10 @@
         <div class="w-1/3 h-px bg-gradient-to-r from-transparent via-orange-700 to-transparent mt-4 landscape:hidden"></div>
       </div>
 
-      <!-- Tagline section -->
       <div class="flex flex-col items-center landscape:items-center landscape:text-left">
         <p class="font-sans text-xl landscape:text-lg my-8 landscape:my-0 tracking-widest font-bold
                text-gray-200
+        
                animate-flicker landscape:max-w-xs">
           This won't be just an easy candy&nbsp;handout.
         </p>
@@ -101,14 +106,14 @@
       
     </div>
 
-    <!-- Bottom section - always stacked -->
     <div class="flex flex-col items-center mt-8 landscape:mt-4">
       <div
         class="flex items-center gap-2 text-white/50 text-xs font-sans tracking-wider uppercase mb-4"
         in:fade={{ delay: 1500, duration: 2000 }}
       >
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"  viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" fill="none">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M7.11 12.822c-2.55.684-4.29 1.378-3.376 4.787.913 3.41 2.766 3.141 5.317 2.458l-.97-3.622zm9.78 0c2.55.684 4.29 1.378 3.376 4.787-.913 3.41-2.766 3.141-5.317 2.458l.97-3.622zm2.429.912a7.75 7.702 0 0 0-2.72-8.732 7.75 7.702 0 0 0-9.198 0 7.75 7.702 0 0 0-2.72 8.732"></path>
+   
+           <path stroke-linecap="round" stroke-linejoin="round" d="M7.11 12.822c-2.55.684-4.29 1.378-3.376 4.787.913 3.41 2.766 3.141 5.317 2.458l-.97-3.622zm9.78 0c2.55.684 4.29 1.378 3.376 4.787-.913 3.41-2.766 3.141-5.317 2.458l.97-3.622zm2.429.912a7.75 7.702 0 0 0-2.72-8.732 7.75 7.702 0 0 0-9.198 0 7.75 7.702 0 0 0-2.72 8.732"></path>
         </svg>
         <span>Headphones Recommended</span>
       </div>
@@ -116,6 +121,7 @@
       <button 
         on:click={handleStart}
         class="relative inline-block px-10 py-3 font-bold text-lg text-white uppercase tracking-widest transition-all duration-300
+  
                bg-black/50 border border-orange-800/50 rounded-tl-xl rounded-br-xl
                hover:border-orange-600 hover:shadow-[0_0_20px_rgba(255,110,50,0.5)] hover:scale-110"
       >
