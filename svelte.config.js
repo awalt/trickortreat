@@ -1,20 +1,24 @@
+import adapter from '@sveltejs/adapter-static';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
-// Import the adapter
-import adapter from '@sveltejs/adapter-cloudflare';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-  kit: {
-    // Set the adapter
-    adapter: adapter({
-      // See below for options.
-      routes: {
-        include: ['/*'],
-        exclude: ['<all>']
-      }
-    })
-  },
-  preprocess: vitePreprocess()
+	preprocess: vitePreprocess(),
+
+	kit: {
+		adapter: adapter({
+			pages: 'build',
+			assets: 'build',
+			fallback: 'index.html',
+			precompress: false,
+			strict: true
+		}),
+		
+		// Add this paths object
+		paths: {
+			//base: '/trickortreat' // Replace with your actual subdirectory name
+		}
+	}
 };
 
 export default config;
