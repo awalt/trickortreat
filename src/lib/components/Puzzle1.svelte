@@ -7,7 +7,7 @@
 
   let userInput = '';
   let errorMessage = '';
-  const correctAnswer = '889'; // The secret code for this puzzle
+  const correctAnswer = '489'; // The secret code for this puzzle
 
   async function checkAnswer() {
     console.log(correctAnswer, userInput)

@@ -4,7 +4,9 @@
 @tailwind utilities;
 
 body, html {
+    background:black;
   -webkit-user-select: none; /* Safari */
   -ms-user-select: none; /* IE 10 and IE 11 */
   user-select: none; /* Standard syntax */
+  overscroll-behavior-y: contain;
 }
