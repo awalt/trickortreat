@@ -19,13 +19,13 @@
 
   // Sound for successfully solving a puzzle.
   export const successSound = new Howl({
-    src: ['/success.mp3'],
+    src: ['/correct.mp3'],
     volume: 0.8
   });
 
   // Sound for an incorrect answer.
   export const errorSound = new Howl({
-    src: ['/error.mp3'],
+    src: ['/incorrect.mp3'],
     volume: 0.6
   });
 
@@ -35,4 +35,14 @@
 
   export const courageSound = new Howl({
     src: ['/deep.mp3']
+});
+
+  export const knockSound = new Howl({
+    src: ['/knock.mp3']
+});
+  export const dustySound = new Howl({
+    src: ['/dusty.mp3']
+});
+  export const warningSound = new Howl({
+    src: ['/warning.mp3']
 });

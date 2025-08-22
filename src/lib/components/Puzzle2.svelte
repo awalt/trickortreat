@@ -1,11 +1,11 @@
 <script>
   import { register } from 'swiper/element/bundle';
-  import { onMount } from 'svelte';
+ import { onMount, onDestroy } from 'svelte';
 
   register();
 
   import { gameStore } from '$lib/gameStore.js';
-  import { clickSound, successSound, errorSound } from '$lib/audio.js';
+  import { clickSound, successSound, errorSound, warningSound } from '$lib/audio.js';
   import { fade } from 'svelte/transition';
 
   let userInput = '';
@@ -13,6 +13,13 @@
   const correctAnswer = '123';
 
   let swiperEl;
+
+  warningSound.play();
+
+     onDestroy(() => {
+    warningSound.pause();
+    warningSound.currentTime = 0;
+  });
 
   onMount(() => {
     if (swiperEl) {
@@ -52,8 +59,8 @@
   }
 </script>
 
-<div class="w-full h-full flex flex-col items-center justify-center px-0 py-4 sm:p-8 text-center bg-gray-900"
-  in:fade={{ duration: 1000 }}>
+<div class="w-full min-h-screen flex flex-col items-center justify-center px-0 py-4 sm:p-8 text-center bg-gray-900"
+  in:fade={{ duration: 1000 }}>
 
   <h1 class="text-6xl mb-4 font-creepster text-red-500" >
     Title Here

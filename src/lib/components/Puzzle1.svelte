@@ -1,13 +1,21 @@
 <!-- FILE: src/routes/Puzzle1.svelte -->
 <script>
   import { gameStore } from '$lib/gameStore.js';
-  import { clickSound, successSound, errorSound } from '$lib/audio.js';
+  import { clickSound, successSound, errorSound, dustySound } from '$lib/audio.js';
   import { tick } from 'svelte';
   import { fade } from 'svelte/transition';
+   import { onMount, onDestroy } from 'svelte';
 
   let userInput = '';
   let errorMessage = '';
   const correctAnswer = '489'; // The secret code for this puzzle
+
+  dustySound.play();
+
+     onDestroy(() => {
+    dustySound.pause();
+    dustySound.currentTime = 0;
+  });
 
   async function checkAnswer() {
     console.log(correctAnswer, userInput)
@@ -59,9 +67,7 @@ in:fade={{ duration: 1000 }} >
       Unlock
     </button>
     
-    {#if errorMessage}
-      <p class="text-red-500 mt-4 animate-pulse">{errorMessage}</p>
-    {/if}
+   <p class="text-red-500 mt-4 animate-pulse h-6">{errorMessage}</p>
   </div>
 </div>
 

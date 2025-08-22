@@ -3,6 +3,7 @@
     import Puzzle1 from '$lib/components/Puzzle1.svelte';
     import Puzzle2 from '$lib/components/Puzzle2.svelte';
     import Puzzle3 from '$lib/components/Puzzle3.svelte';
+    import Puzzle4 from '$lib/components/Puzzle4.svelte';
     import Conclusion from '$lib/components/Conclusion.svelte';
     import VideoTransition from '$lib/components/VideoTransition.svelte';
     import Splash from '$lib/components/Splash.svelte'; // Import Splash component
@@ -25,6 +26,8 @@
         <Puzzle2 />
     {:else if $gameStore.currentView === 'puzzle3'}
         <Puzzle3 />
+    {:else if $gameStore.currentView === 'puzzle4'}
+        <Puzzle4 />
     {:else if $gameStore.currentView === 'conclusion'}
         <Conclusion />
     {/if}

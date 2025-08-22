@@ -1,12 +1,17 @@
 <script>
   import { gameStore } from '$lib/gameStore.js';
   import { fade, scale } from 'svelte/transition';
-  import { onMount } from 'svelte';
+ import { onMount, onDestroy } from 'svelte';
   import { clickSound, courageSound, suspiciousSound } from '$lib/audio.js';
 
   let showModal = false;
 
   suspiciousSound.play();
+
+   onDestroy(() => {
+    suspiciousSound.pause();
+    suspiciousSound.currentTime = 0;
+  });
 
   function handleGoToDoor() {
     clickSound.play();
@@ -41,22 +46,22 @@
 </style>
 
 <div class="relative w-full h-screen flex flex-col items-center justify-center text-center overflow-hidden p-4 bg-black" in:fade={{ duration: 1000 }}>
-  <h1 class="text-5xl md:text-7xl font-creepster text-gray-200 text-shadow-lg mb-8 animate-pulse">It looks sus. What do you do?</h1>
+  <h1 class="text-5xl md:text-7xl font-creepster text-gray-200 text-shadow-lg mb-8">It looks suspicious. What do you do?</h1>
 
-  <div class="flex gap-4">
+ <div class="flex gap-4">
     <button
       on:click={handleRunAway}
       class="relative inline-block px-10 py-3 font-bold text-lg text-white uppercase tracking-widest transition-all duration-300
              bg-black/50 border border-orange-800/50 rounded-tl-xl rounded-br-xl
              hover:border-orange-600 hover:shadow-[0_0_20px_rgba(255,110,50,0.5)] hover:scale-110">
-      Run away
+      <span class="animate-pulse">Run away</span>
     </button>
     <button
       on:click={handleGoToDoor}
       class="relative inline-block px-10 py-3 font-bold text-lg text-white uppercase tracking-widest transition-all duration-300
              bg-black/50 border border-orange-800/50 rounded-tl-xl rounded-br-xl
              hover:border-orange-600 hover:shadow-[0_0_20px_rgba(255,110,50,0.5)] hover:scale-110">
-      Go to door
+      <span class="animate-pulse">Go to door</span>
     </button>
   </div>
 </div>
