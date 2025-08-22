@@ -71,12 +71,36 @@
         </div>
       </swiper-slide>
 
-      <swiper-slide>
+       <swiper-slide>
         <div class="w-full aspect-square flex flex-col items-center justify-center">
           <div class="swiper-zoom-container">
             <img src="/door.png" alt="Door" class="max-h-full max-w-full object-contain">
           </div>
-          <p class="text-3xl mt-3 font-creepster text-gray-300" style="text-shadow: 1px 1px 3px #000;">Door</p>
+          <p class="text-3xl mt-3 font-creepster text-gray-300" style="text-shadow: 1px 1px 3px #000;">Door1</p>
+        </div>
+      </swiper-slide>
+       <swiper-slide>
+        <div class="w-full aspect-square flex flex-col items-center justify-center">
+          <div class="swiper-zoom-container">
+            <img src="/door2.png" alt="Door" class="max-h-full max-w-full object-contain">
+          </div>
+          <p class="text-3xl mt-3 font-creepster text-gray-300" style="text-shadow: 1px 1px 3px #000;">Door2</p>
+        </div>
+      </swiper-slide>
+       <swiper-slide>
+        <div class="w-full aspect-square flex flex-col items-center justify-center">
+          <div class="swiper-zoom-container">
+            <img src="/door3.png" alt="Door" class="max-h-full max-w-full object-contain">
+          </div>
+          <p class="text-3xl mt-3 font-creepster text-gray-300" style="text-shadow: 1px 1px 3px #000;">Door3</p>
+        </div>
+      </swiper-slide>
+      <swiper-slide>
+        <div class="w-full aspect-square flex flex-col items-center justify-center">
+          <div class="swiper-zoom-container">
+            <img src="/door4.png" alt="Door" class="max-h-full max-w-full object-contain">
+          </div>
+          <p class="text-3xl mt-3 font-creepster text-gray-300" style="text-shadow: 1px 1px 3px #000;">Door4</p>
         </div>
       </swiper-slide>
 

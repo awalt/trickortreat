@@ -1,10 +1,8 @@
 import { writable } from 'svelte/store';
 
-// A new store to track video loading
-export const videoLoaded = writable(false);
-
 const defaultState = {
   currentView: 'intro', 
+  introVideoReady: false,
   puzzle1Solved: false,
   puzzle2Solved: false,
 };
@@ -16,25 +14,23 @@ function createGameStore() {
 
   const { subscribe, set, update } = writable(initialState);
 
+  // On initial load, decide where to send the user after a brief splash screen.
   if (typeof window !== 'undefined') {
-    // We'll now use the videoLoaded store to decide when to transition
-    const unsubscribe = videoLoaded.subscribe(loaded => {
-      if (loaded) {
-        if (savedState) {
-          const parsedState = JSON.parse(savedState);
-          if (parsedState.puzzle1Solved || parsedState.puzzle2Solved) {
-            set(parsedState);
-          } else {
-            update(state => ({ ...state, currentView: 'intro' }));
-          }
-        } else {
-          update(state => ({ ...state, currentView: 'intro' }));
+    setTimeout(() => {
+      if (savedState) {
+        const parsedState = JSON.parse(savedState);
+        // If user has progress, jump them to the correct puzzle
+        if (parsedState.puzzle1Solved || parsedState.puzzle2Solved) {
+           set({ ...parsedState, introVideoReady: true }); // No need to load intro video
+           return;
         }
-        unsubscribe(); // Unsubscribe after the transition
       }
-    });
+      // Otherwise, go to the intro
+      update(state => ({ ...state, currentView: 'intro' }));
+    }, 500); // Show splash for 0.5 seconds
   }
 
+  // Persist game state to localStorage
   subscribe(value => {
     if (typeof window !== 'undefined' && value.currentView !== 'splash') {
       localStorage.setItem('escapeGameState', JSON.stringify(value));
@@ -45,6 +41,7 @@ function createGameStore() {
     subscribe,
     startGame: () => update(state => ({ ...state, currentView: 'walking' })),
     finishWalking: () => update(state => ({ ...state, currentView: 'puzzle1' })),
+    setIntroVideoReady: () => update(state => ({ ...state, introVideoReady: true })),
     solvePuzzle: (puzzleId) => {
       update(state => {
         const newState = { ...state };
@@ -62,7 +59,7 @@ function createGameStore() {
       set(defaultState);
       if (typeof window !== 'undefined') {
         localStorage.removeItem('escapeGameState');
-        update(state => ({...defaultState, currentView: 'intro'}));
+        update(state => ({...defaultState, currentView: 'intro', introVideoReady: false}));
       }
     },
     goToView: (view) => update(state => ({ ...state, currentView: view }))
