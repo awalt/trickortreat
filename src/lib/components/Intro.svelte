@@ -73,7 +73,7 @@
 
   {#if !$gameStore.introVideoReady}
     <div class="absolute z-20 text-white/50 text-lg tracking-widest" transition:fade>
-      Loading...
+      
     </div>
   {/if}
 

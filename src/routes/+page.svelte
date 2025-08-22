@@ -5,6 +5,7 @@
     import Conclusion from '$lib/components/Conclusion.svelte';
     import VideoTransition from '$lib/components/VideoTransition.svelte';
     import Splash from '$lib/components/Splash.svelte'; // Import Splash component
+    import DoorScene from '$lib/components/DoorScene.svelte';
     import { gameStore } from '$lib/gameStore.js';
 </script>
 
@@ -15,6 +16,8 @@
         <Intro />
     {:else if $gameStore.currentView === 'walking'}
         <VideoTransition />
+    {:else if $gameStore.currentView === 'doorScene'}
+        <DoorScene />
     {:else if $gameStore.currentView === 'puzzle1'}
         <Puzzle1 />
     {:else if $gameStore.currentView === 'puzzle2'}

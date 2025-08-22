@@ -28,3 +28,11 @@
     src: ['/error.mp3'],
     volume: 0.6
   });
+
+  export const suspiciousSound = new Howl({
+    src: ['/sus.wav']
+});
+
+  export const courageSound = new Howl({
+    src: ['/deep.mp3']
+});

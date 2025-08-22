@@ -40,7 +40,7 @@ function createGameStore() {
   return {
     subscribe,
     startGame: () => update(state => ({ ...state, currentView: 'walking' })),
-    finishWalking: () => update(state => ({ ...state, currentView: 'puzzle1' })),
+    finishWalking: () => update(state => ({ ...state, currentView: 'doorScene' })),
     setIntroVideoReady: () => update(state => ({ ...state, introVideoReady: true })),
     solvePuzzle: (puzzleId) => {
       update(state => {
