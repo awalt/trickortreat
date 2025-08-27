@@ -1,9 +1,12 @@
 <script>
   import { createEventDispatcher } from 'svelte';
+  import { successSound, errorSound } from '$lib/audio.js';
 
-  export let isCorrect = false;
-  export let isShaking = false;
+  export let isCorrect = null;
   export let continueLabel = 'Continue';
+
+  let isShaking = false;
+  let errorMessage = '';
 
   const dispatch = createEventDispatcher();
 
@@ -14,40 +17,33 @@
   function handleContinue() {
     dispatch('continue');
   }
+
+  $: if (isCorrect !== null) {
+    if (isCorrect) {
+      successSound.play();
+      errorMessage = '';
+      isShaking = false;
+    } else {
+      errorSound.play();
+      errorMessage = 'Incorrect Code. Try Again.';
+      isShaking = true;
+      setTimeout(() => (isShaking = false), 500);
+    }
+  }
 </script>
 
 <div class="flex flex-col items-center mt-8">
-  {#if !isCorrect}
-    <button
-      on:click={handleSubmit}
-      class="relative font-bold py-3 px-5 rounded-lg text-xl transition-all duration-300 shadow-lg flex items-center gap-2"
-      class:shake={isShaking}
-      class:bg-red-900={!isCorrect}
-      class:hover:bg-red-800={!isCorrect}
-      class:border-red-700={!isCorrect}
-      class:hover:scale-105={!isCorrect}
-      class:active:scale-100={!isCorrect}
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-6 w-6"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-        />
-      </svg>
-      <span>ENTER</span>
-    </button>
-  {:else}
-    <div class="flex flex-col items-center">
+  <div class="flex flex-col items-center justify-center min-h-24">
+    {#if isCorrect !== true}
       <button
-        class="bg-green-700 border-2 border-green-500 text-white font-bold py-3 px-3 rounded-lg text-xl shadow-lg shadow-green-700/50 flex items-center gap-2"
+        on:click={handleSubmit}
+        class="relative flex items-center gap-2 rounded-lg py-3 px-5 text-xl font-bold shadow-lg transition-all duration-300"
+        class:shake={isShaking}
+        class:border-red-700={!isCorrect}
+        class:bg-red-900={!isCorrect}
+        class:hover:bg-red-800={!isCorrect}
+        class:hover:scale-105={!isCorrect}
+        class:active:scale-100={!isCorrect}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -60,19 +56,48 @@
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
-            d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"
+            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
           />
         </svg>
-        <span>UNLOCKED</span>
+        <span>ENTER</span>
       </button>
-      <button
-        on:click={handleContinue}
-        class="mt-4 bg-blue-600 hover:bg-blue-500 border-2 border-blue-400 text-white font-bold py-2 px-6 rounded-lg text-lg transition-all duration-300 shadow-lg shadow-blue-600/50 hover:shadow-blue-500/70 hover:scale-105 active:scale-100"
-      >
-        {continueLabel}
-      </button>
-    </div>
-  {/if}
+    {:else}
+      <div class="flex flex-col items-center">
+        <div class="flex items-center gap-2 text-xl font-bold text-green-400">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"
+            />
+          </svg>
+          <span>UNLOCKED</span>
+        </div>
+        <button
+          on:click={handleContinue}
+          class="mt-4 rounded-lg border-2 border-blue-400 bg-blue-600 py-2 px-6 text-lg font-bold text-white shadow-lg shadow-blue-600/50 transition-all duration-300 hover:scale-105 hover:bg-blue-500 hover:shadow-blue-500/70 active:scale-100"
+        >
+          {continueLabel}
+        </button>
+      </div>
+    {/if}
+  </div>
+
+  <p
+    class="mt-4 h-6 text-red-500 transition-opacity duration-300"
+    class:animate-pulse={errorMessage}
+    class:opacity-100={errorMessage}
+    class:opacity-0={!errorMessage}
+  >
+    {errorMessage || ''}
+  </p>
 </div>
 
 <style>

@@ -1,30 +1,27 @@
 <script>
   import { register } from 'swiper/element/bundle';
   import { onMount, onDestroy } from 'svelte';
-  import SubmitButton from './SubmitButton.svelte'; // Import the new component
+  import SubmitButton from './SubmitButton.svelte';
 
   register();
 
   import { gameStore } from '$lib/gameStore.js';
-  import { clickSound, successSound, errorSound, warningSound } from '$lib/audio.js';
+  import { clickSound, warningSound } from '$lib/audio.js';
   import { fade } from 'svelte/transition';
 
   let userInput = '';
-  let errorMessage = '';
   const correctAnswer = '372';
-  let isCorrect = false;
-  let isShaking = false;
+  let isCorrect = null;
 
   let swiperEl;
-
-  warningSound.play();
+  let signSlideVisited = false;
 
   onDestroy(() => {
     warningSound.pause();
     warningSound.currentTime = 0;
   });
 
-  onMount(() => {
+  onMount(async () => {
     if (swiperEl) {
       const swiperParams = {
         zoom: {
@@ -35,29 +32,35 @@
         initialSlide: 2,
       };
       Object.assign(swiperEl, swiperParams);
-      swiperEl.initialize();
+      
+      await swiperEl.initialize();
+
+      swiperEl.swiper.on('slideChange', () => {
+        if (swiperEl.swiper.activeIndex === 1 && !signSlideVisited) {
+          warningSound.play();
+          signSlideVisited = true;
+        }
+      });
     }
   });
 
-  async function checkAnswer() {
+  function checkAnswer() {
+    if (!userInput) return;
     clickSound.play();
-    errorMessage = '';
-    isShaking = false;
-
-    if (userInput == correctAnswer) {
-      successSound.play();
-      isCorrect = true;
-    } else {
-      errorSound.play();
-      errorMessage = 'Incorrect Code. Try Again.';
-      userInput = '';
-      isShaking = true;
-      setTimeout(() => (isShaking = false), 500);
+    isCorrect = userInput == correctAnswer; // Use == as requested
+    if (!isCorrect) {
+        userInput = '';
     }
   }
 
   function handleContinue() {
     gameStore.solvePuzzle('puzzle2');
+  }
+
+  function handleKeyUp(event) {
+    if (event.key === 'Enter') {
+      checkAnswer();
+    }
   }
 </script>
 
@@ -72,7 +75,7 @@
       <swiper-slide>
         <div class="w-full aspect-square flex flex-col items-center justify-center">
           <div class="swiper-zoom-container">
-            <img src="/window.png" alt="Window" class="max-h-full max-w-full object-contain" />
+            <img src="/window5.jpeg" alt="Window" class="max-h-full max-w-full object-contain" />
           </div>
           <p class="text-3xl mt-3 font-creepster text-gray-300" style="text-shadow: 1px 1px 3px #000;">
             Window
@@ -83,7 +86,7 @@
       <swiper-slide>
         <div class="w-full aspect-square flex flex-col items-center justify-center">
           <div class="swiper-zoom-container">
-            <img src="/sign.jpeg" alt="Door" class="max-h-full max-w-full object-contain" />
+            <img src="/sign.jpeg" alt="Sign" class="max-h-full max-w-full object-contain" />
           </div>
           <p class="text-3xl mt-3 font-creepster text-gray-300" style="text-shadow: 1px 1px 3px #000;">
             Sign
@@ -93,7 +96,7 @@
       <swiper-slide>
         <div class="w-full aspect-square flex flex-col items-center justify-center">
           <div class="swiper-zoom-container">
-            <img src="/house4.jpeg" alt="Door" class="max-h-full max-w-full object-contain" />
+            <img src="/house3d.png" alt="Door" class="max-h-full max-w-full object-contain" />
           </div>
           <p class="text-3xl mt-3 font-creepster text-gray-300" style="text-shadow: 1px 1px 3px #000;">
             Door
@@ -103,7 +106,7 @@
       <swiper-slide>
         <div class="w-full aspect-square flex flex-col items-center justify-center">
           <div class="swiper-zoom-container">
-            <img src="/mailbox2.jpeg" alt="Door" class="max-h-full max-w-full object-contain" />
+            <img src="/mailbox2.jpeg" alt="Mailbox" class="max-h-full max-w-full object-contain" />
           </div>
           <p class="text-3xl mt-3 font-creepster text-gray-300" style="text-shadow: 1px 1px 3px #000;">
             Mailbox
@@ -124,18 +127,14 @@
       on:input={() => {
         if (userInput.length > 3) userInput = userInput.slice(0, 3);
       }}
+      on:keyup={handleKeyUp}
     />
 
-    <SubmitButton {isCorrect} {isShaking} on:submit={checkAnswer} on:continue={handleContinue} />
-
-    {#if errorMessage}
-      <p class="text-red-500 mt-4 animate-pulse">{errorMessage}</p>
-    {/if}
+    <SubmitButton {isCorrect} on:submit={checkAnswer} on:continue={handleContinue} />
   </div>
 </div>
 
 <style>
-  /* Import the new font by adding a font-family to your styles */
   .font-creepster {
     font-family: 'Creepster', cursive;
   }
