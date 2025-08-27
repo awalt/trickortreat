@@ -12,7 +12,7 @@
     const timeUntilEnd = videoElement.duration - videoElement.currentTime;
 
     // Start fading 3 seconds before the video ends and ensure we only set it once
-    if (timeUntilEnd <= 3.5 && !fadingToBlack) {
+    if (timeUntilEnd <= 1.5 && !fadingToBlack) {
       fadingToBlack = true;
     }
   }
@@ -28,7 +28,7 @@
   <video 
     bind:this={videoElement}
     class="w-full h-full object-cover"
-    src="/runninghouse.mp4" 
+    src="/walk2.mp4" 
     autoplay 
     playsinline
     on:timeupdate={handleTimeUpdate}

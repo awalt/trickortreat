@@ -1,21 +1,19 @@
 <script>
   import { gameStore } from '$lib/gameStore.js';
   import { fade, scale } from 'svelte/transition';
- import { onMount, onDestroy } from 'svelte';
+  import { onMount, onDestroy } from 'svelte';
   import { clickSound, courageSound, suspiciousSound } from '$lib/audio.js';
 
   let showModal = false;
 
   suspiciousSound.play();
-
-   onDestroy(() => {
+  onDestroy(() => {
     suspiciousSound.pause();
     suspiciousSound.currentTime = 0;
   });
-
   function handleGoToDoor() {
     clickSound.play();
-    gameStore.goToView('puzzle1');
+    gameStore.goToView('walking');
   }
 
   function handleRunAway() {
@@ -46,7 +44,8 @@
 </style>
 
 <div class="relative w-full h-screen flex flex-col items-center justify-center text-center overflow-hidden p-4 bg-black" in:fade={{ duration: 1000 }}>
-  <h1 class="text-5xl md:text-7xl font-creepster text-gray-200 text-shadow-lg mb-8">It looks suspicious. What do you do?</h1>
+  <h1 class="text-5xl md:text-7xl font-creepster text-gray-200 text-shadow-lg mb-8">It looks suspicious.
+ What do you do?</h1>
 
  <div class="flex gap-4">
     <button
@@ -58,7 +57,8 @@
     </button>
     <button
       on:click={handleGoToDoor}
-      class="relative inline-block px-10 py-3 font-bold text-lg text-white uppercase tracking-widest transition-all duration-300
+      class="relative inline-block px-10 py-3 font-bold text-lg text-white uppercase 
+ tracking-widest transition-all duration-300
              bg-black/50 border border-orange-800/50 rounded-tl-xl rounded-br-xl
              hover:border-orange-600 hover:shadow-[0_0_20px_rgba(255,110,50,0.5)] hover:scale-110">
       <span class="animate-pulse">Go to door</span>
@@ -72,6 +72,7 @@
     in:scale={{ duration: 300, start: 0.9, opacity: 0 }}
     out:scale={{ duration: 200, start: 1, end: 0.9, opacity: 0 }}
     class="relative w-full max-w-lg p-8 bg-gradient-to-br from-gray-900 to-black/90 text-center
+  
            border-2 border-orange-800/50 shadow-[0_0_30px_rgba(255,110,50,0.3)]">
     
     <div class="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-orange-500"></div>
@@ -83,7 +84,8 @@
     <p class="text-gray-300 text-lg mb-8">Take a few deep breaths.</p>
     <button
       on:click={closeModal}
-      class="relative inline-block px-10 py-3 font-bold text-lg text-white uppercase tracking-widest transition-all duration-300
+  
+     class="relative inline-block px-10 py-3 font-bold text-lg text-white uppercase tracking-widest transition-all duration-300
              bg-black/50 border border-orange-800/50 rounded-tl-xl rounded-br-xl
              hover:border-orange-600 hover:shadow-[0_0_20px_rgba(255,110,50,0.5)] hover:scale-110">
       OK

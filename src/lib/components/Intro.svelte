@@ -60,7 +60,7 @@
  in:fade={{ duration: 500 }}>
   <video 
     class="absolute top-0 left-0 w-full h-full object-cover"
-    src="/statichouse.mp4" 
+    src="/housestatic.mp4" 
     autoplay 
     muted 
     playsinline

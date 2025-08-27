@@ -21,8 +21,8 @@ function createGameStore() {
         const parsedState = JSON.parse(savedState);
         // If user has progress, jump them to the correct puzzle
         if (parsedState.puzzle1Solved || parsedState.puzzle2Solved) {
-           set({ ...parsedState, introVideoReady: true }); // No need to load intro video
-           return;
+            set({ ...parsedState, introVideoReady: true }); // No need to load intro video
+            return;
         }
       }
       // Otherwise, go to the intro
@@ -39,8 +39,8 @@ function createGameStore() {
 
   return {
     subscribe,
-    startGame: () => update(state => ({ ...state, currentView: 'walking' })),
-    finishWalking: () => update(state => ({ ...state, currentView: 'doorScene' })),
+    startGame: () => update(state => ({ ...state, currentView: 'doorScene' })),
+    finishWalking: () => update(state => ({ ...state, currentView: 'walking' })),
     setIntroVideoReady: () => update(state => ({ ...state, introVideoReady: true })),
     solvePuzzle: (puzzleId) => {
       update(state => {

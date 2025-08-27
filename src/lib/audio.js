@@ -30,7 +30,7 @@
   });
 
   export const suspiciousSound = new Howl({
-    src: ['/sus.wav']
+    src: ['/first.mp3']
 });
 
   export const courageSound = new Howl({

@@ -3,7 +3,7 @@
     import Puzzle1 from '$lib/components/Puzzle1.svelte';
     import Puzzle2 from '$lib/components/Puzzle2.svelte';
     import Puzzle3 from '$lib/components/Puzzle3.svelte';
-    import Puzzle4 from '$lib/components/Puzzle4.svelte';
+    import Puzzle4 from '$lib/components/Puzzle3.svelte';
     import Conclusion from '$lib/components/Conclusion.svelte';
     import VideoTransition from '$lib/components/VideoTransition.svelte';
     import Splash from '$lib/components/Splash.svelte'; // Import Splash component
