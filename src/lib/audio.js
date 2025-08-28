@@ -51,5 +51,5 @@
 });
   export const buzzSound = new Howl({
     src: ['/buzz.mp3'],
-    volume: 0.1
+    volume: 0.3
 });
