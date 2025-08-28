@@ -1,70 +1,49 @@
 <script>
-  import { gameStore } from '$lib/gameStore.js';
-  // Import onMount to set the initial position
+  import { gameStore, gamePagesOrder } from '$lib/gameStore.js';
   import { onMount } from 'svelte';
-
   let isVisible = true;
-
-  // --- Start of Drag Logic ---
-  let menuElement; // The draggable div element
-  let x, y; // The x and y coordinates of the menu
-  let offsetX, offsetY; // The distance from the cursor to the element's corner
+  let menuElement;
+  let x, y;
+  let offsetX, offsetY;
   let isDragging = false;
-
-  // Position the menu in the bottom-right on its first appearance
   onMount(() => {
     if (menuElement) {
-      x = window.innerWidth - menuElement.offsetWidth - 16; // 1rem = 16px
+      x = window.innerWidth - menuElement.offsetWidth - 16;
       y = window.innerHeight - menuElement.offsetHeight - 16;
     }
   });
-
-  // Universal function to start dragging
   function startDrag(clientX, clientY) {
     isDragging = true;
     offsetX = clientX - x;
     offsetY = clientY - y;
   }
-  
-  // Universal function to handle movement
   function onDrag(clientX, clientY) {
     if (isDragging) {
       x = clientX - offsetX;
       y = clientY - offsetY;
     }
   }
-
-  // Universal function to stop dragging
   function stopDrag() {
     isDragging = false;
   }
-
-  // Mouse event handlers
   function handleMouseDown(event) {
     startDrag(event.clientX, event.clientY);
   }
   function handleMouseMove(event) {
     onDrag(event.clientX, event.clientY);
   }
-
-  // Touch event handlers
   function handleTouchStart(event) {
     startDrag(event.touches[0].clientX, event.touches[0].clientY);
   }
   function handleTouchMove(event) {
     onDrag(event.touches[0].clientX, event.touches[0].clientY);
   }
-  // --- End of Drag Logic ---
-
-
   function resetGame() {
     gameStore.reset();
   }
-
   function goTo(view) {
     gameStore.goToView(view);
   }
-
   function closeMenu() {
     isVisible = false;
   }
@@ -101,13 +80,9 @@
   </div>
   <div class="grid grid-cols-2 gap-2">
     <button on:click={resetGame} class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-sm">Reset Game</button>
-    <button on:click={() => goTo('intro')} class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm">Intro</button>
-    <button on:click={() => goTo('doorScene')} class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm">DoorScene</button>
-    <button on:click={() => goTo('door')} class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm">Door</button>
-    <button on:click={() => goTo('puzzle2')} class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm">Puzzle 2</button>
-    <button on:click={() => goTo('knock')} class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm">Knock</button>
-    <button on:click={() => goTo('bug')} class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm">Bug</button>
-    <button on:click={() => goTo('conclusion')} class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm">Conclusion</button>
+    {#each gamePagesOrder as page}
+        <button on:click={() => goTo(page)} class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm">{page}</button>
+    {/each}
   </div>
 </div>
 {/if}

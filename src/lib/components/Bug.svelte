@@ -7,10 +7,12 @@
   // RIGHT: Import the BugController class from your new JS file.
   import BugController from '$lib/bugController.js'; 
 
+  let spiderController;
+
   onMount(() => {
     // Note: The original library was designed to create swarms.
     // To control a single bug, we can create a controller with minBugs = 1 and maxBugs = 1.
-    const spiderController = new BugController();
+    spiderController = new BugController();
     spiderController.initialize({
       imageSprite: 'spider-sprite.png',
         bugWidth: 69,
@@ -82,11 +84,9 @@
 
    onDestroy(() => {
     // Check if the controller was initialized before trying to destroy it
-    if (spiderController) {
-      // NOTE: The method name might be different. 
-      // Common names are destroyAllBugs(), stop(), removeAll(), or cleanup().
-      // Please check the bug library's documentation for the correct method.
-      spiderController.destroyAllBugs(); 
+    if (typeof spiderController != "undefined") {
+        console.log({spiderController})
+      spiderController.remove(); 
     }
   });
 

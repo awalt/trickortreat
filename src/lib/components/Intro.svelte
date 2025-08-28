@@ -4,6 +4,7 @@
   import { fade } from 'svelte/transition';
   import { onMount } from 'svelte';
 
+
   function handleStart() {
     clickSound.play();
     if (!moodMusic.playing()) {
@@ -23,6 +24,7 @@
     }
 
     gameStore.startGame();
+    //gameStore.solvePuzzle();
   }
 
   onMount(() => {

@@ -12,23 +12,23 @@
 </script>
 
 <main class="h-screen w-screen bg-gray-900 text-white">
-    {#if $gameStore.currentView === 'splash'}
+    {#if $gameStore.currentView === 'Splash'}
         <Splash />
-    {:else if $gameStore.currentView === 'intro'}
+    {:else if $gameStore.currentView === 'Intro'}
         <Intro />
-    {:else if $gameStore.currentView === 'walking'}
+    {:else if $gameStore.currentView === 'VideoTransition'}
         <VideoTransition />
-    {:else if $gameStore.currentView === 'doorScene'}
+    {:else if $gameStore.currentView === 'DoorScene'}
         <DoorScene />
-    {:else if $gameStore.currentView === 'door'}
+    {:else if $gameStore.currentView === 'Door'}
         <Door />
-    {:else if $gameStore.currentView === 'puzzle2'}
+    {:else if $gameStore.currentView === 'Puzzle2'}
         <Puzzle2 />
-    {:else if $gameStore.currentView === 'knock'}
+    {:else if $gameStore.currentView === 'Knock'}
         <Knock />
-    {:else if $gameStore.currentView === 'bug'}
+    {:else if $gameStore.currentView === 'Bug'}
         <Bug />
-    {:else if $gameStore.currentView === 'conclusion'}
+    {:else if $gameStore.currentView === 'Conclusion'}
         <Conclusion />
     {/if}
 </main>

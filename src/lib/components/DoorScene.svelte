@@ -14,6 +14,7 @@
   function handleGoToDoor() {
     clickSound.play();
     gameStore.goToView('walking');
+    //gameStore.solvePuzzle();
   }
 
   function handleRunAway() {
