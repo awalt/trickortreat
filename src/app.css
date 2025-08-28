@@ -13,7 +13,8 @@ body, html {
 
 .font-creepster {
   visibility: hidden;
-}
+    font-family: 'Creepster', cursive;
+  }
 
 /* Once the 'font-loaded' class is added to the body, 
   we make the text with the 'font-creepster' class visible.

@@ -49,3 +49,7 @@
   export const beetleSound = new Howl({
     src: ['/beetle.mp3']
 });
+  export const buzzSound = new Howl({
+    src: ['/buzz.mp3'],
+    volume: 0.1
+});

@@ -1,4 +1,34 @@
-// This file contains the logic for creating swarms of bugs.
+// --- Global Controller Manager ---
+// This ensures only one BugController instance is active at a time.
+const bugControllerManager = {
+  activeInstance: null,
+
+  /**
+   * The ultimate "kill switch". Destroys the active controller,
+   * clears all known timers, and removes all bug elements.
+   */
+  killAll: () => {
+    if (bugControllerManager.activeInstance) {
+      // Use the controller's own cleanup methods
+      bugControllerManager.activeInstance.end();
+      bugControllerManager.activeInstance = null;
+    }
+
+    // Aggressively clear any stray timers that might have been missed.
+    // This loops from the highest possible timer ID down to 0.
+    const highestId = window.setTimeout(() => {}, 0);
+    for (let i = 0; i < highestId; i++) {
+      window.clearTimeout(i);
+      window.clearInterval(i);
+      window.cancelAnimationFrame(i);
+    }
+    
+    // Finally, remove any leftover bug elements from the DOM.
+    const bugs = document.querySelectorAll('.bug');
+    bugs.forEach(bug => bug.remove());
+    console.log("BugController: All instances and timers have been terminated.");
+  }
+};
 
 // --- Helper Functions ---
 const mergeOptions = (obj1, obj2) => {
@@ -119,10 +149,13 @@ var Bug = {
 
     remove: function() {
     	this.active = false;
-        if (this.inserted && this.bug.parentNode) {
-            this.bug.parentNode.removeChild(this.bug);
-            this.inserted = false;
-        }
+    // More aggressive removal:
+    // We check if the bug element exists and has a parent,
+    // bypassing the internal 'inserted' flag which might be unreliable.
+    if (this.bug && this.bug.parentNode) {
+        this.bug.parentNode.removeChild(this.bug);
+    }
+    this.inserted = false; // Still set this for internal consistency
     },
 
     reset: function() {
@@ -156,12 +189,12 @@ var Bug = {
 
         this._lastTimestamp = t;
 
-        if (--this.toggle_stationary_counter <= 0) {
+        /*if (--this.toggle_stationary_counter <= 0) {
             this.toggleStationary();
         }
         if (this.stationary) {
             return;
-        }
+        }*/
 
 
         if (--this.edge_test_counter <= 0 && this.bug_near_window_edge()) {
@@ -808,6 +841,7 @@ var BugDispatch = {
     },
 
     end: function() {
+        console.log("Ending bugs")
         for (var i = 0; i < this.bugs.length; i++) {
         	if(this.spawnDelay[i]) clearTimeout(this.spawnDelay[i]);
             this.bugs[i].stop();
@@ -961,11 +995,16 @@ var BugDispatch = {
 
 
 // --- Main Controller Class ---
-// We export this class so the Svelte component can use it.
 function BugController() {
+  // Before initializing, kill any previously active instance.
+  bugControllerManager.killAll();
+
+  // Register this new instance as the active one.
+  bugControllerManager.activeInstance = this;
+  
   this.initialize.apply(this, arguments);
 }
-// This line now works correctly because BugController is a function, not a class
 BugController.prototype = BugDispatch;
 
-export default BugController;
+// Export both the controller and the manager
+export { BugController as default, bugControllerManager };

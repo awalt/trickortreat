@@ -13,11 +13,12 @@
   });
   function handleGoToDoor() {
     clickSound.play();
-    gameStore.goToView('walking');
+    gameStore.goToView('VideoTransition');
     //gameStore.solvePuzzle();
   }
 
   function handleRunAway() {
+    suspiciousSound.pause();
     clickSound.play();
     courageSound.play();
     showModal = true;
@@ -38,11 +39,6 @@
   });
 </script>
 
-<style>
-  .font-creepster {
-    font-family: 'Creepster', cursive;
-  }
-</style>
 
 <div class="relative w-full h-screen flex flex-col items-center justify-center text-center overflow-hidden p-4 bg-black" in:fade={{ duration: 1000 }}>
     <div class="max-w-3xl mx-auto">
