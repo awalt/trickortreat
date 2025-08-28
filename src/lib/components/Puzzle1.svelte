@@ -10,7 +10,7 @@
   import { fade } from 'svelte/transition';
 
   let userInput = '';
-  const correctAnswer = '372';
+  const correctAnswer = '341';
   let isCorrect = null;
 
   let swiperEl;
@@ -46,7 +46,6 @@
 
   function checkAnswer() {
     if (!userInput) return;
-    clickSound.play();
     isCorrect = userInput == correctAnswer; // Use == as requested
     if (!isCorrect) {
         userInput = '';
@@ -75,7 +74,7 @@
       <swiper-slide>
         <div class="w-full aspect-square flex flex-col items-center justify-center">
           <div class="swiper-zoom-container">
-            <img src="/window5.jpeg" alt="Window" class="max-h-full max-w-full object-contain" />
+            <img src="/window5b.jpeg" alt="Window" class="max-h-full max-w-full object-contain" />
           </div>
           <p class="text-3xl mt-3 font-creepster text-gray-300" style="text-shadow: 1px 1px 3px #000;">
             Window
@@ -125,7 +124,7 @@
       maxlength="3"
       class="bg-gray-800 border-2 border-gray-600 text-white text-4xl text-center w-36 py-3 rounded-lg tracking-[0.3em] focus:outline-none focus:border-red-500"
       on:input={() => {
-        if (userInput.length > 3) userInput = userInput.slice(0, 3);
+        //if (userInput.length > 3) userInput = userInput.slice(0, 3);
       }}
       on:keyup={handleKeyUp}
     />

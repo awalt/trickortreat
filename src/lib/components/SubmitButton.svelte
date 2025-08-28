@@ -1,9 +1,10 @@
 <script>
   import { createEventDispatcher } from 'svelte';
-  import { successSound, errorSound } from '$lib/audio.js';
+  import { successSound, errorSound, clickSound } from '$lib/audio.js';
 
   export let isCorrect = null;
   export let continueLabel = 'Continue';
+  export let attempt = 0; // <-- ADD THIS LINE: A prop to track submission attempts
 
   let isShaking = false;
   let errorMessage = '';
@@ -11,6 +12,7 @@
   const dispatch = createEventDispatcher();
 
   function handleSubmit() {
+    console.log("Submit")
     dispatch('submit');
   }
 
@@ -18,12 +20,22 @@
     dispatch('continue');
   }
 
-  $: if (isCorrect !== null) {
+  // v-- CHANGE THIS BLOCK --v
+  // This logic now runs every time `attempt` changes,
+  // guaranteeing the feedback triggers on every submission.
+  $: if (attempt >= 0) {
+    console.log("Attempt", attempt)
     if (isCorrect) {
       successSound.play();
       errorMessage = '';
       isShaking = false;
-    } else {
+
+      // ADD THIS: Hide the keyboard on success by blurring the active element.
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
+    } else if (isCorrect === false) {
+      // This block will now run every time for a wrong answer
       errorSound.play();
       errorMessage = 'Incorrect Code. Try Again.';
       isShaking = true;
@@ -32,7 +44,7 @@
   }
 </script>
 
-<div class="flex flex-col items-center mt-8">
+<div class="flex flex-col items-center mt-1">
   <div class="flex flex-col items-center justify-center min-h-24">
     {#if isCorrect !== true}
       <button

@@ -44,9 +44,9 @@
 </style>
 
 <div class="relative w-full h-screen flex flex-col items-center justify-center text-center overflow-hidden p-4 bg-black" in:fade={{ duration: 1000 }}>
-  <h1 class="text-5xl md:text-7xl font-creepster text-gray-200 text-shadow-lg mb-8">It looks suspicious.
- What do you do?</h1>
-
+    <div class="max-w-3xl mx-auto">
+  <h1 class="text-5xl md:text-7xl font-creepster text-gray-200 text-shadow-lg mb-8">Every other house on this street has been visited. Will you be its first trick or treater?</h1>
+    </div>
  <div class="flex gap-4">
     <button
       on:click={handleRunAway}
