@@ -1,4 +1,5 @@
 <script>
+  /*Puzzle1.svelte*/
   import { register } from 'swiper/element/bundle';
   import { onMount, onDestroy } from 'svelte';
   import SubmitButton from './SubmitButton.svelte';
@@ -6,10 +7,9 @@
   register();
 
   import { gameStore } from '$lib/gameStore.js';
-  import { clickSound, warningSound } from '$lib/audio.js';
+  import { warningSound } from '$lib/audio.js';
   import { fade } from 'svelte/transition';
 
-  let userInput = '';
   const correctAnswer = '341';
   let isCorrect = null;
 
@@ -32,7 +32,7 @@
         initialSlide: 2,
       };
       Object.assign(swiperEl, swiperParams);
-      
+
       await swiperEl.initialize();
 
       swiperEl.swiper.on('slideChange', () => {
@@ -44,22 +44,15 @@
     }
   });
 
-  function checkAnswer() {
-    if (!userInput) return;
-    isCorrect = userInput == correctAnswer; // Use == as requested
-    if (!isCorrect) {
-        userInput = '';
-    }
+  // The user's input is now passed in the event detail
+  function checkAnswer(event) {
+    const submittedInput = event.detail;
+    if (!submittedInput) return;
+    isCorrect = submittedInput == correctAnswer;
   }
 
   function handleContinue() {
     gameStore.solvePuzzle('puzzle2');
-  }
-
-  function handleKeyUp(event) {
-    if (event.key === 'Enter') {
-      checkAnswer();
-    }
   }
 </script>
 
@@ -116,20 +109,14 @@
   </div>
 
   <div class="flex flex-col items-center mt-8">
-    <input
-      id="codeInput"
-      type="number"
-      bind:value={userInput}
-      placeholder="---"
-      maxlength="3"
-      class="bg-gray-800 border-2 border-gray-600 text-white text-4xl text-center w-36 py-3 rounded-lg tracking-[0.3em] focus:outline-none focus:border-red-500"
-      on:input={() => {
-        //if (userInput.length > 3) userInput = userInput.slice(0, 3);
-      }}
-      on:keyup={handleKeyUp}
+    <!-- The input is gone, and we now pass props to the button -->
+    <SubmitButton
+      {isCorrect}
+      maxLength={3}
+      inputType="number"
+      on:submit={checkAnswer}
+      on:continue={handleContinue}
     />
-
-    <SubmitButton {isCorrect} on:submit={checkAnswer} on:continue={handleContinue} />
   </div>
 </div>
 

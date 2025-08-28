@@ -1,50 +1,131 @@
 <script>
-  import { createEventDispatcher } from 'svelte';
-  import { successSound, errorSound, clickSound } from '$lib/audio.js';
+  /* SubmitButton.svelte */
+  import { createEventDispatcher, onMount } from 'svelte';
+  import { successSound, errorSound } from '$lib/audio.js';
 
+  // --- PROPS ---
   export let isCorrect = null;
   export let continueLabel = 'Continue';
-  export let attempt = 0; // <-- ADD THIS LINE: A prop to track submission attempts
+  export let inputType = 'text'; // 'text', 'number', or 'directional'
+  export let maxLength = 3;
+  export let combinationLength = 3; // For directional input
 
+  // --- LOCAL STATE ---
+  let userInput = ''; // For text/number input
+  let directions = []; // For directional input
+  let attempt = -1;
   let isShaking = false;
   let errorMessage = '';
-
   const dispatch = createEventDispatcher();
 
+  // Initialize directions array when the component mounts
+  onMount(() => {
+    if (inputType === 'directional') {
+      directions = Array(combinationLength).fill('up');
+    }
+  });
+
+  // --- MAPPINGS ---
+  const directionCycle = ['up', 'right', 'down', 'left'];
+  const rotationMap = {
+    up: 0,
+    right: 90,
+    down: 180,
+    left: 270,
+  };
+
+  // --- FUNCTIONS ---
+  function rotateArrow(index) {
+    const currentDirection = directions[index];
+    const currentIndex = directionCycle.indexOf(currentDirection);
+    const nextIndex = (currentIndex + 1) % directionCycle.length;
+    directions[index] = directionCycle[nextIndex];
+  }
+
   function handleSubmit() {
-    console.log("Submit")
-    dispatch('submit');
+    const valueToSubmit = inputType === 'directional' ? directions : userInput;
+    if (inputType === 'directional' || userInput) {
+      attempt++;
+      dispatch('submit', valueToSubmit);
+    }
   }
 
   function handleContinue() {
     dispatch('continue');
   }
 
-  // v-- CHANGE THIS BLOCK --v
-  // This logic now runs every time `attempt` changes,
-  // guaranteeing the feedback triggers on every submission.
+  function handleKeyUp(event) {
+    if (event.key === 'Enter') {
+      handleSubmit();
+    }
+  }
+
+  // --- REACTIVE LOGIC ---
   $: if (attempt >= 0) {
-    console.log("Attempt", attempt)
     if (isCorrect) {
       successSound.play();
       errorMessage = '';
       isShaking = false;
-
-      // ADD THIS: Hide the keyboard on success by blurring the active element.
       if (document.activeElement instanceof HTMLElement) {
         document.activeElement.blur();
       }
     } else if (isCorrect === false) {
-      // This block will now run every time for a wrong answer
       errorSound.play();
       errorMessage = 'Incorrect Code. Try Again.';
       isShaking = true;
       setTimeout(() => (isShaking = false), 500);
+
+      // Reset input on failure
+      if (inputType === 'directional') {
+        directions = Array(combinationLength).fill('up');
+      } else {
+        userInput = '';
+      }
     }
   }
 </script>
 
-<div class="flex flex-col items-center mt-1">
+<div class="flex flex-col items-center w-full mt-2">
+  {#if isCorrect !== true}
+    {#if inputType === 'directional'}
+      <div class="flex items-center justify-center gap-4 mb-2">
+        {#each Array(combinationLength) as _, i}
+          <button
+            on:click={() => rotateArrow(i)}
+            class="w-16 h-16 bg-gray-800 border-2 border-gray-600 rounded-lg flex items-center justify-center focus:outline-none focus:border-red-500"
+            aria-label={`Direction ${i + 1}, currently ${directions[i]}`}
+          >
+            <svg
+              class="w-10 h-10 text-white transition-transform duration-300 ease-in-out"
+              style="transform: rotate({rotationMap[directions[i]]}deg);"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 15l7-7 7 7"
+              />
+            </svg>
+          </button>
+        {/each}
+      </div>
+    {:else}
+      <input
+        id="codeInput"
+        type={inputType}
+        bind:value={userInput}
+        placeholder="---"
+        maxlength={maxLength}
+        class="bg-gray-800 border-2 border-gray-600 text-white text-4xl text-center w-36 py-3 rounded-lg mb-0 tracking-[0.3em] focus:outline-none focus:border-red-500"
+        on:keyup={handleKeyUp}
+      />
+    {/if}
+  {/if}
+
   <div class="flex flex-col items-center justify-center min-h-24">
     {#if isCorrect !== true}
       <button
@@ -75,7 +156,7 @@
       </button>
     {:else}
       <div class="flex flex-col items-center">
-        <div class="flex items-center gap-2 text-xl font-bold text-green-400">
+        <div class="flex items-center gap-2 text-xl font-bold text-green-400 mt-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-6 w-6"
@@ -103,7 +184,7 @@
   </div>
 
   <p
-    class="mt-4 h-6 text-red-500 transition-opacity duration-300"
+    class="h-6 text-red-500 transition-opacity duration-300"
     class:animate-pulse={errorMessage}
     class:opacity-100={errorMessage}
     class:opacity-0={!errorMessage}

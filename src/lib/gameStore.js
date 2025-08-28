@@ -7,6 +7,16 @@ const defaultState = {
   puzzle2Solved: false,
 };
 
+//USE THIS AS THE MASTER LIST OF THE PUZZLE ORDER. ALSO USE THIS FOR THE DebugMenu SHORTCUTS (automatically)
+const gamePagesOrder = [
+    "Intro", 
+    "DoorScene",
+    "Door",
+    "Bug",
+    "Knock",
+    "Conclusion"
+]
+
 function createGameStore() {
   const savedState = typeof window !== 'undefined' ? localStorage.getItem('escapeGameState') : null;
 

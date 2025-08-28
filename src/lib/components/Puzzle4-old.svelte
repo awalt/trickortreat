@@ -34,7 +34,7 @@ text-gray-300 overflow-hidden" in:fade={{ duration: 1000 }}>
     </h1>
     <img src="/path.png" alt="" class="w-full h-auto max-w-lg">
     <p class="text-lg md:text-xl max-w-2xl mx-auto">
-      Placeholder text for Puzzle 4. The desk is cluttered with old books, strange artifacts, and... things that crawl. Look closely, for secrets often hide in plain sight, sometimes scuttling just at the edge of your vision.
+      There would be like a vignette peephole around the image or something.
     </p>
   </div>
 

@@ -103,10 +103,10 @@
     <button on:click={resetGame} class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-sm">Reset Game</button>
     <button on:click={() => goTo('intro')} class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm">Intro</button>
     <button on:click={() => goTo('doorScene')} class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm">DoorScene</button>
-    <button on:click={() => goTo('puzzle1')} class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm">Puzzle 1</button>
+    <button on:click={() => goTo('door')} class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm">Door</button>
     <button on:click={() => goTo('puzzle2')} class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm">Puzzle 2</button>
-    <button on:click={() => goTo('puzzle3')} class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm">Puzzle 3</button>
-    <button on:click={() => goTo('puzzle4')} class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm">Puzzle 4</button>
+    <button on:click={() => goTo('knock')} class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm">Knock</button>
+    <button on:click={() => goTo('bug')} class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm">Bug</button>
     <button on:click={() => goTo('conclusion')} class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm">Conclusion</button>
   </div>
 </div>

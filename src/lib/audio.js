@@ -46,3 +46,6 @@
   export const warningSound = new Howl({
     src: ['/warning.mp3']
 });
+  export const beetleSound = new Howl({
+    src: ['/beetle.mp3']
+});
