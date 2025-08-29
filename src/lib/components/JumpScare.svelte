@@ -6,6 +6,7 @@
   let videoElement;
   let showVideo = false;
   let closeTimer = null;
+  let videoReady = false; // New state to track if video is ready
 
   onMount(() => {
     const startTimeout = setTimeout(() => {
@@ -26,33 +27,29 @@
     showVideo = false;
   };
 
-  $: if (showVideo && videoElement) {
-    const playWhenReady = () => {
-      if (videoElement.readyState >= 3) {
-        videoElement.play();
-        // Set a timer to hide the video 2 second after it starts
-        closeTimer = setTimeout(hideVideo, 1200); 
-
-        videoElement.requestFullscreen().catch(err => {
-          console.error("Error attempting to enable full-screen mode:", err);
-        });
-      }
-    };
-
-    videoElement.addEventListener('canplaythrough', playWhenReady, { once: true });
+  // This function now runs when the video is buffered and ready
+  const onCanPlay = () => {
+    videoReady = true; // Make the container visible
+    videoElement.play();
     
-    // Call it directly in case the event already fired
-    playWhenReady();
+    // Set a timer to hide the video 1.2 seconds after it starts
+    closeTimer = setTimeout(hideVideo, 550);
+
+    videoElement.requestFullscreen().catch(err => {
+      console.error("Error attempting to enable full-screen mode:", err);
+    });
   }
 </script>
 
 {#if showVideo}
-  <div class="fullscreen-video">
+  <div class="fullscreen-video" style="opacity: {videoReady ? 1 : 0};">
     <video
       bind:this={videoElement}
-      src="/scarelong.mp4"
+      src="/scareshort.mp4"
       preload="auto"
       playsinline
+      poster="/scareshort.png"
+      on:canplaythrough={onCanPlay}
     />
   </div>
 {/if}
@@ -69,6 +66,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    /* Smooth fade-in transition */
+    transition: opacity 0.1s linear;
   }
 
   video {
