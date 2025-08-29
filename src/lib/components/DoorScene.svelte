@@ -39,28 +39,36 @@
   });
 </script>
 
+<div class="relative w-full h-screen flex flex-col items-center justify-center text-center overflow-hidden p-4" in:fade={{ duration: 1000 }}>
+    <video autoplay muted class="absolute top-0 left-0 w-full h-full object-cover z-0">
+        <source src="/houseopen.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+    </video>
 
-<div class="relative w-full h-screen flex flex-col items-center justify-center text-center overflow-hidden p-4 bg-black" in:fade={{ duration: 1000 }}>
-    <div class="max-w-3xl mx-auto">
-  <h1 class="text-5xl md:text-7xl font-creepster text-gray-200 text-shadow-lg mb-8">Every other house on this street has been visited. Will you be its first trick or treater?</h1>
+    <div class="relative z-10">
+        <div class="max-w-3xl mx-auto">
+            <h1 class="text-5xl md:text-7xl font-creepster text-gray-200 text-shadow-lg mb-8">Every other house on this street has been visited.
+            Will you be its first trick or treater?</h1>
+        </div>
+        <div class="flex gap-4 justify-center">
+            <button
+            on:click={handleRunAway}
+            class="relative inline-block px-10 py-3 font-bold text-lg text-white uppercase tracking-widest transition-all duration-300
+                    bg-black/50 border border-orange-800/50 rounded-tl-xl rounded-br-xl
+                    hover:border-orange-600 hover:shadow-[0_0_20px_rgba(255,110,50,0.5)] hover:scale-110">
+            <span class="animate-pulse">Run away</span>
+            </button>
+            <button
+            on:click={handleGoToDoor}
+            
+            class="relative inline-block px-10 py-3 font-bold text-lg text-white uppercase 
+        tracking-widest transition-all duration-300
+                    bg-black/50 border border-orange-800/50 rounded-tl-xl rounded-br-xl
+                    hover:border-orange-600 hover:shadow-[0_0_20px_rgba(255,110,50,0.5)] hover:scale-110">
+            <span class="animate-pulse">Go to door</span>
+            </button>
+        </div>
     </div>
- <div class="flex gap-4">
-    <button
-      on:click={handleRunAway}
-      class="relative inline-block px-10 py-3 font-bold text-lg text-white uppercase tracking-widest transition-all duration-300
-             bg-black/50 border border-orange-800/50 rounded-tl-xl rounded-br-xl
-             hover:border-orange-600 hover:shadow-[0_0_20px_rgba(255,110,50,0.5)] hover:scale-110">
-      <span class="animate-pulse">Run away</span>
-    </button>
-    <button
-      on:click={handleGoToDoor}
-      class="relative inline-block px-10 py-3 font-bold text-lg text-white uppercase 
- tracking-widest transition-all duration-300
-             bg-black/50 border border-orange-800/50 rounded-tl-xl rounded-br-xl
-             hover:border-orange-600 hover:shadow-[0_0_20px_rgba(255,110,50,0.5)] hover:scale-110">
-      <span class="animate-pulse">Go to door</span>
-    </button>
-  </div>
 </div>
 
 {#if showModal}
@@ -68,6 +76,7 @@
   <div
     in:scale={{ duration: 300, start: 0.9, opacity: 0 }}
     out:scale={{ duration: 200, start: 1, end: 0.9, opacity: 0 }}
+    
     class="relative w-full max-w-lg p-8 bg-gradient-to-br from-gray-900 to-black/90 text-center
   
            border-2 border-orange-800/50 shadow-[0_0_30px_rgba(255,110,50,0.3)]">
@@ -79,7 +88,8 @@
 
     <h2 class="text-3xl font-creepster text-orange-400 mb-4 text-shadow-md">You don't have the courage yet.</h2>
     <p class="text-gray-300 text-lg mb-8">Take a few deep breaths.</p>
-    <button
+ 
+       <button
       on:click={closeModal}
   
      class="relative inline-block px-10 py-3 font-bold text-lg text-white uppercase tracking-widest transition-all duration-300
