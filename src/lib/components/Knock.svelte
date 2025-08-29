@@ -4,6 +4,8 @@
   
   import { knockSound,clickSound, buzzSound } from '$lib/audio.js';
 
+  import JumpScare from '$lib/components/JumpScare.svelte';
+
   const dispatch = createEventDispatcher();
   const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -140,6 +142,8 @@
       }
   }
 </script>
+
+<JumpScare delay={7000} />
 
 <main class="door-background min-h-screen flex flex-col items-center justify-center p-4">
   <div class="relative max-w-lg mb-8">
