@@ -1,8 +1,8 @@
 <script>
   import { createEventDispatcher } from 'svelte';
-  import { onMount, onDestroy } from 'svelte';
+  import { onDestroy } from 'svelte';
   
-  import { knockSound,clickSound, buzzSound } from '$lib/audio.js';
+  import { knockSound, buzzSound, creepyDoorSound } from '$lib/audio.js';
 
   import JumpScare from '$lib/components/JumpScare.svelte';
 
@@ -10,25 +10,18 @@
   const sleep = ms => new Promise(r => setTimeout(r, ms));
 
   let knocks = [[], [], [], []];
-  let isPlaying = false;
+  let isPlaying = false; 
   let resultMessage = '';
-  let resultMessageType = ''; // 'correct' or 'incorrect'
-  let playingCell = null; // Stored as { rowIndex, colIndex }
+  let resultMessageType = ''; 
+  let playingCell = null; 
   let houseFlicker = false; 
-  let isFlickerLoopActive = true;
-  let isFlickerLoopRunning = false; // NEW: Guard to prevent multiple flicker loops.
-
-  const correctPattern = '2121';
-
-  onMount(()=>{
-    console.log("Start flicker. This will give a clue to the user what knocking pattern they need to enter.")
-    playHouseFlickerPattern();
-  })
+  
+  const correctPattern = '4132';
 
   onDestroy(() => {
-    isFlickerLoopActive = false;
     buzzSound.stop();
     knockSound.stop();
+    creepyDoorSound.stop();
   });
 
   function handleKnock(rowIndex, colIndex) {
@@ -41,9 +34,6 @@
   }
 
   async function handleSubmit() {
-    isFlickerLoopActive = false; 
-    houseFlicker = false;
-
     isPlaying = true;
     resultMessage = '';
     const pattern = knocks.map(row => row.length).join('');
@@ -64,12 +54,9 @@
     if (pattern === correctPattern) {
       resultMessage = 'ACCESS GRANTED';
       resultMessageType = 'correct';
-      // isFlickerLoopActive remains false, stopping the clue permanently.
     } else {
       resultMessage = 'ACCESS DENIED';
       resultMessageType = 'incorrect';
-      isFlickerLoopActive = true;
-      playHouseFlickerPattern();
     }
     
     isPlaying = false;
@@ -87,59 +74,48 @@
     });
   }
 
-  // MODIFIED: Added the guard logic to this function.
+  async function handleDoorbellRing() {
+    if (isPlaying) return; 
+    isPlaying = true;
+
+    buzzSound.play();
+    await sleep(1000); 
+    
+    await playHouseFlickerPattern();
+    
+    isPlaying = false;
+  }
+
   async function playHouseFlickerPattern() {
-    // If a flicker loop is already running, do nothing.
-    if (isFlickerLoopRunning) return;
-    isFlickerLoopRunning = true;
+    const flickerDuration = 100;
+    const shortPause = 250;
+    const longPause = 600;
 
-    try {
-      const flickerDuration = 100;
-      const shortPause = 250;
-      const longPause = 600;
-      const loopPause = 2000;
+    for (const numStr of correctPattern) {
+      const numFlickers = parseInt(numStr, 10);
+      for (let i = 0; i < numFlickers; i++) {
+        houseFlicker = true;
+        await sleep(flickerDuration);
+        houseFlicker = false;
 
-      while (isFlickerLoopActive) {
-        for (const numStr of correctPattern) {
-          if (!isFlickerLoopActive) break;
-
-          const numFlickers = parseInt(numStr, 10);
-          for (let i = 0; i < numFlickers; i++) {
-            if (!isFlickerLoopActive) break;
-
-            buzzSound.play();
-            houseFlicker = true;
-            await sleep(flickerDuration);
-            houseFlicker = false;
-
-            if (i < numFlickers - 1) {
-              await sleep(shortPause);
-            }
-          }
-          if (!isFlickerLoopActive) break;
-          await sleep(longPause);
-        }
-
-        if (isFlickerLoopActive) {
-          await sleep(loopPause);
+        if (i < numFlickers - 1) {
+          await sleep(shortPause);
         }
       }
-    } finally {
-      // Ensure the guard is released when the loop finishes for any reason.
-      isFlickerLoopRunning = false;
+      await sleep(longPause);
     }
+  }
+  
+  function handleOpenDoorClick() {
+    creepyDoorSound.play();
+    dispatch('doorOpen');
   }
 
   function resetPattern() {
-      if (isPlaying) return;
-      knocks = [[], [], [], []];
-      resultMessage = '';
-      houseFlicker = false;
-
-      if (!isFlickerLoopActive) {
-        isFlickerLoopActive = true;
-        playHouseFlickerPattern();
-      }
+    if (isPlaying) return;
+    knocks = [[], [], [], []];
+    resultMessage = '';
+    houseFlicker = false;
   }
 </script>
 
@@ -147,17 +123,25 @@
 
 <main class="door-background min-h-screen flex flex-col items-center justify-center p-4">
   <div class="relative max-w-lg mb-8">
-
     <h1 class="text-6xl mb-4 font-creepster text-red-500 text-center">Trick or Treat</h1>
-
 
     <img src="/house3.jpeg" alt="House 3D" class="w-full object-contain"
          class:house-lightning-flicker={houseFlicker}
     />
+
+    <div class="flex flex-col items-center mt-6">
+      <p class="font-body text-amber-200/90 text-lg mb-2">Ring The Doorbell</p>
+      <div class="doorbell-plate">
+        <button on:click={handleDoorbellRing} disabled={isPlaying} class="doorbell-button"></button>
+      </div>
+    </div>
   </div>
 
   <div class="bg-[#5c3a21] border-8 border-[#3d2514] p-6 md:p-8 rounded-lg shadow-2xl shadow-black/60 text-center w-full max-w-md">
     
+    <h2 class="text-2xl font-title text-amber-300/70 mb-1 uppercase tracking-wider engraved-text">
+        Open Door
+    </h2>
     <h1 class="text-4xl md:text-5xl font-title text-amber-300 mb-2 uppercase tracking-wider engraved-text">
       Secret Knock
     </h1>
@@ -212,30 +196,38 @@
         </button>
     </div>
 
-    <div class="mt-6 h-8 flex items-center justify-center">
+    <div class="mt-6 h-20 flex flex-col items-center justify-center">
       {#if resultMessage}
-      <div class="text-2xl font-title tracking-widest"
-      >
-        {resultMessage}
-      </div>
-    {/if}
+        <div class="text-2xl font-title tracking-widest"
+             class:text-green-400={resultMessageType === 'correct'}
+             class:text-red-500={resultMessageType === 'incorrect'}
+        >
+          {resultMessage}
+        </div>
+
+        {#if resultMessageType === 'correct'}
+          <button on:click={handleOpenDoorClick} class="brass-button mt-4">
+            Open Door
+          </button>
+        {/if}
+      {/if}
     </div>
   </div>
 </main>
 
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=EB+Garamond&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=EB+Garamond&family=Creepster&display=swap');
 
-  /* Apply the custom fonts to Tailwind classes */
   .font-title {
     font-family: 'Cinzel Decorative', serif;
   }
-
+  .font-creepster {
+      font-family: 'Creepster', cursive;
+  }
   .font-body {
     font-family: 'EB Garamond', serif;
   }
 
-  /* Simulated wood grain background for the page */
   .door-background {
     background-color: #3d2514;
     background-image: linear-gradient(0deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.4) 100%), 
@@ -243,12 +235,10 @@
     background-size: 100%, 12px 100%;
   }
 
-  /* Engraved text effect for the title */
   .engraved-text {
     text-shadow: 1px 1px 0px #2a1b0e, 2px 2px 2px rgba(0,0,0,0.8);
   }
 
-  /* Custom styles for the brass buttons */
   .brass-button {
     @apply px-6 py-3 bg-yellow-800 text-amber-100 rounded-sm uppercase tracking-wider;
     @apply border-2 border-t-amber-500 border-l-amber-600 border-b-yellow-950 border-r-yellow-950;
@@ -262,11 +252,50 @@
      @apply bg-yellow-900 border-t-yellow-950 border-l-yellow-950 border-b-amber-500 border-r-amber-600;
   }
 
+  /* NEW: Styles for the doorbell plate */
+  .doorbell-plate {
+    width: 80px; /* Width of the plate */
+    height: 120px; /* Height of the plate (portrait aspect) */
+    background: linear-gradient(to bottom, #7a5230, #5c3a21); /* Darker wood/metal effect */
+    border: 3px solid #3d2514; /* Even darker edge */
+    border-radius: 8px; /* Slightly rounded corners */
+    box-shadow: 0px 5px 15px rgba(0,0,0,0.6), inset 0px 0px 10px rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px; /* Padding inside the plate */
+    margin-top: 10px; /* Space between text and plate */
+  }
 
-  /* Keyframe for the knocking animation */
+  /* Modified: Doorbell button inside the plate */
+  .doorbell-button {
+    width: 60px; /* Size of the circular button */
+    height: 60px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #ffd700, #b8860b); /* Gold/brass gradient */
+    border: 3px solid #8B4513; /* Darker brass edge */
+    box-shadow: 0px 3px 6px rgba(0,0,0,0.5), inset 0px 0px 3px rgba(255,255,255,0.4);
+    cursor: pointer;
+    transition: all 0.1s ease-out;
+  }
+
+  .doorbell-button:hover:not(:disabled) {
+    background: radial-gradient(circle at 30% 30%, #ffe766, #c8961b);
+  }
+
+  .doorbell-button:active:not(:disabled) {
+    transform: translateY(2px); /* Smaller push down */
+    box-shadow: 0px 1px 3px rgba(0,0,0,0.5), inset 0px 0px 5px rgba(0,0,0,0.4);
+  }
+
+  .doorbell-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
   @keyframes knock-animation {
     0% { transform: scale(1); }
-    50% { transform: scale(0.9) rotate(-5deg); } /* Simulate a slight movement */
+    50% { transform: scale(0.9) rotate(-5deg); }
     100% { transform: scale(1); }
   }
 
@@ -274,9 +303,8 @@
     animation: knock-animation 0.2s ease-in-out;
   }
 
-  /* New: Lightning flicker for the house image */
   .house-lightning-flicker {
     filter: brightness(150%) saturate(150%);
-    transition: filter 0.05s ease-out; /* Quick transition for flicker */
+    transition: filter 0.05s ease-out;
   }
 </style>

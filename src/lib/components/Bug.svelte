@@ -142,6 +142,11 @@
 </div>
 
 <style>
+  /* Add this block */
+  :global(body) {
+    overflow-x: hidden;
+  }
+
   :global(.bug) {
     pointer-events: none;
     z-index: 50; /* Ensure bugs are on top of other content if needed */

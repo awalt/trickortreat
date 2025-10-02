@@ -53,3 +53,7 @@
     src: ['/buzz.mp3'],
     volume: 0.3
 });
+  export const creepyDoorSound = new Howl({
+    src: ['/creepydoor.mp3'],
+    volume: 0.7
+});
