@@ -2,7 +2,7 @@
   import { onMount, onDestroy } from 'svelte';
   import { fade } from 'svelte/transition';
   import SubmitButton from './SubmitButton.svelte';
-  import { zoom } from 'svelte-zoom'; // Import the zoom action
+  import Zoom from 'svelte-zoom'; // Import the zoom action
 
   // Import the BugController class from your new JS file.
   import BugController, { bugControllerManager } from '$lib/bugController.js';
@@ -117,15 +117,14 @@
 >
   <div class="z-10 ">
     <div class="sticky top-8">
-      <h1 class="text-5xl md:text-6xl mb-4 font-serif text-yellow-400">
+      <h1 class="text-5xl md:text-2xl mb-4 font-serif text-yellow-400">
         Peephole
       </h1>
 
-      <img
+      <Zoom
         src="/path6.png"
         alt="A winding path"
-        class="w-full h-auto mx-auto"
-        use:zoom={{ minZoom: 1, maxZoom: 4 }}
+        class="w-full h-auto mx-auto max-w-2xl"
       />
 
       <p class="mt-6">
