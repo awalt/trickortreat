@@ -5,18 +5,24 @@
 
   // Import the BugController class from your new JS file.
   import BugController, { bugControllerManager } from '$lib/bugController.js';
-  import PinchZoom from 'pinch-zoom-js'; 
+  import PinchZoom from 'pinch-zoom-js';
 
   let spiderController;
-  let zoomableImage; 
+  let zoomableImage;
+  let pinchZoomInstance; // Variable to hold the PinchZoom instance
 
-  onMount(() => {
-    if (zoomableImage) {
-      new PinchZoom(zoomableImage, {
-        minZoom: 1, 
-        maxZoom: 4  
+  // We'll initialize the zoom library AFTER the image has loaded
+  function initializeZoom() {
+    if (zoomableImage && !pinchZoomInstance) {
+      pinchZoomInstance = new PinchZoom(zoomableImage, {
+        minZoom: 1,
+        maxZoom: 4
       });
     }
+  }
+
+  onMount(() => {
+    // PinchZoom initialization has been moved to the initializeZoom function
 
     spiderController = new BugController();
     spiderController.initialize({
@@ -59,7 +65,7 @@
             bugInstance.angle_deg = -Math.atan2(dy, dx) * (180 / Math.PI);
             bugInstance.angle_rad = bugInstance.deg2rad(bugInstance.angle_deg);
           }
-        }, 50); 
+        }, 50);
       });
     }
 
@@ -79,8 +85,7 @@
       const leftX = window.innerWidth * 0.2;
       const rightX = window.innerWidth * 0.8;
       const topY = window.innerHeight * 0.2;
-      // To make page scrollable, let's make the patrol path longer
-      const bottomY = window.innerHeight * 1.2; // Make spider walk below the fold
+      const bottomY = window.innerHeight * 1.2;
       const startY = window.innerHeight - spiderController.options.bugHeight;
       const offscreenY = -spiderController.options.bugHeight;
 
@@ -99,6 +104,10 @@
   });
 
   onDestroy(() => {
+    // Clean up both the zoom instance and the bugs
+    if (pinchZoomInstance) {
+      pinchZoomInstance.destroy();
+    }
     if (typeof spiderController != "undefined") {
       bugControllerManager.killAll();
     }
@@ -119,21 +128,25 @@
   }
 </script>
 
-<div 
-  class="relative w-full flex flex-col items-center justify-center p-8 text-center bg-black min-h-screen" 
+<div
+  class="relative w-full flex flex-col items-center justify-center p-8 text-center bg-black min-h-screen"
   style="background-image: url('/wood.png'); background-size: cover; background-position: center;"
   in:fade={{ duration: 1000 }}
 >
-  <div class="z-10 "> <div class="sticky top-8"> <h1 class="text-5xl md:text-6xl mb-4 font-serif text-yellow-400">
+  <div class="z-10 ">
+    <div class="sticky top-8">
+      <h1 class="text-5xl md:text-6xl mb-4 font-serif text-yellow-400">
         Peephole
       </h1>
-      
-      <img 
-        bind:this={zoomableImage} 
-        src="/path6.png" 
-        alt="A winding path" 
-        class="w-full h-auto max-w-2xl mx-auto" style="touch-action: none;"
-      >
+
+      <img
+        bind:this={zoomableImage}
+        src="/path6.png"
+        alt="A winding path"
+        class="w-full h-auto mx-auto"
+        style="touch-action: none;"
+        on:load={initializeZoom}
+      />
 
       <p class="mt-6">
         Unlock Peephole
