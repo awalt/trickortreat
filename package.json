@@ -28,6 +28,7 @@
     "howler": "^2.2.4",
     "install": "^0.13.0",
     "interactjs": "^1.10.27",
+    "pinch-zoom-js": "^2.3.5",
     "svelte-carousel": "^1.0.25",
     "swiper": "^11.2.10"
   }

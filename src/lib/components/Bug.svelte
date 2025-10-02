@@ -5,12 +5,19 @@
 
   // Import the BugController class from your new JS file.
   import BugController, { bugControllerManager } from '$lib/bugController.js';
+  import PinchZoom from 'pinch-zoom-js'; 
 
   let spiderController;
+  let zoomableImage; 
 
   onMount(() => {
-    // Note: The original library was designed to create swarms.
-    // To control a single bug, we can create a controller with minBugs = 1 and maxBugs = 1.
+    if (zoomableImage) {
+      new PinchZoom(zoomableImage, {
+        minZoom: 1, 
+        maxZoom: 4  
+      });
+    }
+
     spiderController = new BugController();
     spiderController.initialize({
       imageSprite: 'spider-sprite.png',
@@ -29,9 +36,8 @@
       maxBugs: 1
     });
 
-    const spider = spiderController.bugs[0]; // Get the single spider instance
+    const spider = spiderController.bugs[0];
 
-    // This async function directs the bug to a target coordinate.
     async function walkTo(bugInstance, target) {
       return new Promise(resolve => {
         const interval = setInterval(() => {
@@ -46,99 +52,67 @@
           const dy = target.y - pos.top;
           const distance = Math.sqrt(dx * dx + dy * dy);
 
-          if (distance < 15) { // If close enough, stop and resolve
+          if (distance < 15) {
             clearInterval(interval);
             resolve();
           } else {
-            // Point the bug towards the target
             bugInstance.angle_deg = -Math.atan2(dy, dx) * (180 / Math.PI);
             bugInstance.angle_rad = bugInstance.deg2rad(bugInstance.angle_deg);
           }
-        }, 50); // Check position and adjust angle every 50ms
+        }, 50); 
       });
     }
 
-    // This robust function sets the spider's position.
     async function setSpiderPosition(x, y) {
       return new Promise(resolve => {
         const interval = setInterval(() => {
-          // Wait until the spider's HTML element (spider.bug) is created by the library
           if (spider && spider.bug) {
             clearInterval(interval);
-            
-            // **THE FIX**: Use the library's own method to set the position.
-            // The method takes (top, left) arguments, so we pass y then x.
             spider.setPos(y, x);
-            
             resolve();
           }
-        }, 50); // Check every 50ms
+        }, 50);
       });
     }
 
     async function spiderPatrol() {
-      // Define path waypoints based on screen dimensions
       const leftX = window.innerWidth * 0.2;
       const rightX = window.innerWidth * 0.8;
       const topY = window.innerHeight * 0.2;
-      const bottomY = window.innerHeight * 0.8;
-      // Correct starting position: place the spider's bottom edge at the screen's bottom
+      // To make page scrollable, let's make the patrol path longer
+      const bottomY = window.innerHeight * 1.2; // Make spider walk below the fold
       const startY = window.innerHeight - spiderController.options.bugHeight;
       const offscreenY = -spiderController.options.bugHeight;
 
-      // Loop the spider's path indefinitely
       while (true) {
-        // Use the new robust function to place the spider at its start point
         await setSpiderPosition(leftX, startY);
         spider.go();
-
-        // 1. March up
         await walkTo(spider, { x: leftX, y: topY });
-
-        // 2. March right
         await walkTo(spider, { x: rightX, y: topY });
-
-        // 3. March down
         await walkTo(spider, { x: rightX, y: bottomY });
-
-        // 4. March left
         await walkTo(spider, { x: leftX, y: bottomY });
-
-        // 5. March up and offscreen
         await walkTo(spider, { x: leftX, y: offscreenY });
       }
     }
 
-    // Start the spider's walk after a delay
     setTimeout(spiderPatrol, 2000);
   });
 
   onDestroy(() => {
-    // Check if the controller was initialized before trying to destroy it
     if (typeof spiderController != "undefined") {
       bugControllerManager.killAll();
     }
   });
 
-
-  // Define the correct answer with 5 directions.
   const correctAnswer = ['up', 'right', 'down', 'left', 'up'];
-
-  // This variable will be updated based on the user's submission.
   let isCorrect = null;
 
-  /**
-   * This function is called when the SubmitButton dispatches a 'submit' event.
-   */
   function checkAnswer(event) {
     const submittedCombination = event.detail;
     if (!submittedCombination) return;
     isCorrect = JSON.stringify(submittedCombination) === JSON.stringify(correctAnswer);
   }
 
-  /**
-   * This function is called when the user clicks 'Continue' after a correct answer.
-   */
   function handleContinue() {
     console.log('Proceeding to the next level!');
     alert('You solved it! We would move on... but this is not coded yet.');
@@ -146,26 +120,38 @@
 </script>
 
 <div 
-  class="relative w-full h-full flex flex-col items-center justify-center p-8 text-center bg-slate-800 text-gray-500 overflow-hidden" 
+  class="relative w-full flex flex-col items-center justify-center p-8 text-center bg-black min-h-screen" 
   style="background-image: url('/wood.png'); background-size: cover; background-position: center;"
   in:fade={{ duration: 1000 }}
 >
-  <div class="z-10">
-    <h1 class="text-5xl md:text-6xl mb-4 font-serif text-yellow-400">
-      Peephole
-    </h1>
-    <img src="/path4.png" alt="A winding path" class="w-full h-auto max-w-lg">
+  <div class="z-10 "> <div class="sticky top-8"> <h1 class="text-5xl md:text-6xl mb-4 font-serif text-yellow-400">
+        Peephole
+      </h1>
+      
+      <img 
+        bind:this={zoomableImage} 
+        src="/path6.png" 
+        alt="A winding path" 
+        class="w-full h-auto max-w-2xl mx-auto" style="touch-action: none;"
+      >
 
-
-    <p class="mt-6">
-      Unlock Peephole
-    </p>
-    <SubmitButton
-      {isCorrect}
-      inputType="directional"
-      combinationLength={5}
-      on:submit={checkAnswer}
-      on:continue={handleContinue}
-    />
+      <p class="mt-6">
+        Unlock Peephole
+      </p>
+      <SubmitButton
+        {isCorrect}
+        inputType="directional"
+        combinationLength={5}
+        on:submit={checkAnswer}
+        on:continue={handleContinue}
+      />
+    </div>
   </div>
 </div>
+
+<style>
+  :global(.bug) {
+    pointer-events: none;
+    z-index: 50; /* Ensure bugs are on top of other content if needed */
+  }
+</style>
