@@ -19,7 +19,7 @@
 
   // Sound for successfully solving a puzzle.
   export const successSound = new Howl({
-    src: ['/correct.mp3'],
+    src: ['/unlock.mp3'],
     volume: 0.8
   });
 

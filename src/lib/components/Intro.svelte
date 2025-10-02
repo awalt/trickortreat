@@ -84,24 +84,24 @@
       class="relative z-10 flex flex-col items-center w-full max-w-4xl p-8"
       in:fade={{ delay: 200, duration: 2000 }}
     >
-      <div class="flex flex-col landscape:flex-row landscape:items-center landscape:gap-8 landscape:justify-center items-center w-full">
+      <div class=" w-full">
         
-        <div class="flex flex-col items-center landscape:items-center">
-          <div class="w-1/3 h-px bg-gradient-to-r from-transparent via-orange-700 to-transparent mb-4 landscape:hidden"></div>
+        <div class="">
+          <div class="h-px bg-gradient-to-r from-transparent via-orange-700 to-transparent mb-4 landscape:hidden"></div>
           <h1 
             class="text-6xl md:text-8xl landscape:text-5xl font-bold mb-4 landscape:mb-0 tracking-wider uppercase" 
             style="font-family: 'Creepster', cursive; text-shadow: 0 0 15px #ff6600, 0 0 25px #ff6600;"
           >
-            Trick Or Treat
+            Where Trick or Treat Meets Escape&nbsp;Room
           </h1>
-          <div class="w-1/3 h-px bg-gradient-to-r from-transparent via-orange-700 to-transparent mt-4 landscape:hidden"></div>
+          <div class="h-px bg-gradient-to-r from-transparent via-orange-700 to-transparent mt-4 landscape:hidden"></div>
         </div>
 
-        <div class="flex flex-col items-center landscape:items-center landscape:text-left">
-          <p class="font-sans text-xl landscape:text-lg my-8 landscape:my-0 tracking-widest font-bold
+        <div class="">
+          <p class="font-sans text-xl my-4 tracking-widest font-bold
                 text-gray-200
-                animate-flicker landscape:max-w-xs">
-            This won't be just an easy candy&nbsp;handout.
+                animate-flicker text-center">
+            Solve the puzzles. Claim the candy… if you dare.
           </p>
         </div>
       </div>

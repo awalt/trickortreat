@@ -146,19 +146,20 @@
 </script>
 
 <div 
-  class="relative w-full h-full flex flex-col items-center justify-center p-8 text-center bg-green-900 text-gray-300 overflow-hidden" 
+  class="relative w-full h-full flex flex-col items-center justify-center p-8 text-center bg-slate-800 text-gray-500 overflow-hidden" 
+  style="background-image: url('/wood.png'); background-size: cover; background-position: center;"
   in:fade={{ duration: 1000 }}
 >
   <div class="z-10">
     <h1 class="text-5xl md:text-6xl mb-4 font-serif text-yellow-400">
       Peephole
     </h1>
-    <img src="/path.png" alt="A winding path" class="w-full h-auto max-w-lg">
-    <p class="text-lg md:text-xl max-w-2xl mx-auto">
-      There would be like a vignette peephole around the image or something.
+    <img src="/path4.png" alt="A winding path" class="w-full h-auto max-w-lg">
+
+
+    <p class="mt-6">
+      Unlock Peephole
     </p>
-
-
     <SubmitButton
       {isCorrect}
       inputType="directional"

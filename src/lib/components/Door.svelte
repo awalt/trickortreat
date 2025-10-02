@@ -95,21 +95,15 @@
           </p>
         </div>
       </swiper-slide>
-      <swiper-slide>
-        <div class="w-full aspect-square flex flex-col items-center justify-center">
-          <div class="swiper-zoom-container">
-            <img src="/mailbox2.jpeg" alt="Mailbox" class="max-h-full max-w-full object-contain" />
-          </div>
-          <p class="text-3xl mt-3 font-creepster text-gray-300" style="text-shadow: 1px 1px 3px #000;">
-            Mailbox
-          </p>
-        </div>
-      </swiper-slide>
+      
     </swiper-container>
   </div>
 
   <div class="flex flex-col items-center mt-8">
     <!-- The input is gone, and we now pass props to the button -->
+     <p>
+        Unlock Peephole
+     </p>
     <SubmitButton
       {isCorrect}
       maxLength={3}
