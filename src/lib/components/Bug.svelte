@@ -2,28 +2,14 @@
   import { onMount, onDestroy } from 'svelte';
   import { fade } from 'svelte/transition';
   import SubmitButton from './SubmitButton.svelte';
+  import { zoom } from 'svelte-zoom'; // Import the zoom action
 
   // Import the BugController class from your new JS file.
   import BugController, { bugControllerManager } from '$lib/bugController.js';
-  import PinchZoom from 'pinch-zoom-js';
 
   let spiderController;
-  let zoomableImage;
-  let pinchZoomInstance; // Variable to hold the PinchZoom instance
-
-  // We'll initialize the zoom library AFTER the image has loaded
-  function initializeZoom() {
-    if (zoomableImage && !pinchZoomInstance) {
-      pinchZoomInstance = new PinchZoom(zoomableImage, {
-        minZoom: 1,
-        maxZoom: 4
-      });
-    }
-  }
 
   onMount(() => {
-    // PinchZoom initialization has been moved to the initializeZoom function
-
     spiderController = new BugController();
     spiderController.initialize({
       imageSprite: 'spider-sprite.png',
@@ -104,10 +90,6 @@
   });
 
   onDestroy(() => {
-    // Clean up both the zoom instance and the bugs
-    if (pinchZoomInstance) {
-      pinchZoomInstance.destroy();
-    }
     if (typeof spiderController != "undefined") {
       bugControllerManager.killAll();
     }
@@ -140,12 +122,10 @@
       </h1>
 
       <img
-        bind:this={zoomableImage}
         src="/path6.png"
         alt="A winding path"
         class="w-full h-auto mx-auto"
-        style="touch-action: none;"
-        on:load={initializeZoom}
+        use:zoom={{ minZoom: 1, maxZoom: 4 }}
       />
 
       <p class="mt-6">
