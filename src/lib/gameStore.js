@@ -15,6 +15,7 @@ export const gamePagesOrder = [
     "Door",
     "Bug",
     "Knock",
+    "Candy",
     "Conclusion"
 ]
 

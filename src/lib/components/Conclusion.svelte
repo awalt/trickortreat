@@ -1,16 +1,14 @@
-<!-- FILE: src/routes/Conclusion.svelte -->
 <script>
   import { onMount } from 'svelte';
   
-  // Props that should be passed from the game
-  export let finalTime = "05:42"; // Default time in MM:SS format
+  // UPDATED: finalTime is no longer a prop and will be loaded from localStorage.
+  let finalTime = "00:00"; 
   export let playerName = "";
   
   let showNameInput = false;
   let isSubmitting = false;
   let nameSubmitted = false;
   
-  // Mock highscores data - in real app this would come from a database
   let highscores = [
     { name: "SpookMaster", time: "03:45" },
     { name: "GhostHunter", time: "04:12" },
@@ -19,6 +17,15 @@
     { name: "BatSignal", time: "05:28" }
   ];
   
+  // NEW: This helper function formats seconds into MM:SS
+  function formatTimeFromSeconds(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    const paddedMinutes = String(minutes).padStart(2, '0');
+    const paddedSeconds = String(remainingSeconds).padStart(2, '0');
+    return `${paddedMinutes}:${paddedSeconds}`;
+  }
+
   function showHighscoreInput() {
     showNameInput = true;
   }
@@ -27,12 +34,10 @@
     if (playerName.trim()) {
       isSubmitting = true;
       
-      // Simulate API call
       setTimeout(() => {
-        // Add player to highscores (in real app, this would be handled server-side)
         highscores = [...highscores, { name: playerName.trim(), time: finalTime }]
           .sort((a, b) => timeToSeconds(a.time) - timeToSeconds(b.time))
-          .slice(0, 10); // Keep top 10
+          .slice(0, 10);
         
         isSubmitting = false;
         nameSubmitted = true;
@@ -54,7 +59,6 @@
         url: window.location.origin
       });
     } else {
-      // Fallback for browsers that don't support Web Share API
       const shareText = `I just escaped the Halloween Escape Room in ${finalTime}! Can you beat my time? ${window.location.origin}`;
       navigator.clipboard.writeText(shareText).then(() => {
         alert('Share link copied to clipboard!');
@@ -63,7 +67,13 @@
   }
   
   onMount(() => {
-    // Spooky entrance animation
+    // --- NEW: Read the final time from localStorage ---
+    const finalTimeInSeconds = localStorage.getItem('gameFinalTime');
+    if (finalTimeInSeconds) {
+      finalTime = formatTimeFromSeconds(parseInt(finalTimeInSeconds, 10));
+    }
+    // --- End of new code ---
+
     const elements = document.querySelectorAll('.animate-in');
     elements.forEach((el, index) => {
       setTimeout(() => {
@@ -208,7 +218,7 @@
             </div>
             
             <a 
-              href="https://www.mobileescapes.ca/escape/once-in-a-blue-moon"
+              href="https://www.mobileescapes.ca/about-us"
               target="_blank"
               rel="noopener noreferrer"
               class="inline-block bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-bold transition-all duration-300 transform hover:scale-105 hover:shadow-xl shadow-blue-500/50"

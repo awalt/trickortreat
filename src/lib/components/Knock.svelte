@@ -1,29 +1,34 @@
 <script>
-  import { createEventDispatcher } from 'svelte';
-  import { onDestroy } from 'svelte';
+  import { createEventDispatcher, onMount, onDestroy } from 'svelte';
   
-  import { knockSound, buzzSound, creepyDoorSound } from '$lib/audio.js';
-
-  import JumpScare from '$lib/components/JumpScare.svelte';
+  // NEW: Import the reusable timer component
+  import Timer from '$lib/components/Timer.svelte';
+  
+  import { knockSound, buzzSound, creepyDoorSound, dingDongSound } from '$lib/audio.js';
 
   const dispatch = createEventDispatcher();
   const sleep = ms => new Promise(r => setTimeout(r, ms));
 
+  // --- Component State ---
   let knocks = [[], [], [], []];
   let isPlaying = false; 
   let resultMessage = '';
   let resultMessageType = ''; 
   let playingCell = null; 
   let houseFlicker = false; 
-  
   const correctPattern = '4132';
 
   onDestroy(() => {
+    // Clean up sounds (timer cleanup is now handled by the GameTimer component)
     buzzSound.stop();
     knockSound.stop();
     creepyDoorSound.stop();
+    dingDongSound.stop();
   });
 
+  // --- Timer formatting function has been removed ---
+
+  // --- Game Logic ---
   function handleKnock(rowIndex, colIndex) {
     if (isPlaying) return;
     if (resultMessage) {
@@ -54,6 +59,18 @@
     if (pattern === correctPattern) {
       resultMessage = 'ACCESS GRANTED';
       resultMessageType = 'correct';
+
+      // --- ADD THIS CODE BLOCK TO STOP THE TIMER ---
+      const startTime = localStorage.getItem('gameStartTime');
+      if (startTime) {
+        const finalTimeInSeconds = Math.floor((Date.now() - parseInt(startTime, 10)) / 1000);
+        localStorage.setItem('gameFinalTime', finalTimeInSeconds);
+      }
+      localStorage.setItem('isGameTimerRunning', 'false');
+      // Notify the timer component to update its display to the final time.
+      window.dispatchEvent(new CustomEvent('reset-timer'));
+      // --- END OF NEW CODE ---
+
     } else {
       resultMessage = 'ACCESS DENIED';
       resultMessageType = 'incorrect';
@@ -77,30 +94,27 @@
   async function handleDoorbellRing() {
     if (isPlaying) return; 
     isPlaying = true;
-
-    buzzSound.play();
-    await sleep(1000); 
-    
+    dingDongSound.play();
+    await sleep(2000); 
+    //buzzSound.play();
+    //await sleep(1000); 
     await playHouseFlickerPattern();
-    
     isPlaying = false;
   }
 
   async function playHouseFlickerPattern() {
     const flickerDuration = 100;
     const shortPause = 250;
-    const longPause = 600;
+    const longPause = 800;
 
     for (const numStr of correctPattern) {
       const numFlickers = parseInt(numStr, 10);
       for (let i = 0; i < numFlickers; i++) {
         houseFlicker = true;
+        buzzSound.play();
         await sleep(flickerDuration);
         houseFlicker = false;
-
-        if (i < numFlickers - 1) {
-          await sleep(shortPause);
-        }
+        if (i < numFlickers - 1) await sleep(shortPause);
       }
       await sleep(longPause);
     }
@@ -119,7 +133,8 @@
   }
 </script>
 
-<JumpScare delay={7000} />
+<!-- NEW: Using the reusable GameTimer component -->
+<Timer />
 
 <main class="door-background min-h-screen flex flex-col items-center justify-center p-4">
   <div class="relative max-w-lg mb-8">
@@ -138,7 +153,6 @@
   </div>
 
   <div class="bg-[#5c3a21] border-8 border-[#3d2514] p-6 md:p-8 rounded-lg shadow-2xl shadow-black/60 text-center w-full max-w-md">
-    
     <h2 class="text-2xl font-title text-amber-300/70 mb-1 uppercase tracking-wider engraved-text">
         Open Door
     </h2>
@@ -180,18 +194,10 @@
     </div>
 
     <div class="flex items-center justify-center gap-4">
-        <button
-          on:click={resetPattern}
-          disabled={isPlaying}
-          class="brass-button"
-        >
+        <button on:click={resetPattern} disabled={isPlaying} class="brass-button">
           Reset
         </button>
-        <button
-          on:click={handleSubmit}
-          disabled={isPlaying}
-          class="brass-button px-8"
-        >
+        <button on:click={handleSubmit} disabled={isPlaying} class="brass-button px-8">
           Knock
         </button>
     </div>
@@ -204,7 +210,6 @@
         >
           {resultMessage}
         </div>
-
         {#if resultMessageType === 'correct'}
           <button on:click={handleOpenDoorClick} class="brass-button mt-4">
             Open Door
@@ -218,15 +223,11 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=EB+Garamond&family=Creepster&display=swap');
 
-  .font-title {
-    font-family: 'Cinzel Decorative', serif;
-  }
-  .font-creepster {
-      font-family: 'Creepster', cursive;
-  }
-  .font-body {
-    font-family: 'EB Garamond', serif;
-  }
+  /* The timer's style has been moved to the GameTimer.svelte component */
+
+  .font-title { font-family: 'Cinzel Decorative', serif; }
+  .font-creepster { font-family: 'Creepster', cursive; }
+  .font-body { font-family: 'EB Garamond', serif; }
 
   .door-background {
     background-color: #3d2514;
@@ -235,9 +236,7 @@
     background-size: 100%, 12px 100%;
   }
 
-  .engraved-text {
-    text-shadow: 1px 1px 0px #2a1b0e, 2px 2px 2px rgba(0,0,0,0.8);
-  }
+  .engraved-text { text-shadow: 1px 1px 0px #2a1b0e, 2px 2px 2px rgba(0,0,0,0.8); }
 
   .brass-button {
     @apply px-6 py-3 bg-yellow-800 text-amber-100 rounded-sm uppercase tracking-wider;
@@ -245,49 +244,39 @@
     @apply font-title text-sm font-bold transition-all duration-150;
     @apply disabled:opacity-50 disabled:cursor-not-allowed;
   }
-  .brass-button:not(:disabled):hover {
-     @apply bg-yellow-700;
-  }
-  .brass-button:not(:disabled):active {
-     @apply bg-yellow-900 border-t-yellow-950 border-l-yellow-950 border-b-amber-500 border-r-amber-600;
-  }
+  .brass-button:not(:disabled):hover { @apply bg-yellow-700; }
+  .brass-button:not(:disabled):active { @apply bg-yellow-900 border-t-yellow-950 border-l-yellow-950 border-b-amber-500 border-r-amber-600; }
 
-  /* NEW: Styles for the doorbell plate */
   .doorbell-plate {
-    width: 80px; /* Width of the plate */
-    height: 120px; /* Height of the plate (portrait aspect) */
-    background: linear-gradient(to bottom, #7a5230, #5c3a21); /* Darker wood/metal effect */
-    border: 3px solid #3d2514; /* Even darker edge */
-    border-radius: 8px; /* Slightly rounded corners */
+    width: 80px;
+    height: 120px;
+    background: linear-gradient(to bottom, #7a5230, #5c3a21);
+    border: 3px solid #3d2514;
+    border-radius: 8px;
     box-shadow: 0px 5px 15px rgba(0,0,0,0.6), inset 0px 0px 10px rgba(255,255,255,0.1);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 10px; /* Padding inside the plate */
-    margin-top: 10px; /* Space between text and plate */
+    padding: 10px;
+    margin-top: 10px;
   }
 
-  /* Modified: Doorbell button inside the plate */
   .doorbell-button {
-    width: 60px; /* Size of the circular button */
+    width: 60px;
     height: 60px;
     border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, #ffd700, #b8860b); /* Gold/brass gradient */
-    border: 3px solid #8B4513; /* Darker brass edge */
+    background: radial-gradient(circle at 30% 30%, #ffd700, #b8860b);
+    border: 3px solid #8B4513;
     box-shadow: 0px 3px 6px rgba(0,0,0,0.5), inset 0px 0px 3px rgba(255,255,255,0.4);
     cursor: pointer;
     transition: all 0.1s ease-out;
   }
 
-  .doorbell-button:hover:not(:disabled) {
-    background: radial-gradient(circle at 30% 30%, #ffe766, #c8961b);
-  }
-
+  .doorbell-button:hover:not(:disabled) { background: radial-gradient(circle at 30% 30%, #ffe766, #c8961b); }
   .doorbell-button:active:not(:disabled) {
-    transform: translateY(2px); /* Smaller push down */
+    transform: translateY(2px);
     box-shadow: 0px 1px 3px rgba(0,0,0,0.5), inset 0px 0px 5px rgba(0,0,0,0.4);
   }
-
   .doorbell-button:disabled {
     opacity: 0.6;
     cursor: not-allowed;
@@ -299,12 +288,11 @@
     100% { transform: scale(1); }
   }
 
-  .animate-knock {
-    animation: knock-animation 0.2s ease-in-out;
-  }
-
+  .animate-knock { animation: knock-animation 0.2s ease-in-out; }
   .house-lightning-flicker {
     filter: brightness(150%) saturate(150%);
     transition: filter 0.05s ease-out;
   }
 </style>
+
+

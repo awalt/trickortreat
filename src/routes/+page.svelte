@@ -6,12 +6,13 @@
     import Bug from '$lib/components/Bug.svelte';
     import Conclusion from '$lib/components/Conclusion.svelte';
     import VideoTransition from '$lib/components/VideoTransition.svelte';
-    import Splash from '$lib/components/Splash.svelte'; // Import Splash component
+    import Splash from '$lib/components/Splash.svelte'; 
     import DoorScene from '$lib/components/DoorScene.svelte';
+    import Candy from '$lib/components/Candy.svelte';
     import { gameStore } from '$lib/gameStore.js';
 </script>
 
-<main class="h-screen w-screen bg-gray-900 text-white">
+<main class="h-screen w-full bg-gray-900 text-white">
     {#if $gameStore.currentView === 'Splash'}
         <Splash />
     {:else if $gameStore.currentView === 'Intro'}
@@ -28,6 +29,8 @@
         <Knock />
     {:else if $gameStore.currentView === 'Bug'}
         <Bug />
+        {:else if $gameStore.currentView === 'Candy'}
+        <Candy />
     {:else if $gameStore.currentView === 'Conclusion'}
         <Conclusion />
     {/if}

@@ -51,9 +51,16 @@
 });
   export const buzzSound = new Howl({
     src: ['/buzz.mp3'],
-    volume: 0.3
+    volume: 0.4
 });
   export const creepyDoorSound = new Howl({
     src: ['/creepydoor.mp3'],
     volume: 0.7
+});
+  export const congratsSound = new Howl({
+    src: ['/congrats.wav']
+});
+  export const dingDongSound = new Howl({
+    src: ['/dingdong.mp3'],
+    volume: 0.4
 });
