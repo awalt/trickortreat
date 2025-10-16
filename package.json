@@ -22,6 +22,7 @@
     "vite": "^7.0.4"
   },
   "dependencies": {
+    "@rollup/rollup-linux-x64-gnu": "^4.52.4",
     "@sveltejs/adapter-cloudflare": "^7.2.2",
     "@tailwindcss/cli": "^4.1.12",
     "@tailwindcss/vite": "^4.1.12",
