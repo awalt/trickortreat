@@ -3,32 +3,77 @@
 @tailwind components;
 @tailwind utilities;
 
-body, html {
-    background:black;
-  -webkit-user-select: none; /* Safari */
-  -ms-user-select: none; /* IE 10 and IE 11 */
-  user-select: none; /* Standard syntax */
-  overscroll-behavior-y: contain;
+body,
+html {
+    background: black;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+    overscroll-behavior-y: contain;
 }
 
 .font-creepster {
-  visibility: hidden;
-    font-family: 'Creepster', cursive;
-  }
+    visibility: hidden;
+    font-family: "Creepster", cursive;
+}
 
-/* Once the 'font-loaded' class is added to the body, 
+/* Once the 'font-loaded' class is added to the body,
   we make the text with the 'font-creepster' class visible.
 */
 .font-loaded .font-creepster {
-  visibility: visible;
+    visibility: visible;
 }
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
 }
 
-input[type=number] {
-  -moz-appearance: textfield; /* Firefox */
-  appearance: textfield; /* Other browsers */
+input[type="number"] {
+    -moz-appearance: textfield; /* Firefox */
+    appearance: textfield; /* Other browsers */
+}
+
+video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Hide all video controls */
+    controls: none;
+}
+
+/* Additional CSS to ensure no controls show on various browsers */
+video::-webkit-media-controls {
+    display: none !important;
+}
+
+video::-webkit-media-controls-panel {
+    display: none !important;
+}
+
+video::-webkit-media-controls-play-button {
+    display: none !important;
+}
+
+video::-webkit-media-controls-start-playback-button {
+    display: none !important;
+}
+
+/* Firefox */
+video::-moz-media-controls {
+    display: none !important;
+}
+
+/* General fallback */
+video::media-controls {
+    display: none !important;
+}
+
+/* Ensure video fills container without any UI */
+video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    outline: none;
+    border: none;
 }

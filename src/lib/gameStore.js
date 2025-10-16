@@ -81,11 +81,24 @@ function createGameStore() {
         const currentIndex = gamePagesOrder.indexOf(state.currentView);
         const nextView = gamePagesOrder[currentIndex + 1] || "Conclusion";
 
-        // If the next view is the conclusion, stop the timer.
+        // ✅ FIX: Stop the timer BEFORE navigating if next view is Conclusion
         if (nextView === "Conclusion") {
-          // We need to call the stopTimer method from outside the update function.
-          // We'll use a `setTimeout` to ensure it runs after the state update.
-          setTimeout(() => gameStore.stopTimer(), 0);
+          // Stop timer synchronously before state update
+          if (typeof window !== "undefined") {
+            const startTime = localStorage.getItem("gameStartTime");
+            if (startTime) {
+              const finalTimeInSeconds = Math.floor(
+                (Date.now() - parseInt(startTime, 10)) / 1000,
+              );
+              localStorage.setItem(
+                "gameFinalTime",
+                finalTimeInSeconds.toString(),
+              );
+            }
+            localStorage.setItem("isGameTimerRunning", "false");
+            // Dispatch event so Timer component updates
+            window.dispatchEvent(new CustomEvent("reset-timer"));
+          }
         }
 
         return {
