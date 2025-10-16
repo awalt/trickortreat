@@ -243,7 +243,6 @@
                             name="leaderboard"
                             method="POST"
                             netlify
-                            on:submit|preventDefault={submitScore}
                             class="flex flex-col sm:flex-row gap-4 items-center justify-center"
                         >
                             <input
