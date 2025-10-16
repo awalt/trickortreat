@@ -35,6 +35,7 @@
 
     // Remove the old submitScore function and replace it with this.
     async function handleSubmit() {
+        console.log("handleSubmit");
         if (!playerName.trim()) return;
 
         isSubmitting = true;
@@ -68,6 +69,7 @@
 
                 nameSubmitted = true; // This shows your success message ✅
                 showNameInput = false; // This hides the form
+                console.log("OK!");
             } else {
                 // Handle server-side errors
                 alert(

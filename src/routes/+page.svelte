@@ -36,9 +36,3 @@
         <Conclusion />
     {/if}
 </main>
-
-<form name="leaderboard" netlify netlify-honeypot="bot-field" hidden>
-    <input type="hidden" name="form-name" value="leaderboard" />
-    <input type="text" name="playerName" />
-    <input type="text" name="time" />
-</form>
