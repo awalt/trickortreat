@@ -275,7 +275,7 @@
                             name="leaderboard"
                             method="POST"
                             netlify
-                            on:submit|preventDefault={submitScore}
+                            on:submit|preventDefault={handleSubmit}
                             class="flex flex-col sm:flex-row gap-4 items-center justify-center"
                         >
                             <input
