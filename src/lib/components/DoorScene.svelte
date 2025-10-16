@@ -47,7 +47,7 @@
 
     <div class="relative z-10">
         <div class="max-w-3xl mx-auto">
-            <h1 class="text-5xl md:text-7xl font-creepster text-gray-200 text-shadow-lg mb-8">Every other house on this street has been visited.
+            <h1 class="text-5xl md:text-7xl font-bold font-sans text-gray-200 text-shadow-lg mb-8">Every other house on this street has been visited.
             Will you be its first trick or treater?</h1>
         </div>
         <div class="flex gap-4 justify-center">
@@ -60,8 +60,8 @@
             </button>
             <button
             on:click={handleGoToDoor}
-            
-            class="relative inline-block px-10 py-3 font-bold text-lg text-white uppercase 
+
+            class="relative inline-block px-10 py-3 font-bold text-lg text-white uppercase
         tracking-widest transition-all duration-300
                     bg-black/50 border border-orange-800/50 rounded-tl-xl rounded-br-xl
                     hover:border-orange-600 hover:shadow-[0_0_20px_rgba(255,110,50,0.5)] hover:scale-110">
@@ -76,11 +76,11 @@
   <div
     in:scale={{ duration: 300, start: 0.9, opacity: 0 }}
     out:scale={{ duration: 200, start: 1, end: 0.9, opacity: 0 }}
-    
+
     class="relative w-full max-w-lg p-8 bg-gradient-to-br from-gray-900 to-black/90 text-center
-  
+
            border-2 border-orange-800/50 shadow-[0_0_30px_rgba(255,110,50,0.3)]">
-    
+
     <div class="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-orange-500"></div>
     <div class="absolute -top-1 -right-1 w-4 h-4 border-t-2 border-r-2 border-orange-500"></div>
     <div class="absolute -bottom-1 -left-1 w-4 h-4 border-b-2 border-l-2 border-orange-500"></div>
@@ -88,10 +88,10 @@
 
     <h2 class="text-3xl font-creepster text-orange-400 mb-4 text-shadow-md">You don't have the courage yet.</h2>
     <p class="text-gray-300 text-lg mb-8">Take a few deep breaths.</p>
- 
+
        <button
       on:click={closeModal}
-  
+
      class="relative inline-block px-10 py-3 font-bold text-lg text-white uppercase tracking-widest transition-all duration-300
              bg-black/50 border border-orange-800/50 rounded-tl-xl rounded-br-xl
              hover:border-orange-600 hover:shadow-[0_0_20px_rgba(255,110,50,0.5)] hover:scale-110">

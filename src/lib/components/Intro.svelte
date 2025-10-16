@@ -5,6 +5,9 @@
   import { onMount } from 'svelte';
 
 
+  let showInfoModal = false;
+
+
   function handleStart() {
     clickSound.play();
     if (!moodMusic.playing()) {
@@ -25,6 +28,9 @@
 
     gameStore.startGame();
     //gameStore.solvePuzzle();
+  }
+  function toggleInfoModal() {
+    showInfoModal = !showInfoModal;
   }
 
   onMount(() => {
@@ -55,6 +61,25 @@
 
   .animate-flicker {
     animation: flicker 4s ease-in-out infinite;
+  }
+
+  @keyframes grow-shrink {
+    0% {
+      transform: scale(0.7);
+      opacity: 0;
+    }
+    80% {
+      transform: scale(1.05);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .animate-grow-shrink {
+    animation: grow-shrink 0.4s ease-out forwards;
   }
 </style>
 
@@ -125,6 +150,74 @@
         >
           Start
         </button>
+
+
+        <div class="mt-12 pt-8 border-t border-gray-700/30 mb-3">
+        <p class="text-gray-400 text-sm">
+  <button 
+    on:click={toggleInfoModal} 
+    class="text-orange-400 hover:text-orange-300 underline transition-colors duration-200 rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
+    aria-label="Show game information"
+  >
+    This game
+  </button> 
+  was conjured by 
+  <a 
+    href="https://www.mobileescapes.ca/about-us"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="inline-flex items-center gap-1 text-orange-400 hover:text-orange-300 underline transition-colors duration-200 rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
+  >
+    Mobile Escapes
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+      <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+      <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
+    </svg>
+  </a>.
+</p>
+      </div>
+      </div>
+    </div>
+  {/if}
+
+  {#if showInfoModal}
+    <div
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
+      on:click|self={toggleInfoModal}
+      transition:fade={{ duration: 300 }}
+    >
+      <div class="bg-gray-900/80 border border-orange-500/50 rounded-lg shadow-xl p-8 max-w-lg w-full relative text-white animate-grow-shrink">
+        <button
+          on:click={toggleInfoModal}
+          class="absolute top-2 right-2 text-gray-400 hover:text-white transition-colors"
+          aria-label="Close modal"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
+        <div class="flex flex-col items-center mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mb-2 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <h2 class="text-2xl font-bold text-orange-400 text-center">Game Info</h2>
+        </div>
+
+        <div class="text-gray-300 space-y-4">
+          <p>
+            This free 10-minute game was conjured up by Alex, Eric, and Nick to celebrate Halloween 2025! We wanted to give you a taste of the custom-tailored adventures we can create at Mobile&nbsp;Escapes.
+          </p>
+          <p>
+            Our main goal is for you to have a blast solving these spooky puzzles. If you enjoyed the experience, we hope you'll think of Mobile&nbsp;Escapes for your next real-life or virtual escape room adventure!
+          </p>
+        </div>
+
+        <div class="mt-8 text-right">
+          <button on:click={toggleInfoModal} class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-6 rounded-lg transition-colors">
+            OK
+          </button>
+        </div>
       </div>
     </div>
   {/if}
