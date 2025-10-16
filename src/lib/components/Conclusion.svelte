@@ -6,6 +6,7 @@
     // finalTime is loaded from localStorage.
     let finalTime = "00:00";
     export let playerName = "";
+    let finalTimeInSeconds = 0; // Add this line to fix the error
 
     let showNameInput = false;
     let isSubmitting = false;
@@ -89,9 +90,10 @@
 
     onMount(() => {
         // Read the final time from localStorage
-        const finalTimeInSeconds = localStorage.getItem("gameFinalTime");
-        if (finalTimeInSeconds) {
-            finalTime = formatTimeFromSeconds(parseInt(finalTimeInSeconds, 10));
+        const storedFinalTime = localStorage.getItem("gameFinalTime");
+        if (storedFinalTime) {
+            finalTimeInSeconds = parseInt(storedFinalTime, 10); // Store the raw seconds
+            finalTime = formatTimeFromSeconds(finalTimeInSeconds); // Format for display
         }
 
         const elements = document.querySelectorAll(".animate-in");
