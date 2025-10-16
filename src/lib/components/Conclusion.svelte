@@ -211,15 +211,15 @@
                             >
                                 <span
                                     class="bg-blue-600/30 px-3 py-1 rounded-full text-blue-200 text-sm"
-                                    >🎯 Team Building</span
+                                    >Team Building</span
                                 >
                                 <span
                                     class="bg-blue-600/30 px-3 py-1 rounded-full text-blue-200 text-sm"
-                                    >🎉 Private Events</span
+                                    >Classrooms</span
                                 >
                                 <span
                                     class="bg-blue-600/30 px-3 py-1 rounded-full text-blue-200 text-sm"
-                                    >🏢 Corporate Packages</span
+                                    >Corporate Events</span
                                 >
                             </div>
 
@@ -246,7 +246,7 @@
                                 rel="noopener noreferrer"
                                 class="inline-block bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-lg text-lg font-bold transition-all duration-300 transform hover:scale-105 hover:shadow-xl shadow-orange-500/50"
                             >
-                                🎟️ Book Now
+                                Book Now
                             </a>
                         </div>
                     </div>
