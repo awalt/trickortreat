@@ -1,4 +1,4 @@
-//This file is: gameStore.js
+// This file is: gameStore.js
 import { writable } from "svelte/store";
 
 const defaultState = {
@@ -7,7 +7,7 @@ const defaultState = {
   lastSolvedPuzzle: null,
 };
 
-//USE THIS AS THE MASTER LIST OF THE PUZZLE ORDER. ALSO USE THIS FOR THE DebugMenu SHORTCUTS (automatically)
+// USE THIS AS THE MASTER LIST OF THE PUZZLE ORDER. ALSO USE THIS FOR THE DebugMenu SHORTCUTS (automatically)
 export const gamePagesOrder = [
   "Splash",
   "Intro",
@@ -30,32 +30,18 @@ function createGameStore() {
 
   const { subscribe, set, update } = writable(initialState);
 
-  // On initial load, decide where to send the user after a brief splash screen.
+  // MODIFIED SECTION: On initial load, restore the previous session or start a new one.
   if (typeof window !== "undefined") {
     setTimeout(() => {
       if (savedState) {
+        // If a saved state exists, parse it and set the store to that state.
+        // This will restore the user to the exact 'currentView' they were on.
         const parsedState = JSON.parse(savedState);
-        // If user has progress, jump them to the correct puzzle
-        if (parsedState.lastSolvedPuzzle) {
-          const lastPuzzleIndex = gamePagesOrder.indexOf(
-            parsedState.lastSolvedPuzzle,
-          );
-          if (
-            lastPuzzleIndex > -1 &&
-            lastPuzzleIndex + 1 < gamePagesOrder.length
-          ) {
-            const nextView = gamePagesOrder[lastPuzzleIndex + 1];
-            set({
-              ...parsedState,
-              currentView: nextView,
-              introVideoReady: true,
-            });
-            return;
-          }
-        }
+        set(parsedState);
+      } else {
+        // Otherwise, if there's no saved state, go to the intro.
+        update((state) => ({ ...state, currentView: "Intro" }));
       }
-      // Otherwise, go to the intro
-      update((state) => ({ ...state, currentView: "Intro" }));
     }, 500); // Show splash for 0.5 seconds
   }
 
@@ -73,10 +59,35 @@ function createGameStore() {
     finishWalking: () => update((state) => ({ ...state, currentView: "Door" })),
     setIntroVideoReady: () =>
       update((state) => ({ ...state, introVideoReady: true })),
+    stopTimer: () => {
+      if (typeof window === "undefined") return;
+
+      const startTime = localStorage.getItem("gameStartTime");
+      // Only proceed if the timer was actually started
+      if (startTime) {
+        const finalTimeInSeconds = Math.floor(
+          (Date.now() - parseInt(startTime, 10)) / 1000,
+        );
+        localStorage.setItem("gameFinalTime", finalTimeInSeconds.toString());
+      }
+      // Set the running status to false
+      localStorage.setItem("isGameTimerRunning", "false");
+
+      // Dispatch an event to let the Timer component know it should update its display
+      window.dispatchEvent(new CustomEvent("reset-timer"));
+    },
     solvePuzzle: () => {
       update((state) => {
         const currentIndex = gamePagesOrder.indexOf(state.currentView);
         const nextView = gamePagesOrder[currentIndex + 1] || "Conclusion";
+
+        // If the next view is the conclusion, stop the timer.
+        if (nextView === "Conclusion") {
+          // We need to call the stopTimer method from outside the update function.
+          // We'll use a `setTimeout` to ensure it runs after the state update.
+          setTimeout(() => gameStore.stopTimer(), 0);
+        }
+
         return {
           ...state,
           lastSolvedPuzzle: state.currentView,
@@ -99,21 +110,14 @@ function createGameStore() {
     goToPage: (pageName) =>
       update((state) => {
         const targetIndex = gamePagesOrder.indexOf(pageName);
-
-        // If the page name is not in the order, do nothing and log a warning.
         if (targetIndex === -1) {
           console.warn(
             `Cannot go to page "${pageName}": not found in gamePagesOrder.`,
           );
           return state;
         }
-
-        // The last solved puzzle should be the page just before the one we are navigating to.
-        // If we navigate to the first or second item (Splash/Intro), there is no "solved" puzzle yet.
         const newLastSolvedPuzzle =
           targetIndex > 1 ? gamePagesOrder[targetIndex - 1] : null;
-
-        // Update the state with the new view and the correct last solved puzzle to maintain progress.
         return {
           ...state,
           currentView: pageName,

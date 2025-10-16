@@ -1,78 +1,78 @@
 <script>
-  import { gameStore } from '$lib/gameStore.js';
-  import JumpScare from '$lib/components/JumpScare.svelte';
-  import { fade } from 'svelte/transition';
+    import { gameStore } from "$lib/gameStore.js";
+    import JumpScare from "$lib/components/JumpScare.svelte";
+    import { fade } from "svelte/transition";
+    import Timer from "$lib/components/Timer.svelte";
 
-   import { onMount, onDestroy } from 'svelte';
-  import { congratsSound } from '$lib/audio.js'; 
+    import { onMount, onDestroy } from "svelte";
+    import { congratsSound } from "$lib/audio.js";
 
-  let playJumpScare = false;
+    let playJumpScare = false;
 
-  // The timer in JumpScare.svelte is set to 550ms, plus a 100ms fade.
-  // We use 750ms here to ensure the transition completes before navigating.
-  const JUMPSCARE_DURATION = 750;
+    // The timer in JumpScare.svelte is set to 550ms, plus a 100ms fade.
+    // We use 750ms here to ensure the transition completes before navigating.
+    const JUMPSCARE_DURATION = 750;
 
-  function bragTheCandy() {
-    if (playJumpScare) return;
-    
-    playJumpScare = true;
-    
-    // After the jump scare duration, automatically move to the Conclusion page.
-    setTimeout(() => {
-      gameStore.solvePuzzle(); // Moves from "Candy" to "Conclusion"
-    }, JUMPSCARE_DURATION);
-  }
+    function bragTheCandy() {
+        if (playJumpScare) return;
 
-  onMount(() => {
-    congratsSound.play();
-  });
+        playJumpScare = true;
 
-  onDestroy(() => {
-    // Stop the sound if the user navigates away before it finishes
-    congratsSound.stop();
-  });
+        // After the jump scare duration, automatically move to the Conclusion page.
+        setTimeout(() => {
+            gameStore.solvePuzzle(); // Moves from "Candy" to "Conclusion"
+        }, JUMPSCARE_DURATION);
+    }
+
+    onMount(() => {
+        congratsSound.play();
+    });
+
+    onDestroy(() => {
+        // Stop the sound if the user navigates away before it finishes
+        congratsSound.stop();
+    });
 </script>
 
-<div class="relative w-full  items-center justify-center p-8 text-center"
-     in:fade={{ duration: 1000 }}
+<Timer />
+
+<div
+    class="relative w-full items-center justify-center p-8 text-center"
+    in:fade={{ duration: 1000 }}
 >
-  {#if playJumpScare}
-    <JumpScare delay={0} /> 
-  {/if}
+    {#if playJumpScare}
+        <JumpScare delay={0} />
+    {/if}
 
-  <div class="relative z-10 max-w-2xl mx-auto">
-    
-    <img 
-      src="/candy.png" 
-      alt="A pile of tempting Halloween candy" 
-      class="w-full h-auto max-w-2xl mx-auto mb-8"
-    />
-    
-    <h1 class="text-4xl md:text-5xl font-creepster text-yellow-400 mb-4">
-      Congratulations, you’ve escaped your fears.
-    </h1>
-    <p class="text-gray-300 text-xl mb-10">
-      Claim the candy…if you dare.
-    </p>
+    <div class="relative z-10 max-w-2xl mx-auto">
+        <img
+            src="/candy.png"
+            alt="A pile of tempting Halloween candy"
+            class="w-full h-auto max-w-2xl mx-auto mb-8"
+        />
 
-    <button 
-      on:click={bragTheCandy}
-      disabled={playJumpScare}
-      class="relative inline-block px-12 py-4 font-bold text-xl text-white uppercase tracking-widest transition-all duration-300
+        <h1 class="text-4xl md:text-5xl font-creepster text-yellow-400 mb-4">
+            Congratulations, you’ve escaped your fears.
+        </h1>
+        <p class="text-gray-300 text-xl mb-10">Claim the candy…if you dare.</p>
+
+        <button
+            on:click={bragTheCandy}
+            disabled={playJumpScare}
+            class="relative inline-block px-12 py-4 font-bold text-xl text-white uppercase tracking-widest transition-all duration-300
              bg-orange-600 border-4 border-yellow-400 rounded-full
              hover:bg-orange-700 hover:shadow-[0_0_30px_rgba(255,255,0,0.8)] hover:scale-110 disabled:opacity-50"
-    >
-      Grab the candy
-    </button>
-
-  </div>
+        >
+            Grab the candy
+        </button>
+    </div>
 </div>
 
 <style>
-  .font-creepster {
-    font-family: 'Creepster', cursive;
-  }
-   :global(body) {
-    overflow-x: hidden;
-  }
+    .font-creepster {
+        font-family: "Creepster", cursive;
+    }
+    :global(body) {
+        overflow-x: hidden;
+    }
 </style>

@@ -74,19 +74,29 @@
             const leftX = window.innerWidth * 0.2;
             const rightX = window.innerWidth * 0.8;
             const topY = window.innerHeight * 0.2;
-            const bottomY = window.innerHeight * 1.2;
             const startY =
-                window.innerHeight - spiderController.options.bugHeight;
-            const offscreenY = -spiderController.options.bugHeight;
+                window.innerHeight - spiderController.options.bugHeight; // On-screen bottom
+            const offscreenTopY = -spiderController.options.bugHeight; // Off-screen top
 
             while (true) {
+                // Start at bottom left, on screen
                 await setSpiderPosition(leftX, startY);
                 spider.go();
+
+                // 1. Walk UP to the top-left
                 await walkTo(spider, { x: leftX, y: topY });
+
+                // 2. Walk RIGHT to the top-right
                 await walkTo(spider, { x: rightX, y: topY });
-                await walkTo(spider, { x: rightX, y: bottomY });
-                await walkTo(spider, { x: leftX, y: bottomY });
-                await walkTo(spider, { x: leftX, y: offscreenY });
+
+                // 3. Walk DOWN to the bottom-right (on-screen)
+                await walkTo(spider, { x: rightX, y: startY });
+
+                // 4. Walk LEFT to the bottom-left (on-screen)
+                await walkTo(spider, { x: leftX, y: startY });
+
+                // 5. Walk UP and exit at the top edge
+                await walkTo(spider, { x: leftX, y: offscreenTopY });
             }
         }
 
@@ -115,6 +125,8 @@
         alert("You solved it! We would move on... but this is not coded yet.");
     }
 </script>
+
+<Timer />
 
 <div
     class="relative w-full flex flex-col items-center justify-center p-8 text-center bg-black min-h-screen"
