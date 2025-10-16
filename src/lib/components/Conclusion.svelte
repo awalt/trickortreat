@@ -248,8 +248,8 @@
                             >
                                 <input
                                     type="hidden"
-                                    name="solve_time"
-                                    value={solveTime}
+                                    name="finalTimeInSeconds"
+                                    value={finalTimeInSeconds}
                                 />
                                 <input
                                     type="text"
