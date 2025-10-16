@@ -6,7 +6,7 @@
     // finalTime is loaded from localStorage.
     let finalTime = "00:00";
     export let playerName = "";
-    let finalTimeInSeconds = 0; // Add this line to fix the error
+    let finalTimeInSeconds = 0;
 
     let showNameInput = false;
     let isSubmitting = false;
@@ -49,7 +49,7 @@
 
                 isSubmitting = false;
                 nameSubmitted = true;
-                showNameInput = false;
+                showNameInput = false; // This will hide the form
             }, 1500);
         }
     }
@@ -62,12 +62,11 @@
     function playAgain() {
         gameStore.reset();
         localStorage.removeItem("gameFinalTime");
-        localStorage.setItem("gameStartTime", false);
+        localStorage.setItem("gameStartTime", "false");
         localStorage.setItem("isGameTimerRunning", "false");
         window.dispatchEvent(new CustomEvent("reset-timer"));
     }
 
-    // UPDATED: shareGame function with new text
     function shareGame() {
         const shareText = `I solved this Trick of Treat game in ${finalTime}! 💀 Try to beat my time… if you dare.`;
         const shareUrl = window.location.origin;
@@ -225,50 +224,7 @@
             <div
                 class="animate-in opacity-0 translate-y-8 transition-all duration-1000 mb-12"
             >
-                {#if !nameSubmitted && !showNameInput}
-                    <button
-                        on:click={showHighscoreInput}
-                        class="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-lg text-lg font-bold transition-all duration-300 transform hover:scale-105 hover:shadow-lg shadow-purple-500/30 mb-6"
-                    >
-                        🏆 Add to Leaderboard
-                    </button>
-                    {:else if showNameInput}
-                        <div
-                            class="bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 mb-6 border border-purple-500/30"
-                        >
-                            <h3 class="text-xl font-bold text-purple-400 mb-4">
-                                Enter Your Name for the Leaderboard
-                            </h3>
-
-                            <form
-                                name="leaderboard"
-                                method="POST"
-                                netlify
-                                class="flex flex-col sm:flex-row gap-4 items-center justify-center"
-                            >
-                                <input type="hidden" name="form-name" value="leaderboard" />
-
-                                <input type="hidden" name="time" value={finalTime} />
-
-                                <input
-                                    type="text"
-                                    name="playerName"  bind:value={playerName}
-                                    placeholder="Enter your spooky name..."
-                                    class="px-4 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-purple-500 focus:outline-none"
-                                    required
-                                    maxlength="20"
-                                />
-
-                                <button
-                                    type="submit"
-                                    disabled={!playerName.trim()}
-                                    class="bg-green-600 hover:bg-green-700 disabled:bg-gray-600 text-white px-6 py-2 rounded font-bold transition-all duration-300"
-                                >
-                                    Submit Score
-                                </button>
-                            </form>
-                        </div>
-                    {/if}
+                {#if nameSubmitted}
                     <div
                         class="bg-green-800/50 backdrop-blur-sm rounded-lg p-4 mb-6 border border-green-500/30"
                     >
@@ -276,8 +232,58 @@
                             ✅ Score submitted successfully!
                         </p>
                     </div>
+                {:else if showNameInput}
+                    <div
+                        class="bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 mb-6 border border-purple-500/30"
+                    >
+                        <h3 class="text-xl font-bold text-purple-400 mb-4">
+                            Enter Your Name for the Leaderboard
+                        </h3>
+                        <form
+                            name="leaderboard"
+                            method="POST"
+                            netlify
+                            on:submit|preventDefault={submitScore}
+                            class="flex flex-col sm:flex-row gap-4 items-center justify-center"
+                        >
+                            <input
+                                type="hidden"
+                                name="form-name"
+                                value="leaderboard"
+                            />
+                            <input
+                                type="hidden"
+                                name="time"
+                                value={finalTime}
+                            />
+                            <input
+                                type="text"
+                                name="playerName"
+                                bind:value={playerName}
+                                placeholder="Enter your spooky name..."
+                                class="px-4 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-purple-500 focus:outline-none"
+                                required
+                                maxlength="20"
+                            />
+                            <button
+                                type="submit"
+                                disabled={!playerName.trim() || isSubmitting}
+                                class="bg-green-600 hover:bg-green-700 disabled:bg-gray-600 text-white px-6 py-2 rounded font-bold transition-all duration-300"
+                            >
+                                {isSubmitting
+                                    ? "Submitting..."
+                                    : "Submit Score"}
+                            </button>
+                        </form>
+                    </div>
+                {:else}
+                    <button
+                        on:click={showHighscoreInput}
+                        class="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-lg text-lg font-bold transition-all duration-300 transform hover:scale-105 hover:shadow-lg shadow-purple-500/30 mb-6"
+                    >
+                        🏆 Add to Leaderboard
+                    </button>
                 {/if}
-
                 <div
                     class="bg-gray-800/30 backdrop-blur-sm rounded-lg p-6 border border-gray-600/30"
                 >
