@@ -243,8 +243,8 @@
                             <form
                                 name="leaderboard"
                                 method="POST"
-                                data-netlify="true"
-                                action="/submission-success"  class="flex flex-col sm:flex-row gap-4 items-center justify-center"
+                                netlify
+                                class="flex flex-col sm:flex-row gap-4 items-center justify-center"
                             >
                                 <input type="hidden" name="form-name" value="leaderboard" />
 
