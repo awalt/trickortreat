@@ -33,11 +33,30 @@
         showNameInput = true;
     }
 
-    function submitScore() {
-        if (playerName.trim()) {
-            isSubmitting = true;
+    // Remove the old submitScore function and replace it with this.
+    async function handleSubmit() {
+        if (!playerName.trim()) return;
 
-            setTimeout(() => {
+        isSubmitting = true;
+
+        // Prepare the data in the format Netlify expects
+        const formData = new URLSearchParams();
+        formData.append("form-name", "leaderboard");
+        formData.append("playerName", playerName.trim());
+        formData.append("time", finalTime);
+
+        try {
+            const response = await fetch("/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: formData.toString(),
+            });
+
+            if (response.ok) {
+                // SUCCESS! Netlify accepted the submission.
+                // Now, update the UI and local high scores.
                 highscores = [
                     ...highscores,
                     { name: playerName.trim(), time: finalTime },
@@ -47,10 +66,23 @@
                     )
                     .slice(0, 10);
 
-                isSubmitting = false;
-                nameSubmitted = true;
-                showNameInput = false; // This will hide the form
-            }, 1500);
+                nameSubmitted = true; // This shows your success message ✅
+                showNameInput = false; // This hides the form
+            } else {
+                // Handle server-side errors
+                alert(
+                    "Sorry, there was an error submitting your score. Please try again.",
+                );
+                console.error("Netlify form submission failed:", response);
+            }
+        } catch (error) {
+            // Handle network errors
+            alert(
+                "A network error occurred. Please check your connection and try again.",
+            );
+            console.error("Error submitting form to Netlify:", error);
+        } finally {
+            isSubmitting = false; // Re-enable the submit button
         }
     }
 
@@ -243,6 +275,7 @@
                             name="leaderboard"
                             method="POST"
                             netlify
+                            on:submit|preventDefault={submitScore}
                             class="flex flex-col sm:flex-row gap-4 items-center justify-center"
                         >
                             <input
