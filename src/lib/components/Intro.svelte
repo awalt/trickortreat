@@ -13,6 +13,8 @@
     let isPreloading = false;
     let preloadProgress = 0;
     let loadingText = "Start";
+    let isFadingToBlack = false;
+    let showLoadingSpinner = false;
 
     // Preload sounds immediately
     preloadAllSounds();
@@ -25,9 +27,19 @@
             moodMusic.play();
         }
 
-        // Start preloading videos
+        // Start fading to black
+        isFadingToBlack = true;
         isPreloading = true;
-        loadingText = "Loading experience...";
+
+        // After 2 seconds, show loading spinner if still loading
+        const spinnerTimeout = setTimeout(() => {
+            if (isPreloading) {
+                showLoadingSpinner = true;
+            }
+        }, 2000);
+
+        // Start timing the fade and preload
+        const fadeStart = Date.now();
 
         try {
             // Preload critical videos first (ones needed soon)
@@ -39,6 +51,16 @@
             console.log("Critical videos preloaded successfully");
         } catch (error) {
             console.warn("Some videos failed to preload:", error);
+        }
+
+        // Clear the timeout if loading finished
+        clearTimeout(spinnerTimeout);
+        isPreloading = false;
+
+        // Ensure we've been fading for at least 2 seconds
+        const elapsed = Date.now() - fadeStart;
+        if (elapsed < 2000) {
+            await new Promise((resolve) => setTimeout(resolve, 2000 - elapsed));
         }
 
         // Enter fullscreen
@@ -269,6 +291,28 @@
                     </button>
                 </div>
             </div>
+        </div>
+    {/if}
+
+    <!-- Fade to black overlay -->
+    {#if isFadingToBlack}
+        <div
+            class="fixed inset-0 z-50 bg-black flex items-center justify-center"
+            in:fade={{ duration: 2000 }}
+        >
+            {#if showLoadingSpinner}
+                <div
+                    class="flex flex-col items-center gap-4"
+                    in:fade={{ duration: 300 }}
+                >
+                    <div
+                        class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-orange-500"
+                    ></div>
+                    <p class="text-white/70 text-sm tracking-wider">
+                        Loading experience...
+                    </p>
+                </div>
+            {/if}
         </div>
     {/if}
 </div>

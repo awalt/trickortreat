@@ -37,7 +37,7 @@
 <Timer />
 
 <div
-    class="relative w-full items-center justify-center p-8 text-center"
+    class="relative w-full min-h-screen flex items-center justify-center p-8 text-center bg-gray-900"
     in:fade={{ duration: 1000 }}
 >
     {#if playJumpScare}

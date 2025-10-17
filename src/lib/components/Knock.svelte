@@ -1,8 +1,9 @@
 <script>
-    import { createEventDispatcher, onMount, onDestroy } from "svelte";
+    import { onMount, onDestroy } from "svelte";
 
     // NEW: Import the reusable timer component
     import Timer from "$lib/components/Timer.svelte";
+    import { gameStore } from "$lib/gameStore.js";
 
     import {
         knockSound,
@@ -11,7 +12,6 @@
         dingDongSound,
     } from "$lib/audio.js";
 
-    const dispatch = createEventDispatcher();
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
     // --- Component State ---
@@ -130,7 +130,7 @@
 
     function handleOpenDoorClick() {
         creepyDoorSound.play();
-        dispatch("doorOpen");
+        gameStore.solvePuzzle();
     }
 
     function resetPattern() {
@@ -218,7 +218,7 @@
                             <enhanced:img
                                 src="/static/knocker.png"
                                 alt="Knocker"
-                                class="w-2/3 h-2/3 object-contain opacity-50"
+                                class="knocker-image w-2/3 h-2/3 object-contain opacity-50"
                                 class:opacity-100={isHighlighted ||
                                     isPlayingCell}
                                 class:animate-knock={isPlayingCell}
@@ -384,5 +384,10 @@
     .house-lightning-flicker {
         filter: brightness(150%) saturate(150%);
         transition: filter 0.05s ease-out;
+    }
+
+    :global(.knocker-image) {
+        display: block;
+        margin: 0 auto;
     }
 </style>
