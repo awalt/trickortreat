@@ -11,6 +11,12 @@
     import DoorScene from "$lib/components/DoorScene.svelte";
     import Candy from "$lib/components/Candy.svelte";
     import { gameStore } from "$lib/gameStore.js";
+
+    // Scroll to top whenever the current view changes
+    $effect(() => {
+        $gameStore.currentView; // Track this value
+        window.scrollTo({ top: 0, behavior: "instant" });
+    });
 </script>
 
 <main class="h-screen w-full bg-gray-900 text-white">
