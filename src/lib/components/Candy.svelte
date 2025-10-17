@@ -45,8 +45,8 @@
     {/if}
 
     <div class="relative z-10 max-w-2xl mx-auto">
-        <img
-            src="/candy.png"
+        <enhanced:img
+            src="/static/candy.png"
             alt="A pile of tempting Halloween candy"
             class="w-full h-auto max-w-2xl mx-auto mb-8"
         />

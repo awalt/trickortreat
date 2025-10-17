@@ -67,8 +67,8 @@
                 <div
                     class="w-full aspect-square flex flex-col items-center justify-center"
                 >
-                    <img
-                        src="/window5b.jpeg"
+                    <enhanced:img
+                        src="/static/window5b.jpeg"
                         alt="Window"
                         class="max-h-full max-w-full object-contain"
                     />
@@ -85,8 +85,8 @@
                 <div
                     class="w-full aspect-square flex flex-col items-center justify-center"
                 >
-                    <img
-                        src="/sign.jpeg"
+                    <enhanced:img
+                        src="/static/sign.jpeg"
                         alt="Sign"
                         class="max-h-full max-w-full object-contain"
                     />
@@ -102,8 +102,8 @@
                 <div
                     class="w-full aspect-square flex flex-col items-center justify-center"
                 >
-                    <img
-                        src="/house3d.png"
+                    <enhanced:img
+                        src="/static/house3d.png"
                         alt="Door"
                         class="max-h-full max-w-full object-contain"
                     />

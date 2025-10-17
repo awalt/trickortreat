@@ -6,7 +6,7 @@
     let videoElement;
     let showVideo = false;
     let closeTimer = null;
-    let videoReady = false; // New state to track if video is ready
+    let videoReady = false;
 
     onMount(() => {
         const startTimeout = setTimeout(() => {
@@ -21,23 +21,19 @@
     });
 
     const hideVideo = () => {
-        if (document.fullscreenElement) {
-            document.exitFullscreen();
-        }
+        // No longer need to exit fullscreen
         showVideo = false;
     };
 
-    // This function now runs when the video is buffered and ready
     const onCanPlay = () => {
-        videoReady = true; // Make the container visible
+        videoReady = true;
         videoElement.play();
 
-        // Set a timer to hide the video 1.2 seconds after it starts
+        // Set a timer to hide the video
         closeTimer = setTimeout(hideVideo, 550);
 
-        videoElement.requestFullscreen().catch((err) => {
-            console.error("Error attempting to enable full-screen mode:", err);
-        });
+        // REMOVED: The requestFullscreen() call was causing the orientation flip.
+        // Your CSS already handles the fullscreen effect.
     };
 </script>
 
@@ -67,13 +63,13 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        /* Smooth fade-in transition */
         transition: opacity 0.1s linear;
     }
 
     video {
         width: 100%;
         height: 100%;
+        /* This is the key property that crops the video to fill the screen */
         object-fit: cover;
     }
 </style>

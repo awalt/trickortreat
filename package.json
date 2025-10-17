@@ -24,15 +24,19 @@
   "dependencies": {
     "@rollup/rollup-linux-x64-gnu": "^4.52.4",
     "@sveltejs/adapter-cloudflare": "^7.2.2",
+    "@sveltejs/enhanced-img": "^0.8.4",
     "@tailwindcss/cli": "^4.1.12",
     "@tailwindcss/vite": "^4.1.12",
     "@zoom-image/svelte": "^0.3.7",
     "howler": "^2.2.4",
+    "image-size": "^2.0.2",
     "install": "^0.13.0",
     "interactjs": "^1.10.27",
     "pinch-zoom-js": "^2.3.5",
     "svelte-carousel": "^1.0.25",
+    "svelte-image": "^0.2.9",
     "svelte-zoom": "^1.0.16",
-    "swiper": "^11.2.10"
+    "swiper": "^11.2.10",
+    "vite-imagetools": "^9.0.0"
   }
 }

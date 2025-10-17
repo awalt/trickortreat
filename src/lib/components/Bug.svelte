@@ -3,6 +3,8 @@
     import { fade } from "svelte/transition";
     import SubmitButton from "./SubmitButton.svelte";
     import Timer from "$lib/components/Timer.svelte";
+    import { gameStore } from "$lib/gameStore.js";
+    import Image from "svelte-image";
 
     // Import the BugController class from your new JS file.
     import BugController, { bugControllerManager } from "$lib/bugController.js";
@@ -121,8 +123,7 @@
     }
 
     function handleContinue() {
-        console.log("Proceeding to the next level!");
-        alert("You solved it! We would move on... but this is not coded yet.");
+        gameStore.solvePuzzle();
     }
 </script>
 
@@ -139,8 +140,8 @@
                 Peephole
             </h1>
 
-            <img
-                src="/path6.png"
+            <enhanced:img
+                src="/static/path6.png"
                 alt="A winding path"
                 class="w-full h-auto mx-auto max-w-2xl"
             />

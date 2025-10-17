@@ -1,24 +1,24 @@
-import adapter from '@sveltejs/adapter-static';
-import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
+import adapter from "@sveltejs/adapter-static";
+import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-	preprocess: vitePreprocess(),
+  preprocess: vitePreprocess(),
 
-	kit: {
-		adapter: adapter({
-			pages: 'build',
-			assets: 'build',
-			fallback: 'index.html',
-			precompress: false,
-			strict: true
-		}),
-		
-		// Add this paths object
-		paths: {
-			//base: '/trickortreat' // Replace with your actual subdirectory name
-		}
-	}
+  kit: {
+    adapter: adapter({
+      pages: "build",
+      assets: "build",
+      fallback: "index.html",
+      precompress: false,
+      strict: true,
+    }),
+
+    // Add this paths object
+    paths: {
+      //base: '/trickortreat' // Replace with your actual subdirectory name
+    },
+  },
 };
 
 export default config;
