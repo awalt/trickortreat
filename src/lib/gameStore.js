@@ -1,4 +1,4 @@
-// This file is: gameStore.js
+// trickortreat/src/lib/gameStore.js
 import { writable } from "svelte/store";
 
 const defaultState = {
@@ -7,7 +7,7 @@ const defaultState = {
   lastSolvedPuzzle: null,
 };
 
-// USE THIS AS THE MASTER LIST OF THE PUZZLE ORDER. ALSO USE THIS FOR THE DebugMenu SHORTCUTS (automatically)
+// This is the master list of the puzzle order.
 export const gamePagesOrder = [
   "Splash",
   "Intro",
@@ -30,22 +30,19 @@ function createGameStore() {
 
   const { subscribe, set, update } = writable(initialState);
 
-  // MODIFIED SECTION: On initial load, restore the previous session or start a new one.
+  // On initial load, restore the previous session or start a new one.
   if (typeof window !== "undefined") {
     setTimeout(() => {
       if (savedState) {
-        // If a saved state exists, parse it and set the store to that state.
-        // This will restore the user to the exact 'currentView' they were on.
         const parsedState = JSON.parse(savedState);
         set(parsedState);
       } else {
-        // Otherwise, if there's no saved state, go to the intro.
         update((state) => ({ ...state, currentView: "Intro" }));
       }
     }, 500); // Show splash for 0.5 seconds
   }
 
-  // Persist game state to localStorage
+  // Persist the game state to localStorage whenever it changes.
   subscribe((value) => {
     if (typeof window !== "undefined" && value.currentView !== "Splash") {
       localStorage.setItem("escapeGameState", JSON.stringify(value));
@@ -54,51 +51,34 @@ function createGameStore() {
 
   return {
     subscribe,
-    startGame: () =>
-      update((state) => ({ ...state, currentView: "DoorScene" })),
+    startGame: () => {
+      if (typeof window !== "undefined") {
+        // Set the start time and flag the timer as running.
+        localStorage.setItem("gameStartTime", Date.now().toString());
+        localStorage.setItem("isGameTimerRunning", "true");
+        // Ensure any old final time is cleared for the new run.
+        localStorage.removeItem("gameFinalTime");
+      }
+      update((state) => ({ ...state, currentView: "DoorScene" }));
+    },
     finishWalking: () => update((state) => ({ ...state, currentView: "Door" })),
     setIntroVideoReady: () =>
       update((state) => ({ ...state, introVideoReady: true })),
-    stopTimer: () => {
-      if (typeof window === "undefined") return;
-
-      const startTime = localStorage.getItem("gameStartTime");
-      // Only proceed if the timer was actually started
-      if (startTime) {
-        const finalTimeInSeconds = Math.floor(
-          (Date.now() - parseInt(startTime, 10)) / 1000,
-        );
-        localStorage.setItem("gameFinalTime", finalTimeInSeconds.toString());
-      }
-      // Set the running status to false
-      localStorage.setItem("isGameTimerRunning", "false");
-
-      // Dispatch an event to let the Timer component know it should update its display
-      window.dispatchEvent(new CustomEvent("reset-timer"));
-    },
     solvePuzzle: () => {
       update((state) => {
         const currentIndex = gamePagesOrder.indexOf(state.currentView);
         const nextView = gamePagesOrder[currentIndex + 1] || "Conclusion";
 
-        // ✅ FIX: Stop the timer BEFORE navigating if next view is Conclusion
-        if (nextView === "Conclusion") {
-          // Stop timer synchronously before state update
-          if (typeof window !== "undefined") {
-            const startTime = localStorage.getItem("gameStartTime");
-            if (startTime) {
-              const finalTimeInSeconds = Math.floor(
-                (Date.now() - parseInt(startTime, 10)) / 1000,
-              );
-              localStorage.setItem(
-                "gameFinalTime",
-                finalTimeInSeconds.toString(),
-              );
-            }
-            localStorage.setItem("isGameTimerRunning", "false");
-            // Dispatch event so Timer component updates
-            window.dispatchEvent(new CustomEvent("reset-timer"));
+        // If the user has reached the end, stop the timer.
+        if (nextView === "Conclusion" && typeof window !== "undefined") {
+          const startTime = localStorage.getItem("gameStartTime");
+          if (startTime) {
+            const finalTime = Math.floor(
+              (Date.now() - parseInt(startTime, 10)) / 1000,
+            );
+            localStorage.setItem("gameFinalTime", finalTime.toString());
           }
+          localStorage.setItem("isGameTimerRunning", "false");
         }
 
         return {
@@ -109,15 +89,15 @@ function createGameStore() {
       });
     },
     reset: () => {
-      set(defaultState);
       if (typeof window !== "undefined") {
+        // Clear all game-related localStorage items to start fresh.
         localStorage.removeItem("escapeGameState");
-        update((state) => ({
-          ...defaultState,
-          currentView: "Intro",
-          introVideoReady: false,
-        }));
+        localStorage.removeItem("gameStartTime");
+        localStorage.removeItem("gameFinalTime");
+        localStorage.removeItem("isGameTimerRunning");
       }
+      // Reset the store to its default state, starting at the Intro page.
+      set({ ...defaultState, currentView: "Intro" });
     },
     goToView: (view) => update((state) => ({ ...state, currentView: view })),
     goToPage: (pageName) =>

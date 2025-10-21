@@ -1,132 +1,36 @@
 <script>
-    //THIS FILE: Timer.svelte
-    import { onMount, onDestroy } from "svelte";
-    import { gameStore } from "$lib/gameStore.js";
+    // This file is: Timer.svelte
+    // This is a simple display component that subscribes to the global `time` store.
+    import { time } from "$lib/timerStore.js";
+    import { onMount, onDestroy } from "svelte"; // Import onMount and onDestroy
 
-    // ✅ 1. NEW HELPER FUNCTION
-    // This function runs immediately to get the correct initial time.
-    function getInitialTime() {
-        if (typeof window === "undefined") {
-            return 0; // A safeguard for server-side rendering
-        }
-
-        const storedStartTime = localStorage.getItem("gameStartTime");
-        const isRunning =
-            localStorage.getItem("isGameTimerRunning") !== "false";
-
-        if (isRunning && storedStartTime) {
-            // If timer is active, calculate the current elapsed time
-            const startTime = parseInt(storedStartTime, 10);
-            return Math.floor((Date.now() - startTime) / 1000);
-        } else {
-            // If timer is stopped, get its final stored value
-            const finalTime = localStorage.getItem("gameFinalTime");
-            return finalTime ? parseInt(finalTime, 10) : 0;
-        }
-    }
-
-    let startTime = 0;
-    let elapsedTime = getInitialTime(); // ✅ 2. INITIALIZE WITH THE FUNCTION
-    let timerInterval = null;
-    let isRunning = true;
-    let lastUpdateTime = Date.now();
-    let heartbeatInterval = null;
-
-    // Heartbeat check to detect if timer interval has stopped
-    function startHeartbeat() {
-        if (heartbeatInterval) {
-            clearInterval(heartbeatInterval);
-        }
-        heartbeatInterval = setInterval(() => {
-            const now = Date.now();
-            const timeSinceLastUpdate = now - lastUpdateTime;
-
-            // If timer should be running but hasn't updated in 3 seconds, restart it
-            if (isRunning && timeSinceLastUpdate > 3000) {
-                console.warn("Timer heartbeat detected freeze, restarting...");
-                initializeTimer();
-            }
-        }, 2000); // Check every 2 seconds
-    }
-
-    // This function sets up the timer based on what's in localStorage.
-    // It remains mostly the same, but now it starts with a non-zero elapsedTime.
-    function initializeTimer() {
-        // Clear any old interval to prevent memory leaks when resetting.
-        if (timerInterval) {
-            clearInterval(timerInterval);
-            timerInterval = null;
-        }
-        if (heartbeatInterval) {
-            clearInterval(heartbeatInterval);
-            heartbeatInterval = null;
-        }
-
-        const runningStatus = localStorage.getItem("isGameTimerRunning");
-        isRunning = runningStatus !== "false";
-
-        const storedStartTime = localStorage.getItem("gameStartTime");
-        if (storedStartTime) {
-            startTime = parseInt(storedStartTime, 10);
-        } else {
-            startTime = 0; // Reset internal state if no start time is found.
-        }
-
-        if (isRunning && startTime > 0) {
-            lastUpdateTime = Date.now();
-            timerInterval = setInterval(() => {
-                elapsedTime = Math.floor((Date.now() - startTime) / 1000);
-                lastUpdateTime = Date.now();
-            }, 1000);
-            startHeartbeat();
-            // No need to set elapsedTime here, it's already correct from getInitialTime()
-        } else if (!isRunning && startTime > 0) {
-            const finalTime = localStorage.getItem("gameFinalTime");
-            elapsedTime = finalTime ? parseInt(finalTime, 10) : 0;
-        } else {
-            // Auto-start the timer if it's not running and has no start time
-            if (isRunning) {
-                startTime = Date.now();
-                localStorage.setItem("gameStartTime", startTime.toString());
-                localStorage.setItem("isGameTimerRunning", "true");
-
-                lastUpdateTime = Date.now();
-                timerInterval = setInterval(() => {
-                    elapsedTime = Math.floor((Date.now() - startTime) / 1000);
-                    lastUpdateTime = Date.now();
-                }, 1000);
-                startHeartbeat();
-                elapsedTime = 0;
-            } else {
-                // If explicitly set to not running, display 0
-                elapsedTime = 0;
-            }
-        }
-    }
-
+    // --- CONSOLE LOGS ---
     onMount(() => {
-        // Run the setup function when the component first loads.
-        initializeTimer();
-
-        // Listen for the custom 'reset-timer' event from the debug menu.
-        window.addEventListener("reset-timer", initializeTimer);
+        console.log("Timer.svelte: Component has been MOUNTED.");
     });
 
     onDestroy(() => {
-        if (timerInterval) {
-            clearInterval(timerInterval);
-        }
-        if (heartbeatInterval) {
-            clearInterval(heartbeatInterval);
-        }
-        // IMPORTANT: Clean up the window event listener to prevent memory leaks.
-        window.removeEventListener("reset-timer", initializeTimer);
+        console.log("Timer.svelte: Component has been DESTROYED.");
     });
 
-    // Formats seconds into a MM:SS display
+    // This reactive block will run every time the $time store changes.
+    // This is how you can see the "tick".
+    $: {
+        console.log("Timer.svelte: Tick! New time value received:", $time);
+    }
+    // --- END CONSOLE LOGS ---
+
+    /**
+     * Formats a total number of seconds into a MM:SS string.
+     * @param {number | unknown} seconds The total seconds to format.
+     * @returns {string} The formatted time string (e.g., "01:23").
+     */
     function formatTime(seconds) {
-        const minutes = Math.floor(seconds / 60);
-        const remainingSeconds = seconds % 60;
+        // Guard against null, undefined, or NaN values during initialization.
+        const validSeconds =
+            typeof seconds === "number" && !isNaN(seconds) ? seconds : 0;
+        const minutes = Math.floor(validSeconds / 60);
+        const remainingSeconds = validSeconds % 60;
         const paddedMinutes = String(minutes).padStart(2, "0");
         const paddedSeconds = String(remainingSeconds).padStart(2, "0");
         return `${paddedMinutes}:${paddedSeconds}`;
@@ -158,20 +62,17 @@
         <path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" />
     </svg>
 
-    {#each formatTime(elapsedTime).split("") as char}
+    {#each formatTime($time).split("") as char}
         <span class="digit" class:colon={char === ":"}>{char}</span>
     {/each}
 </div>
 
 <style>
-    /* ✅ UPDATED ANIMATION FOR THE NEW BORDER */
-
     .timer-display {
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
         margin: 0 auto 1rem;
-
         font-family: "Creepster", cursive;
         font-size: 2rem;
         color: #f97316;

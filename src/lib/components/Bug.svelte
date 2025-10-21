@@ -31,12 +31,16 @@
 
         const spider = spiderController.bugs[0];
 
+        // Refactored to use requestAnimationFrame for non-blocking animation
         async function walkTo(bugInstance, target) {
             return new Promise((resolve) => {
-                const interval = setInterval(() => {
+                let animationFrameId;
+
+                function step() {
                     const pos = bugInstance.getPos();
+                    // If bug is gone, stop the animation.
                     if (!pos) {
-                        clearInterval(interval);
+                        cancelAnimationFrame(animationFrameId);
                         resolve();
                         return;
                     }
@@ -45,32 +49,49 @@
                     const dy = target.y - pos.top;
                     const distance = Math.sqrt(dx * dx + dy * dy);
 
+                    // If we've reached the target, stop the animation.
                     if (distance < 15) {
-                        clearInterval(interval);
+                        cancelAnimationFrame(animationFrameId);
                         resolve();
                     } else {
+                        // Otherwise, update the angle and request the next frame.
                         bugInstance.angle_deg =
                             -Math.atan2(dy, dx) * (180 / Math.PI);
                         bugInstance.angle_rad = bugInstance.deg2rad(
                             bugInstance.angle_deg,
                         );
+                        animationFrameId = requestAnimationFrame(step);
                     }
-                }, 50);
+                }
+
+                // Start the animation loop
+                animationFrameId = requestAnimationFrame(step);
             });
         }
 
+        // Refactored to use requestAnimationFrame to wait for spider non-blockingly
         async function setSpiderPosition(x, y) {
             return new Promise((resolve) => {
-                const interval = setInterval(() => {
+                let animationFrameId;
+
+                function check() {
+                    // If spider is ready, set position and stop polling.
                     if (spider && spider.bug) {
-                        clearInterval(interval);
+                        cancelAnimationFrame(animationFrameId);
                         spider.setPos(y, x);
                         resolve();
+                    } else {
+                        // Otherwise, wait for the next frame to check again.
+                        animationFrameId = requestAnimationFrame(check);
                     }
-                }, 50);
+                }
+
+                // Start polling
+                animationFrameId = requestAnimationFrame(check);
             });
         }
 
+        // Refactored to a non-blocking, recursive loop with requestAnimationFrame
         async function spiderPatrol() {
             const leftX = window.innerWidth * 0.2;
             const rightX = window.innerWidth * 0.8;
@@ -79,28 +100,40 @@
                 window.innerHeight - spiderController.options.bugHeight; // On-screen bottom
             const offscreenTopY = -spiderController.options.bugHeight; // Off-screen top
 
-            while (true) {
-                // Start at bottom left, on screen
-                await setSpiderPosition(leftX, startY);
-                spider.go();
+            // Define the patrol sequence
+            const patrolPoints = [
+                { x: leftX, y: topY }, // 1. Walk UP to top-left
+                { x: rightX, y: topY }, // 2. Walk RIGHT to top-right
+                { x: rightX, y: startY }, // 3. Walk DOWN to bottom-right
+                { x: leftX, y: startY }, // 4. Walk LEFT to bottom-left
+                { x: leftX, y: offscreenTopY }, // 5. Walk UP and exit
+            ];
 
-                // 1. Walk UP to the top-left
-                await walkTo(spider, { x: leftX, y: topY });
+            // Recursive function to handle the patrol loop
+            async function executePatrol(index) {
+                // When the sequence is done, reset and start over.
+                if (index >= patrolPoints.length) {
+                    // Reset position to start for a seamless loop
+                    await setSpiderPosition(leftX, startY);
+                    // Use requestAnimationFrame to yield to the main thread before restarting
+                    requestAnimationFrame(() => executePatrol(0));
+                    return;
+                }
 
-                // 2. Walk RIGHT to the top-right
-                await walkTo(spider, { x: rightX, y: topY });
+                const point = patrolPoints[index];
+                await walkTo(spider, point);
 
-                // 3. Walk DOWN to the bottom-right (on-screen)
-                await walkTo(spider, { x: rightX, y: startY });
-
-                // 4. Walk LEFT to the bottom-left (on-screen)
-                await walkTo(spider, { x: leftX, y: startY });
-
-                // 5. Walk UP and exit at the top edge
-                await walkTo(spider, { x: leftX, y: offscreenTopY });
+                // Use requestAnimationFrame to yield before the next step
+                requestAnimationFrame(() => executePatrol(index + 1));
             }
+
+            // Start the initial patrol sequence
+            await setSpiderPosition(leftX, startY);
+            spider.go();
+            executePatrol(0);
         }
 
+        // Start the patrol after a delay
         setTimeout(spiderPatrol, 2000);
     });
 

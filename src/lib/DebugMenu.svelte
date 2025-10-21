@@ -1,5 +1,5 @@
 <script>
-    //This file is: DebugMenu.svelte
+    // This file is: DebugMenu.svelte
     import { gameStore, gamePagesOrder } from "$lib/gameStore.js";
     import { onMount } from "svelte";
     let isVisible = true;
@@ -53,32 +53,34 @@
     }
 
     function goTo(view) {
-        gameStore.goToView(view);
+        gameStore.goToPage(view);
     }
 
     function closeMenu() {
         isVisible = false;
     }
 
+    // Directly manipulates localStorage to reset the timer state.
+    // The readable store will automatically pick up the changes.
     function resetTimer() {
         localStorage.removeItem("gameFinalTime");
-        localStorage.setItem("gameStartTime", Date.now());
+        localStorage.setItem("gameStartTime", Date.now().toString());
         localStorage.setItem("isGameTimerRunning", "true");
-        window.dispatchEvent(new CustomEvent("reset-timer"));
     }
 
-    // NEW: This function stops the timer and saves the final time.
+    // Directly manipulates localStorage to stop the timer.
     function stopTimer() {
         const startTime = localStorage.getItem("gameStartTime");
         if (startTime) {
             const finalTimeInSeconds = Math.floor(
                 (Date.now() - parseInt(startTime, 10)) / 1000,
             );
-            localStorage.setItem("gameFinalTime", finalTimeInSeconds);
+            localStorage.setItem(
+                "gameFinalTime",
+                finalTimeInSeconds.toString(),
+            );
         }
         localStorage.setItem("isGameTimerRunning", "false");
-        // We dispatch the same event to make the timer re-evaluate its state.
-        window.dispatchEvent(new CustomEvent("reset-timer"));
     }
 </script>
 
@@ -122,7 +124,6 @@
                 class="bg-yellow-600 hover:bg-yellow-700 px-3 py-1 rounded text-sm"
                 >Reset Timer</button
             >
-            <!-- NEW: The button to stop the timer -->
             <button
                 on:click={stopTimer}
                 class="bg-orange-600 hover:bg-orange-700 px-3 py-1 rounded text-sm"

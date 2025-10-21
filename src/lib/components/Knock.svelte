@@ -64,19 +64,6 @@
         if (pattern === correctPattern) {
             resultMessage = "ACCESS GRANTED";
             resultMessageType = "correct";
-
-            // --- ADD THIS CODE BLOCK TO STOP THE TIMER ---
-            const startTime = localStorage.getItem("gameStartTime");
-            if (startTime) {
-                const finalTimeInSeconds = Math.floor(
-                    (Date.now() - parseInt(startTime, 10)) / 1000,
-                );
-                localStorage.setItem("gameFinalTime", finalTimeInSeconds);
-            }
-            localStorage.setItem("isGameTimerRunning", "false");
-            // Notify the timer component to update its display to the final time.
-            window.dispatchEvent(new CustomEvent("reset-timer"));
-            // --- END OF NEW CODE ---
         } else {
             resultMessage = "ACCESS DENIED";
             resultMessageType = "incorrect";
