@@ -16,6 +16,9 @@
     let isFadingToBlack = false;
     let showLoadingSpinner = false;
 
+    // This promise will hold the state of our critical video preloading.
+    let criticalVideosPreloadPromise;
+
     // Preload sounds immediately
     preloadAllSounds();
 
@@ -38,15 +41,10 @@
             }
         }, 2000);
 
-        // Start timing the fade and preload
-        const fadeStart = Date.now();
-
         try {
-            // Preload critical videos first (ones needed soon)
-            await preloadVideos(["doorScene", "videoTransition"]);
-
-            // Then preload the rest in background
-            preloadVideos(["jumpScare"]); // Don't await this one
+            // Wait for the preloading that we started in onMount to complete.
+            // If it's already done, this will resolve immediately.
+            await criticalVideosPreloadPromise;
 
             console.log("Critical videos preloaded successfully");
         } catch (error) {
@@ -57,21 +55,21 @@
         clearTimeout(spinnerTimeout);
         isPreloading = false;
 
-        // Ensure we've been fading for at least 2 seconds
-        const elapsed = Date.now() - fadeStart;
-        if (elapsed < 2000) {
-            await new Promise((resolve) => setTimeout(resolve, 2000 - elapsed));
-        }
+        // Per request, removed the minimum 2-second wait to proceed immediately
+        // after preloading, even if the fade animation is not complete.
 
         // Enter fullscreen
         const elem = document.documentElement;
         if (elem.requestFullscreen) {
             elem.requestFullscreen();
         } else if (elem.mozRequestFullScreen) {
+            /* Firefox */
             elem.mozRequestFullScreen();
         } else if (elem.webkitRequestFullscreen) {
+            /* Chrome, Safari and Opera */
             elem.webkitRequestFullscreen();
         } else if (elem.msRequestFullscreen) {
+            /* IE/Edge */
             elem.msRequestFullscreen();
         }
 
@@ -84,6 +82,24 @@
 
     onMount(() => {
         document.body.style.overflow = "hidden";
+
+        // Start preloading critical videos as soon as the component is mounted.
+        criticalVideosPreloadPromise = preloadVideos([
+            "doorScene",
+            "videoTransition",
+        ]);
+
+        // Also start preloading other videos in the background.
+        preloadVideos(["jumpScare"]);
+
+        // We can add a catch here to log any preloading errors that happen before the user clicks start.
+        criticalVideosPreloadPromise.catch((error) => {
+            console.warn(
+                "Initial video preload failed in the background:",
+                error,
+            );
+        });
+
         return () => {
             document.body.style.overflow = "auto";
         };
@@ -109,9 +125,43 @@
 
     {#if !$gameStore.introVideoReady}
         <div
-            class="absolute z-20 text-white/50 text-lg tracking-widest"
-            transition:fade
-        ></div>
+            class="relative z-10 flex flex-col items-center w-full max-w-4xl p-8 animate-pulse"
+            transition:fade={{ duration: 300 }}
+        >
+            <div class="w-full">
+                <!-- Skeleton Title -->
+                <div
+                    class="h-px bg-gradient-to-r from-transparent via-orange-900/50 to-transparent mb-4 landscape:hidden"
+                ></div>
+                <div
+                    class="h-16 md:h-20 bg-gray-800/50 rounded-lg w-4/5 mx-auto"
+                ></div>
+                <div
+                    class="h-px bg-gradient-to-r from-transparent via-orange-900/50 to-transparent mt-4 landscape:hidden"
+                ></div>
+
+                <!-- Skeleton Tagline -->
+                <div
+                    class="h-7 bg-gray-800/50 rounded-md w-3/5 mx-auto mt-6"
+                ></div>
+            </div>
+
+            <div class="flex flex-col items-center mt-8 landscape:mt-4">
+                <!-- Skeleton Headphones -->
+                <div class="h-5 bg-gray-800/50 rounded-md w-48 mb-4"></div>
+                <!-- Skeleton Button -->
+                <div class="h-12 bg-gray-800/50 rounded-lg w-40"></div>
+
+                <!-- Skeleton Footer -->
+                <div
+                    class="mt-12 pt-8 border-t border-gray-700/30 w-full max-w-md"
+                >
+                    <div
+                        class="h-4 bg-gray-800/50 rounded-md w-3/4 mx-auto"
+                    ></div>
+                </div>
+            </div>
+        </div>
     {/if}
 
     {#if $gameStore.introVideoReady}
@@ -138,8 +188,8 @@
                 <div class="">
                     <p
                         class="font-sans text-xl my-4 tracking-widest font-bold
-                text-gray-200
-                animate-flicker text-center"
+                       text-gray-200
+                       animate-flicker text-center"
                     >
                         Solve the puzzles. Claim the candy… if you dare.
                     </p>
@@ -173,8 +223,8 @@
                 <button
                     on:click={handleStart}
                     class="relative inline-block px-10 py-3 font-bold text-lg text-white uppercase tracking-widest transition-all duration-300
-                bg-black/50 border border-orange-800/50 rounded-tl-xl rounded-br-xl
-                hover:border-orange-600 hover:shadow-[0_0_20px_rgba(255,110,50,0.5)] hover:scale-110"
+                       bg-black/50 border border-orange-800/50 rounded-tl-xl rounded-br-xl
+                       hover:border-orange-600 hover:shadow-[0_0_20px_rgba(255,110,50,0.5)] hover:scale-110"
                 >
                     Start
                 </button>
@@ -319,8 +369,8 @@
 
 <style>
     /* This custom animation creates a slow, subtle pulse for the text-shadow,
-     giving the tagline a "glowing ember" effect.
-  */
+       giving the tagline a "glowing ember" effect.
+   */
     @keyframes flicker {
         0%,
         100% {
