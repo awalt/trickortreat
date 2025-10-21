@@ -2,7 +2,6 @@
     import { gameStore } from "$lib/gameStore.js";
     import JumpScare from "$lib/components/JumpScare.svelte";
     import { fade } from "svelte/transition";
-    import Timer from "$lib/components/Timer.svelte";
 
     import { onMount, onDestroy } from "svelte";
     import { congratsSound } from "$lib/audio.js";
@@ -33,10 +32,6 @@
         congratsSound.stop();
     });
 </script>
-
-<div class="w-full text-center">
-    <Timer />
-</div>
 
 <div
     class="relative w-full min-h-screen flex items-center justify-center p-8 text-center bg-gray-900"

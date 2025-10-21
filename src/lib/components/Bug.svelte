@@ -2,7 +2,6 @@
     import { onMount, onDestroy } from "svelte";
     import { fade } from "svelte/transition";
     import SubmitButton from "./SubmitButton.svelte";
-    import Timer from "$lib/components/Timer.svelte";
     import { gameStore } from "$lib/gameStore.js";
     import Image from "svelte-image";
 
@@ -126,10 +125,6 @@
         gameStore.solvePuzzle();
     }
 </script>
-
-<div class="w-full text-center">
-    <Timer />
-</div>
 
 <div
     class="relative w-full flex flex-col items-center justify-center p-8 text-center bg-black min-h-screen"

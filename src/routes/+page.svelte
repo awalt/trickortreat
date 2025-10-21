@@ -11,6 +11,10 @@
     import DoorScene from "$lib/components/DoorScene.svelte";
     import Candy from "$lib/components/Candy.svelte";
     import { gameStore } from "$lib/gameStore.js";
+    import Timer from "$lib/components/Timer.svelte";
+
+    // Define which pages should display the persistent timer
+    const pagesWithTimer = ["Door", "Knock", "Bug", "Candy"];
 
     // Scroll to top whenever the current view changes
     $effect(() => {
@@ -20,6 +24,13 @@
 </script>
 
 <main class="h-screen w-full bg-gray-900 text-white">
+    <!-- Persistent Timer: Renders a single timer instance for specific pages -->
+    {#if pagesWithTimer.includes($gameStore.currentView)}
+        <div class="w-full pt-4 text-center">
+            <Timer />
+        </div>
+    {/if}
+
     {#if $gameStore.currentView === "Splash"}
         <Splash />
     {:else if $gameStore.currentView === "Intro"}

@@ -9,7 +9,6 @@
     import { gameStore } from "$lib/gameStore.js";
     import { warningSound } from "$lib/audio.js";
     import { fade } from "svelte/transition";
-    import Timer from "$lib/components/Timer.svelte";
 
     const correctAnswer = "341";
     let isCorrect = null;
@@ -57,8 +56,6 @@
     class="w-full min-h-screen flex flex-col items-center justify-center px-0 py-4 sm:p-8 text-center bg-gray-900"
     in:fade={{ duration: 1000 }}
 >
-    <Timer />
-
     <h1 class="text-6xl mb-4 font-creepster text-red-500">Look around</h1>
 
     <div class="w-full sm:max-w-md">
