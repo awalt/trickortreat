@@ -34,7 +34,9 @@
     });
 </script>
 
-<Timer />
+<div class="w-full text-center">
+    <Timer />
+</div>
 
 <div
     class="relative w-full min-h-screen flex items-center justify-center p-8 text-center bg-gray-900"

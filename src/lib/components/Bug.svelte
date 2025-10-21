@@ -127,7 +127,9 @@
     }
 </script>
 
-<Timer />
+<div class="w-full text-center">
+    <Timer />
+</div>
 
 <div
     class="relative w-full flex flex-col items-center justify-center p-8 text-center bg-black min-h-screen"
@@ -146,7 +148,7 @@
                 class="w-full h-auto mx-auto max-w-2xl"
             />
 
-            <p class="mt-6">Unlock Peephole</p>
+            <p class="mt-6">Unlock Doorbell</p>
             <SubmitButton
                 {isCorrect}
                 inputType="directional"

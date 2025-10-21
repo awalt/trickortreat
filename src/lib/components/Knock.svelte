@@ -142,7 +142,9 @@
 </script>
 
 <!-- NEW: Using the reusable GameTimer component -->
-<Timer />
+<div class="w-full text-center">
+    <Timer />
+</div>
 
 <main
     class="door-background min-h-screen flex flex-col items-center justify-center p-4"

@@ -29,6 +29,25 @@
     let elapsedTime = getInitialTime(); // ✅ 2. INITIALIZE WITH THE FUNCTION
     let timerInterval = null;
     let isRunning = true;
+    let lastUpdateTime = Date.now();
+    let heartbeatInterval = null;
+
+    // Heartbeat check to detect if timer interval has stopped
+    function startHeartbeat() {
+        if (heartbeatInterval) {
+            clearInterval(heartbeatInterval);
+        }
+        heartbeatInterval = setInterval(() => {
+            const now = Date.now();
+            const timeSinceLastUpdate = now - lastUpdateTime;
+
+            // If timer should be running but hasn't updated in 3 seconds, restart it
+            if (isRunning && timeSinceLastUpdate > 3000) {
+                console.warn("Timer heartbeat detected freeze, restarting...");
+                initializeTimer();
+            }
+        }, 2000); // Check every 2 seconds
+    }
 
     // This function sets up the timer based on what's in localStorage.
     // It remains mostly the same, but now it starts with a non-zero elapsedTime.
@@ -37,6 +56,10 @@
         if (timerInterval) {
             clearInterval(timerInterval);
             timerInterval = null;
+        }
+        if (heartbeatInterval) {
+            clearInterval(heartbeatInterval);
+            heartbeatInterval = null;
         }
 
         const runningStatus = localStorage.getItem("isGameTimerRunning");
@@ -50,9 +73,12 @@
         }
 
         if (isRunning && startTime > 0) {
+            lastUpdateTime = Date.now();
             timerInterval = setInterval(() => {
                 elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+                lastUpdateTime = Date.now();
             }, 1000);
+            startHeartbeat();
             // No need to set elapsedTime here, it's already correct from getInitialTime()
         } else if (!isRunning && startTime > 0) {
             const finalTime = localStorage.getItem("gameFinalTime");
@@ -64,9 +90,12 @@
                 localStorage.setItem("gameStartTime", startTime.toString());
                 localStorage.setItem("isGameTimerRunning", "true");
 
+                lastUpdateTime = Date.now();
                 timerInterval = setInterval(() => {
                     elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+                    lastUpdateTime = Date.now();
                 }, 1000);
+                startHeartbeat();
                 elapsedTime = 0;
             } else {
                 // If explicitly set to not running, display 0
@@ -86,6 +115,9 @@
     onDestroy(() => {
         if (timerInterval) {
             clearInterval(timerInterval);
+        }
+        if (heartbeatInterval) {
+            clearInterval(heartbeatInterval);
         }
         // IMPORTANT: Clean up the window event listener to prevent memory leaks.
         window.removeEventListener("reset-timer", initializeTimer);
@@ -135,10 +167,10 @@
     /* ✅ UPDATED ANIMATION FOR THE NEW BORDER */
 
     .timer-display {
-        display: flex;
+        display: inline-flex;
         align-items: center;
         gap: 0.5rem;
-        margin-bottom: 1rem;
+        margin: 0 auto 1rem;
 
         font-family: "Creepster", cursive;
         font-size: 2rem;

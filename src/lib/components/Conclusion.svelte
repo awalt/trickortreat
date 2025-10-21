@@ -102,7 +102,7 @@
     }
 
     function shareGame() {
-        const shareText = `I solved this Trick of Treat game in ${finalTime}! 💀 Try to beat my time… if you dare.`;
+        const shareText = `Hey! I solved this Trick of Treat game in ${finalTime}! 💀 Try to beat my time… if you dare.`;
         const shareUrl = window.location.origin;
 
         if (navigator.share) {
