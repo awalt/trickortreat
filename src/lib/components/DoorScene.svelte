@@ -46,7 +46,10 @@
     <video
         autoplay
         muted
+        playsinline
+        webkit-playsinline
         class="absolute top-0 left-0 w-full h-full object-cover z-0"
+        style="pointer-events: none;"
     >
         <source src="/houseopen.mp4" type="video/mp4" />
         Your browser does not support the video tag.
