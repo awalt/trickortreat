@@ -9,8 +9,11 @@
     import BugController, { bugControllerManager } from "$lib/bugController.js";
 
     let spiderController;
+    let patrolTimeoutId; // To store the ID of our setTimeout
+    let isDestroyed = false; // Our "kill switch" for animation loops
 
     onMount(() => {
+        isDestroyed = false; // Reset flag on mount
         spiderController = new BugController();
         spiderController.initialize({
             imageSprite: "spider-sprite.png",
@@ -20,11 +23,11 @@
             canFly: false,
             canDie: false,
             numDeathTypes: 2,
-            zoom: 6,
+            zoom: 4,
             minDelay: 200,
             maxDelay: 1000,
             minSpeed: 6,
-            maxSpeed: 13,
+            maxSpeed: 6,
             minBugs: 1,
             maxBugs: 1,
         });
@@ -37,6 +40,14 @@
                 let animationFrameId;
 
                 function step() {
+                    // --- ADDED CHECK ---
+                    // If component is gone, stop the animation.
+                    if (isDestroyed) {
+                        cancelAnimationFrame(animationFrameId);
+                        resolve();
+                        return;
+                    }
+
                     const pos = bugInstance.getPos();
                     // If bug is gone, stop the animation.
                     if (!pos) {
@@ -75,6 +86,13 @@
                 let animationFrameId;
 
                 function check() {
+                    // --- ADDED CHECK ---
+                    if (isDestroyed) {
+                        cancelAnimationFrame(animationFrameId);
+                        resolve(); // Resolve to prevent any pending .then() from hanging
+                        return;
+                    }
+
                     // If spider is ready, set position and stop polling.
                     if (spider && spider.bug) {
                         cancelAnimationFrame(animationFrameId);
@@ -93,6 +111,8 @@
 
         // Refactored to a non-blocking, recursive loop with requestAnimationFrame
         async function spiderPatrol() {
+            if (isDestroyed) return; // Check at the very beginning
+
             const leftX = window.innerWidth * 0.2;
             const rightX = window.innerWidth * 0.8;
             const topY = window.innerHeight * 0.2;
@@ -111,10 +131,14 @@
 
             // Recursive function to handle the patrol loop
             async function executePatrol(index) {
+                // --- ADDED CHECK ---
+                if (isDestroyed) return;
+
                 // When the sequence is done, reset and start over.
                 if (index >= patrolPoints.length) {
                     // Reset position to start for a seamless loop
                     await setSpiderPosition(leftX, startY);
+                    if (isDestroyed) return; // Check again after await
                     // Use requestAnimationFrame to yield to the main thread before restarting
                     requestAnimationFrame(() => executePatrol(0));
                     return;
@@ -123,25 +147,37 @@
                 const point = patrolPoints[index];
                 await walkTo(spider, point);
 
+                if (isDestroyed) return; // Check again after await
                 // Use requestAnimationFrame to yield before the next step
                 requestAnimationFrame(() => executePatrol(index + 1));
             }
 
             // Start the initial patrol sequence
             await setSpiderPosition(leftX, startY);
+            if (isDestroyed) return; // Check again after await
             spider.go();
             executePatrol(0);
         }
 
         // Start the patrol after a delay
-        setTimeout(spiderPatrol, 2000);
+        patrolTimeoutId = setTimeout(spiderPatrol, 2000);
     });
 
+    // --- === UPDATED onDestroy BLOCK === ---
     onDestroy(() => {
-        if (typeof spiderController != "undefined") {
-            bugControllerManager.killAll();
-        }
+        // 1. Set the flag to stop all our custom animation loops (patrol, etc.)
+        isDestroyed = true;
+
+        // 2. Clear the initial timeout in case we navigate away before it fires
+        clearTimeout(patrolTimeoutId);
+
+        // 3. Call the global manager's killAll() method. This is what you
+        // had originally, and it's the correct way to stop the bugs'
+        // internal animations and remove them from the DOM.
+        bugControllerManager.killAll();
+        spiderController.killAll();
     });
+    // --- =============================== ---
 
     const correctAnswer = ["up", "right", "down", "left", "up"];
     let isCorrect = null;

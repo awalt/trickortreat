@@ -161,7 +161,7 @@
         <h2
             class="text-2xl font-title text-amber-300/70 mb-1 uppercase tracking-wider engraved-text"
         >
-            Open Door
+            Front Door
         </h2>
         <h1
             class="text-4xl md:text-5xl font-title text-amber-300 mb-2 uppercase tracking-wider engraved-text"

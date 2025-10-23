@@ -737,8 +737,8 @@ var BugDispatch = {
   options: {
     minDelay: 500,
     maxDelay: 10000,
-    minBugs: 1,
-    maxBugs: 20,
+    minBugs: 0,
+    maxBugs: 0,
     minSpeed: 5,
     maxSpeed: 10,
     maxLargeTurnDeg: 150,
