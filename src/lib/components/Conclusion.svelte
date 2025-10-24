@@ -101,23 +101,29 @@
         window.dispatchEvent(new CustomEvent("reset-timer"));
     }
 
+    // This is the updated function
     function shareGame() {
         const shareText = `Hey! I solved this Trick of Treat game in ${finalTime}! 💀 Try to beat my time… if you dare.`;
         const shareUrl = window.location.origin;
 
+        // --- SOLUTION ---
+        // Combine your desired text and the URL into a single string
+        const combinedShareContent = `${shareText} ${shareUrl}`;
+
         if (navigator.share) {
             navigator.share({
                 title: "Trick or Treat - Halloween Escape Room",
-                text: shareText,
-                url: shareUrl,
+                text: combinedShareContent, // Use the combined string here
+                // By omitting the 'url' field, apps are forced to use the 'text' field
+                // as the main body of the message.
             });
         } else {
             // Fallback for desktop/unsupported browsers
-            navigator.clipboard
-                .writeText(`${shareText} ${shareUrl}`)
-                .then(() => {
-                    alert("Share link copied to clipboard!");
-                });
+            // This logic was already correct, but we'll use the new
+            // variable for consistency.
+            navigator.clipboard.writeText(combinedShareContent).then(() => {
+                alert("Share link copied to clipboard!");
+            });
         }
     }
 
