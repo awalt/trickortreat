@@ -53,15 +53,26 @@ function createGameStore() {
     subscribe,
     startGame: () => {
       if (typeof window !== "undefined") {
+        // --- REMOVE TIMER LOGIC FROM HERE ---
+        // localStorage.setItem("gameStartTime", Date.now().toString());
+        // localStorage.setItem("isGameTimerRunning", "true");
+        // localStorage.removeItem("gameFinalTime");
+        // --- END REMOVAL ---
+      }
+      update((state) => ({ ...state, currentView: "DoorScene" }));
+    },
+    finishWalking: () => {
+      // --- ADD TIMER LOGIC HERE ---
+      if (typeof window !== "undefined") {
         // Set the start time and flag the timer as running.
         localStorage.setItem("gameStartTime", Date.now().toString());
         localStorage.setItem("isGameTimerRunning", "true");
         // Ensure any old final time is cleared for the new run.
         localStorage.removeItem("gameFinalTime");
       }
-      update((state) => ({ ...state, currentView: "DoorScene" }));
+      // --- END ADDITION ---
+      update((state) => ({ ...state, currentView: "Door" }));
     },
-    finishWalking: () => update((state) => ({ ...state, currentView: "Door" })),
     setIntroVideoReady: () =>
       update((state) => ({ ...state, introVideoReady: true })),
     solvePuzzle: () => {
