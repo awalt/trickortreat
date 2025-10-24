@@ -209,7 +209,7 @@
         z-index: 9999;
 
         /* Apply the 'walk-path' animation */
-        animation: walk-path 12s linear infinite;
+        animation: walk-path 12s linear 4s infinite;
 
         /* Prevents the user from accidentally clicking the spider */
         pointer-events: none;
@@ -222,19 +222,16 @@
         width: var(--tile-width);
         height: var(--tile-height);
 
-        /* Set the background image from our variable */
         background-image: var(--sprite-image-url);
         background-repeat: no-repeat;
         background-position: 0 0;
 
-        /* Apply the 'cycle-sprite' animation */
-        /* steps(7) is the key part for tile-based animation */
-        /* Add the 'wiggle' animation */
+        /* Add a 4s delay to both animations */
         animation:
-            cycle-sprite var(--animation-speed) steps(var(--num-tiles)) infinite,
-            wiggle 0.4s ease-in-out infinite;
+            cycle-sprite var(--animation-speed) steps(var(--num-tiles)) 4s
+                infinite,
+            wiggle 0.4s ease-in-out 4s infinite;
 
-        /* Makes pixel art sprites look crisp */
         image-rendering: pixelated;
     }
 </style>
