@@ -12,7 +12,7 @@
     // We use 750ms here to ensure the transition completes before navigating.
     const JUMPSCARE_DURATION = 750;
 
-    function bragTheCandy() {
+    function grabTheCandy() {
         if (playJumpScare) return;
 
         playJumpScare = true;
@@ -46,6 +46,7 @@
             src="/static/candy.png"
             alt="A pile of tempting Halloween candy"
             class="w-full h-auto max-w-2xl mx-auto mb-8"
+            on:click={grabTheCandy}
         />
 
         <h1 class="text-4xl md:text-5xl font-creepster text-yellow-400 mb-4">
@@ -54,7 +55,7 @@
         <p class="text-gray-300 text-xl mb-10">Claim the candy…if you dare.</p>
 
         <button
-            on:click={bragTheCandy}
+            on:click={grabTheCandy}
             disabled={playJumpScare}
             class="relative inline-block px-12 py-4 font-bold text-xl text-white uppercase tracking-widest transition-all duration-300
              bg-orange-600 border-4 border-yellow-400 rounded-full
