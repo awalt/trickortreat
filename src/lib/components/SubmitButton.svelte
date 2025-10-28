@@ -2,10 +2,12 @@
     /* SubmitButton.svelte */
     import { createEventDispatcher, onMount } from "svelte";
     import { successSound, errorSound } from "$lib/audio.js";
+    import { TEXT } from "$lib/i18n"; // Already imported, good!
 
     // --- PROPS ---
     export let isCorrect = null;
-    export let continueLabel = "Continue";
+    // UPDATED: Use default from TEXT store
+    export let continueLabel = TEXT.submitButton.continue;
     export let inputType = "text"; // 'text', 'number', or 'directional'
     export let maxLength = 3;
     export let combinationLength = 3; // For directional input
@@ -32,6 +34,14 @@
         right: 90,
         down: 180,
         left: 270,
+    };
+
+    // ADDED: Reactive map for translating aria-labels
+    $: directionTranslationMap = {
+        up: TEXT.submitButton.dir_up,
+        right: TEXT.submitButton.dir_right,
+        down: TEXT.submitButton.dir_down,
+        left: TEXT.submitButton.dir_left,
     };
 
     // --- FUNCTIONS ---
@@ -72,7 +82,8 @@
             }
         } else if (isCorrect === false) {
             errorSound.play(); // Assuming audio.js is external
-            errorMessage = "Incorrect Code. Try Again.";
+            // UPDATED: Use error message from TEXT store
+            errorMessage = TEXT.submitButton.incorrect;
             isShaking = true;
             setTimeout(() => (isShaking = false), 500);
 
@@ -99,7 +110,11 @@
                         <button
                             on:click={() => rotateArrow(i)}
                             class="flex items-center justify-center w-16 h-16 bg-gray-800 border-2 border-gray-600 rounded-lg focus:outline-none focus:border-red-500"
-                            aria-label={`Direction ${i + 1}, currently ${directions[i]}`}
+                            aria-label={`${TEXT.submitButton.aria_direction} ${
+                                i + 1
+                            }, ${TEXT.submitButton.aria_currently} ${
+                                directionTranslationMap[directions[i]]
+                            }`}
                         >
                             <svg
                                 class="w-10 h-10 text-white transition-transform duration-300 ease-in-out"
@@ -173,7 +188,7 @@
                         ry="2"
                     />
                 </svg>
-                <span>UNLOCKED</span>
+                <span>{TEXT.submitButton.unlocked}</span>
             </div>
             <button
                 on:click={handleContinue}
@@ -225,7 +240,7 @@
                         ry="2"
                     />
                 </svg>
-                <span>ENTER</span>
+                <span>{TEXT.submitButton.enter}</span>
             </button>
         </div>
     </div>

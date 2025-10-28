@@ -1,6 +1,6 @@
 // --- NEW WAY: Read from environment variable ---
 // It will default to 'en' if VITE_LANGUAGE is not set during the build.
-export const CURRENT_LANG = import.meta.env.VITE_LANGUAGE || "en"; // Default language is English
+export const CURRENT_LANG = import.meta.env.VITE_LANGUAGE || "fr"; // Default language is English
 // -----------------------------------------------
 
 // Log the current language to the console during build
@@ -100,6 +100,18 @@ const translations = {
       footer_made_by_1: "Made with ❤️ in Ottawa by",
       copy_button: "Copy Text",
     },
+    submitButton: {
+      continue: "Continue",
+      incorrect: "Incorrect Code. Try Again.",
+      unlocked: "UNLOCKED",
+      enter: "ENTER",
+      aria_direction: "Direction",
+      aria_currently: "currently",
+      dir_up: "up",
+      dir_right: "right",
+      dir_down: "down",
+      dir_left: "left",
+    },
   },
 
   // --- French Text ---
@@ -153,6 +165,18 @@ const translations = {
       title: "Félicitations, vous avez échappé à vos peurs.",
       subtitle: "Réclamez les bonbons… si vous l'osez.",
       button: "Prendre les bonbons",
+    },
+    submitButton: {
+      continue: "Continuer",
+      incorrect: "Code incorrect. Réessayez.",
+      unlocked: "DÉVERROUILLÉ",
+      enter: "ENTRER",
+      aria_direction: "Direction",
+      aria_currently: "actuellement",
+      dir_up: "haut",
+      dir_right: "droite",
+      dir_down: "bas",
+      dir_left: "gauche",
     },
     conclusion: {
       alert_submit_error:
