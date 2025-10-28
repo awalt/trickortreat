@@ -1,6 +1,6 @@
 // --- NEW WAY: Read from environment variable ---
 // It will default to 'en' if VITE_LANGUAGE is not set during the build.
-export const CURRENT_LANG = import.meta.env.VITE_LANGUAGE || "en";
+export const CURRENT_LANG = import.meta.env.VITE_LANGUAGE || "en"; // Default language is English
 // -----------------------------------------------
 
 // Log the current language to the console during build
