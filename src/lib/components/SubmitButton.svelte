@@ -1,24 +1,29 @@
 <script>
     /* SubmitButton.svelte */
-    import { createEventDispatcher, onMount } from "svelte";
+    import { createEventDispatcher, onMount, tick } from "svelte"; // Import tick
     import { successSound, errorSound } from "$lib/audio.js";
     import { TEXT } from "$lib/i18n"; // Already imported, good!
-
     // --- PROPS ---
     export let isCorrect = null;
     // UPDATED: Use default from TEXT store
     export let continueLabel = TEXT.submitButton.continue;
-    export let inputType = "text"; // 'text', 'number', or 'directional'
+    export let inputType = "text";
+    // 'text', 'number', or 'directional'
     export let maxLength = 3;
-    export let combinationLength = 3; // For directional input
+    export let combinationLength = 3;
+    // For directional input
 
     // --- LOCAL STATE ---
-    let userInput = ""; // For text/number input
-    let directions = []; // For directional input
+    let userInput = "";
+    // For text/number input
+    let directions = [];
+    // For directional input
     let attempt = -1;
     let isShaking = false;
     let errorMessage = "";
     const dispatch = createEventDispatcher();
+
+    let submitButtonWrapper; // ADDED: To bind to our button container
 
     // Initialize directions array when the component mounts
     onMount(() => {
@@ -26,7 +31,6 @@
             directions = Array(combinationLength).fill("up");
         }
     });
-
     // --- MAPPINGS ---
     const directionCycle = ["up", "right", "down", "left"];
     const rotationMap = {
@@ -35,7 +39,6 @@
         down: 180,
         left: 270,
     };
-
     // ADDED: Reactive map for translating aria-labels
     $: directionTranslationMap = {
         up: TEXT.submitButton.dir_up,
@@ -43,7 +46,6 @@
         down: TEXT.submitButton.dir_down,
         left: TEXT.submitButton.dir_left,
     };
-
     // --- FUNCTIONS ---
     function rotateArrow(index) {
         const currentDirection = directions[index];
@@ -71,17 +73,35 @@
         }
     }
 
+    // ADDED: This function scrolls the button into view on mobile
+    async function handleInputFocus() {
+        // Wait for Svelte's next DOM update
+        await tick();
+
+        // Wait a moment for the keyboard to finish animating in
+        setTimeout(() => {
+            if (submitButtonWrapper) {
+                submitButtonWrapper.scrollIntoView({
+                    behavior: "smooth",
+                    block: "nearest", // Ensures it scrolls just enough
+                });
+            }
+        }, 300); // 300ms delay is usually enough
+    }
+
     // --- REACTIVE LOGIC ---
     $: if (attempt >= 0) {
         if (isCorrect) {
-            successSound.play(); // Assuming audio.js is external
+            successSound.play();
+            // Assuming audio.js is external
             errorMessage = "";
             isShaking = false;
             if (document.activeElement instanceof HTMLElement) {
                 document.activeElement.blur();
             }
         } else if (isCorrect === false) {
-            errorSound.play(); // Assuming audio.js is external
+            errorSound.play();
+            // Assuming audio.js is external
             // UPDATED: Use error message from TEXT store
             errorMessage = TEXT.submitButton.incorrect;
             isShaking = true;
@@ -145,12 +165,16 @@
                     maxlength={maxLength}
                     class="w-36 rounded-lg border-2 border-gray-600 bg-gray-800 py-3 text-center text-4xl text-white tracking-[0.3em] focus:border-red-500 focus:outline-none"
                     on:keyup={handleKeyUp}
+                    on:focus={handleInputFocus}
                 />
             {/if}
         </div>
     </div>
 
-    <div class="relative flex flex-col items-center justify-center w-full h-28">
+    <div
+        bind:this={submitButtonWrapper}
+        class="relative flex flex-col items-center justify-center w-full h-28"
+    >
         <div
             class="absolute inset-0 flex flex-col items-center justify-center transition-all duration-500 ease-out"
             class:opacity-100={isCorrect}
