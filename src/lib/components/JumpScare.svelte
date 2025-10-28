@@ -30,7 +30,7 @@
         videoElement.play();
 
         // Set a timer to hide the video
-        closeTimer = setTimeout(hideVideo, 550);
+        closeTimer = setTimeout(hideVideo, 1900);
 
         // REMOVED: The requestFullscreen() call was causing the orientation flip.
         // Your CSS already handles the fullscreen effect.
