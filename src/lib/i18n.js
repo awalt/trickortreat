@@ -63,6 +63,7 @@ const translations = {
       button: "Grab the candy",
     },
     conclusion: {
+      copy_success: "Copied!",
       alert_submit_error:
         "Sorry, there was an error submitting your score. Please try again.",
       alert_network_error:
@@ -179,11 +180,12 @@ const translations = {
       dir_left: "gauche",
     },
     conclusion: {
+      copy_success: "Copié !",
       alert_submit_error:
         "Désolé, une erreur s'est produite lors de la soumission de votre score. Veuillez réessayer.",
       alert_network_error:
         "Une erreur de réseau s'est produite. Veuillez vérifier votre connexion et réessayer.",
-      share_text_1: "Hey! J'ai résolu ce jeu Trick of Treat en ",
+      share_text_1: "Hey! J'ai résolu ce jeu Trick or Treat en ",
       share_text_2: "! 💀 Essaie de battre mon temps… si tu l'oses.",
       share_title: "Trick or Treat - Jeu d'évasion d'Halloween",
       alert_clipboard_copy: "Lien de partage copié dans le presse-papiers!",
