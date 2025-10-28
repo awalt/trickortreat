@@ -327,16 +327,10 @@
 
                 <div class="text-gray-300 space-y-4">
                     <p>
-                        This free 10-minute game was conjured up by Alex, Eric,
-                        and Nick to celebrate Halloween 2025! We wanted to give
-                        you a taste of the custom-tailored adventures we can
-                        create at Mobile&nbsp;Escapes.
+                        {TEXT.intro.info1}
                     </p>
                     <p>
-                        Our main goal is for you to have a blast solving these
-                        spooky puzzles. If you enjoyed the experience, we hope
-                        you'll think of Mobile&nbsp;Escapes for your next
-                        real-life or virtual escape room adventure!
+                        {TEXT.intro.info2}
                     </p>
                 </div>
 

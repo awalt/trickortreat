@@ -55,6 +55,14 @@ const translations = {
       footer_text_1: "was conjured by",
       mobile_escapes: "Mobile Escapes",
       footer_text_2: "and AI",
+      info1: `This free 10-minute game was conjured up by Alex, Eric,
+      and Nick to celebrate Halloween 2025! We wanted to give
+      you a taste of the custom-tailored adventures we can
+      create at Mobile&nbsp;Escapes.`,
+      info2: `Our main goal is for you to have a blast solving these
+      spooky puzzles. If you enjoyed the experience, we hope
+      you'll think of Mobile&nbsp;Escapes for your next
+      real-life or virtual escape room adventure!`,
     },
     candy: {
       alt_text: "A pile of tempting Halloween candy",
@@ -155,6 +163,8 @@ const translations = {
       button_open: "Ouvrir la porte",
     },
     intro: {
+      info1: `Ce jeu gratuit de 10 minutes a été créé par Alex, Eric et Nick pour célébrer l'Halloween 2025! Nous voulions vous donner un avant-goût des aventures sur mesure que nous pouvons créer chez Évasions&nbsp;Mobiles.`,
+      info2: `Notre objectif principal est que vous vous amusiez en résolvant ces énigmes épeurantes. Si vous avez aimé l'expérience, nous espérons que vous penserez à Évasions&nbsp;Mobiles pour votre prochaine aventure de jeu d'évasion, que ce soit en personne ou virtuellement!`,
       footer_button_text: "Ce jeu",
       footer_aria_label: "Afficher les informations du jeu",
       footer_text_1: "a été conçu par",
