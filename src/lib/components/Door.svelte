@@ -67,7 +67,7 @@
                 <div
                     class="w-full aspect-square flex flex-col items-center justify-center"
                 >
-                    <enhanced:img
+                    <img
                         src={FILE.windowImage}
                         alt="Window"
                         class="max-h-full max-w-full object-contain"
@@ -85,7 +85,7 @@
                 <div
                     class="w-full aspect-square flex flex-col items-center justify-center"
                 >
-                    <enhanced:img
+                    <img
                         src={FILE.signImage}
                         alt="Sign"
                         class="max-h-full max-w-full object-contain"
@@ -102,7 +102,7 @@
                 <div
                     class="w-full aspect-square flex flex-col items-center justify-center"
                 >
-                    <enhanced:img
+                    <img
                         src={FILE.doorImage}
                         alt="Door"
                         class="max-h-full max-w-full object-contain"

@@ -4,16 +4,22 @@
     import { fade } from "svelte/transition";
     import { onMount, onDestroy } from "svelte";
     import { congratsSound } from "$lib/audio.js";
-    import { TEXT, FILE } from "$lib/i18n.js"; // <-- IMPORT ADDED
+    import { TEXT, FILE } from "$lib/i18n.js";
 
     let playJumpScare = false;
+    let idleTimer; // <-- ADDED: To hold the 10-second timer
 
     // The timer in JumpScare.svelte is set to 550ms, plus a 100ms fade.
     // We use 750ms here to ensure the transition completes before navigating.
-    const JUMPSCARE_DURATION = 750;
+    const JUMPSCARE_DURATION = 2000;
 
     function grabTheCandy() {
         if (playJumpScare) return;
+
+        // --- ADDED ---
+        // The user clicked, so cancel the 10-second idle timer
+        clearTimeout(idleTimer);
+        // --- END ADDED ---
 
         playJumpScare = true;
 
@@ -25,11 +31,26 @@
 
     onMount(() => {
         congratsSound.play();
+
+        // --- ADDED: Start the 10-second "idle" timer ---
+        idleTimer = setTimeout(() => {
+            // If 10 seconds pass and the user hasn't clicked,
+            // (playJumpScare will still be false), run the function.
+            if (!playJumpScare) {
+                grabTheCandy();
+            }
+        }, 10000); // 10,000 milliseconds = 10 seconds
+        // --- END ADDED ---
     });
 
     onDestroy(() => {
         // Stop the sound if the user navigates away before it finishes
         congratsSound.stop();
+
+        // --- ADDED ---
+        // Always clear timers in onDestroy to prevent memory leaks
+        clearTimeout(idleTimer);
+        // --- END ADDED ---
     });
 </script>
 
@@ -58,9 +79,9 @@
             on:click={grabTheCandy}
             disabled={playJumpScare}
             class="relative inline-block px-12 py-4 font-bold text-xl text-white uppercase tracking-widest transition-all duration-300
-             bg-orange-600 border-4 border-yellow-400 rounded-full
-             hover:bg-orange-700 hover:shadow-[0_0_30px_rgba(255,255,0,0.8)]
-             hover:scale-110 disabled:opacity-50"
+              bg-orange-600 border-4 border-yellow-400 rounded-full
+              hover:bg-orange-700 hover:shadow-[0_0_30px_rgba(255,255,0,0.8)]
+              hover:scale-110 disabled:opacity-50"
         >
             {TEXT.candy.button}
         </button>

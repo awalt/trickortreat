@@ -217,13 +217,16 @@ const baseFilePaths = {
   dingdong: "/dingdong.mp3",
 
   // --- Images ---
-  windowImage: "/window5b.jpeg",
-  signImage: "/sign.jpeg",
-  doorImage: "/house3d.png",
+  windowImage: "/2/jar_new.jpg",
+  signImage: "/2/sign_en.jpg",
+  doorImage: "/2/door_en.jpg",
+
   pathImage: "/path6.png",
-  house3Image: "/house3.jpeg",
+
+  house3Image: "/2/last_door_en.jpg",
   knockerImage: "/knocker.png",
-  candy: "/candy.png",
+
+  candy: "/2/candy_en.jpg",
 
   // --- Videos ---
   houseopenVideo: "/houseopen.mp4",
@@ -237,6 +240,15 @@ const translatedFilePaths = {
     first: "/fr/toutes.wav",
     warning: "/fr/attention.wav",
     deep: "/fr/tu.wav",
+    congrats: "/fr/fel.wav",
+
+    signImage: "/2/sign_fr.jpg",
+    doorImage: "/2/door_fr.jpg",
+
+    pathImage: "/2/peephole_fr.jpg",
+    house3Image: "/2/last_door_fr.jpg",
+
+    candy: "/2/candy_fr.jpg",
   },
 };
 
