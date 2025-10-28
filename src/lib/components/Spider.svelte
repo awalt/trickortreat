@@ -37,7 +37,7 @@
             /* 0%: Start (Pos 0) */
             0% {
                 /* Start off-screen at the bottom, facing up */
-                top: 105vh;
+                top: calc(100vh + 50px); /* <-- FIX */
                 left: 50%;
                 transform: translate(-50%, -50%) rotate(0deg);
             }
@@ -132,7 +132,7 @@
             */
             93.11% {
                 /* Instantly snap to start position */
-                top: 105vh; /* Instantly snap to start position */
+                top: calc(100vh + 50px); /* <-- FIX */
                 left: 50%;
                 transform: translate(-50%, -50%) rotate(0deg);
             }
@@ -140,7 +140,7 @@
             /* Hold at the start position until 100% */
             100% {
                 /* PAUSE at start position (off-screen) */
-                top: 105vh; /* Hold at start position */
+                top: calc(100vh + 50px); /* <-- FIX */
                 left: 50%;
                 transform: translate(-50%, -50%) rotate(0deg);
             }
@@ -202,16 +202,18 @@
       It's positioned absolutely to float over the page content.
     */
     #spider-container {
-        position: absolute;
-        /* A high z-index ensures it's on top of other page content.
-          You might need to adjust this based on your site's stacking.
-        */
+        /* CHANGE THIS from 'absolute' to 'fixed' */
+        position: fixed;
+
         z-index: 9999;
 
-        /* Apply the 'walk-path' animation */
-        animation: walk-path 12s linear 4s infinite;
+        /* These lines correctly set the initial state */
+        top: calc(100vh + 50px);
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(0deg);
 
-        /* Prevents the user from accidentally clicking the spider */
+        /* Animation rules are correct */
+        animation: walk-path 12s linear 4s infinite backwards;
         pointer-events: none;
     }
 

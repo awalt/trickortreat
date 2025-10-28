@@ -67,7 +67,7 @@ const translations = {
         "Sorry, there was an error submitting your score. Please try again.",
       alert_network_error:
         "A network error occurred. Please check your connection and try again.",
-      share_text_1: "Hey! I solved this Trick of Treat game in",
+      share_text_1: "Hey! I solved this Trick or Treat game in",
       share_text_2: "! 💀 Try to beat my time… if you dare.",
       share_title: "Trick or Treat - Halloween Escape Room",
       alert_clipboard_copy: "Share link copied to clipboard!",
@@ -98,6 +98,7 @@ const translations = {
       leaderboard_you: "← You!",
       button_play_again: "🎃 Play Again",
       footer_made_by_1: "Made with ❤️ in Ottawa by",
+      copy_button: "Copy Text",
     },
   },
 
@@ -158,7 +159,7 @@ const translations = {
         "Désolé, une erreur s'est produite lors de la soumission de votre score. Veuillez réessayer.",
       alert_network_error:
         "Une erreur de réseau s'est produite. Veuillez vérifier votre connexion et réessayer.",
-      share_text_1: "Hey! J'ai résolu ce jeu Trick of Treat en",
+      share_text_1: "Hey! J'ai résolu ce jeu Trick of Treat en ",
       share_text_2: "! 💀 Essaie de battre mon temps… si tu l'oses.",
       share_title: "Trick or Treat - Jeu d'évasion d'Halloween",
       alert_clipboard_copy: "Lien de partage copié dans le presse-papiers!",
@@ -189,6 +190,7 @@ const translations = {
       leaderboard_you: "← Vous!",
       button_play_again: "🎃 Jouer à nouveau",
       footer_made_by_1: "Fait avec ❤️ à Ottawa par",
+      copy_button: "Copier le texte",
     },
   },
 };

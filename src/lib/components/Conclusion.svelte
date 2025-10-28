@@ -9,6 +9,14 @@
     export let playerName = "";
     let finalTimeInSeconds = 0;
 
+    // --- NEW VARIABLES ---
+    let shareMessage = ""; // This will be populated reactively
+
+    // --- FIX 1: Initialize button text using the TEXT object ---
+    // (Make sure you've added 'copy_button' to your i18n.js file!)
+    let copyButtonText =
+        TEXT.conclusion.copy_button || "Copy text to clipboard";
+
     let showNameInput = false;
     let isSubmitting = false;
     let nameSubmitted = false;
@@ -20,6 +28,11 @@
         { name: "WitchyWiz", time: "05:01" },
         { name: "BatSignal", time: "05:28" },
     ];
+
+    // --- FIX 2: Remove the '$' from $TEXT ---
+    // This dynamically builds your share message whenever finalTime changes
+    // (Make sure you've added 'copy_share_1' and 'copy_share_2' to i18n.js)
+    shareMessage = `${TEXT.conclusion.share_text_1 || "Hey! I solved this Trick or Treat game in "}${finalTime}${TEXT.conclusion.share_text_2 || "! 💀 Try to beat my time... if you dare. https://trick-or-treat-escape.netlify.app"}`;
 
     // This helper function formats seconds into MM:SS
     function formatTimeFromSeconds(seconds) {
@@ -104,7 +117,7 @@
 
     // This is the updated function
     function shareGame() {
-        const shareText = `Hey! I solved this Trick of Treat game in ${finalTime}! 💀 Try to beat my time… if you dare.`;
+        const shareText = `${TEXT.conclusion.share_text_1} ${finalTime}${TEXT.conclusion.share_text_2}`;
         const shareUrl = window.location.origin;
 
         // --- SOLUTION ---
@@ -128,6 +141,33 @@
         }
     }
 
+    // --- FIX 3: Use TEXT object for button feedback text ---
+    // This function copies the text from the new textarea
+    async function copyShareMessage() {
+        if (!navigator.clipboard) {
+            // Fallback for very old browsers or insecure contexts
+            alert("Clipboard functionality is not available in your browser.");
+            return;
+        }
+        try {
+            await navigator.clipboard.writeText(shareMessage);
+            // (Make sure you've added 'copy_success' to i18n.js)
+            copyButtonText = TEXT.conclusion.copy_success || "Copied! ✅";
+            setTimeout(() => {
+                copyButtonText =
+                    TEXT.conclusion.copy_button || "Copy text to clipboard";
+            }, 2500);
+        } catch (err) {
+            console.error("Failed to copy text: ", err);
+            // (Make sure you've added 'copy_fail' to i18n.js)
+            copyButtonText = TEXT.conclusion.copy_fail || "Failed to copy ❌";
+            setTimeout(() => {
+                copyButtonText =
+                    TEXT.conclusion.copy_button || "Copy text to clipboard";
+            }, 2500);
+        }
+    }
+
     onMount(() => {
         // Read the final time from localStorage
         const storedFinalTime = localStorage.getItem("gameFinalTime");
@@ -142,6 +182,11 @@
                 el.classList.add("opacity-100", "translate-y-0");
             }, index * 200);
         });
+
+        // This line ensures the button text is correct if the component
+        // somehow re-initializes
+        copyButtonText =
+            TEXT.conclusion.copy_button || "Copy text to clipboard";
     });
 </script>
 
@@ -187,6 +232,20 @@
                 <p class="text-gray-400 mt-3 max-w-xs mx-auto">
                     {TEXT.conclusion.share_prompt}
                 </p>
+
+                <div class="mt-6 max-w-lg mx-auto w-full">
+                    <textarea
+                        readonly
+                        class="w-full h-28 p-3 bg-gray-900/70 border border-gray-600/50 rounded-lg text-gray-300 font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        bind:value={shareMessage}
+                    />
+                    <button
+                        on:click={copyShareMessage}
+                        class="mt-2 w-full bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-lg font-bold transition-all duration-300 transform hover:scale-105"
+                    >
+                        {copyButtonText}
+                    </button>
+                </div>
             </div>
 
             <div

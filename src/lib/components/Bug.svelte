@@ -24,12 +24,12 @@
     }
 </script>
 
-<Spider />
 <div
     class="relative w-full flex flex-col items-center justify-center p-8 text-center bg-black min-h-screen"
     style="background-image: url('/wood.png'); background-size: cover; background-position: center;"
     in:fade={{ duration: 1000 }}
 >
+    <Spider />
     <div class="z-10">
         <div class="sticky top-8">
             <h1 class="text-6xl mb-4 font-creepster text-red-500">
