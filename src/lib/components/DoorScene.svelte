@@ -3,6 +3,7 @@
     import { fade, scale } from "svelte/transition";
     import { onMount, onDestroy } from "svelte";
     import { clickSound, courageSound, suspiciousSound } from "$lib/audio.js";
+    import { TEXT } from "$lib/i18n";
 
     let showModal = false;
 
@@ -60,8 +61,8 @@
             <h1
                 class="text-5xl md:text-2xl font-bold font-sans text-gray-200 text-shadow-lg mb-8"
             >
-                Every other house on this street has been visited. Will&nbsp;you
-                be its first trick or treater?
+                <!-- Use {@html} because this string contains &nbsp; -->
+                {@html TEXT.doorScene.question}
             </h1>
         </div>
         <div class="flex gap-4 justify-center">
@@ -71,7 +72,7 @@
                     bg-black/50 border border-orange-800/50 rounded-tl-xl rounded-br-xl
                     hover:border-orange-600 hover:shadow-[0_0_20px_rgba(255,110,50,0.5)] hover:scale-110"
             >
-                <span class="animate-pulse">Run away</span>
+                <span class="animate-pulse">{TEXT.doorScene.runAway}</span>
             </button>
             <button
                 on:click={handleGoToDoor}
@@ -80,7 +81,7 @@
                     bg-black/50 border border-orange-800/50 rounded-tl-xl rounded-br-xl
                     hover:border-orange-600 hover:shadow-[0_0_20px_rgba(255,110,50,0.5)] hover:scale-110"
             >
-                <span class="animate-pulse">Go to door</span>
+                <span class="animate-pulse">{TEXT.doorScene.goToDoor}</span>
             </button>
         </div>
     </div>
@@ -114,9 +115,11 @@
             <h2
                 class="text-3xl font-creepster text-orange-400 mb-4 text-shadow-md"
             >
-                You don't have the courage yet.
+                {TEXT.doorScene.modal_title}
             </h2>
-            <p class="text-gray-300 text-lg mb-8">Take a few deep breaths.</p>
+            <p class="text-gray-300 text-lg mb-8">
+                {TEXT.doorScene.modal_body}
+            </p>
 
             <button
                 on:click={closeModal}
@@ -124,7 +127,7 @@
              bg-black/50 border border-orange-800/50 rounded-tl-xl rounded-br-xl
              hover:border-orange-600 hover:shadow-[0_0_20px_rgba(255,110,50,0.5)] hover:scale-110"
             >
-                OK
+                {TEXT.doorScene.modal_button}
             </button>
         </div>
     </div>

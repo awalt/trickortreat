@@ -2,6 +2,9 @@
     import { onMount, onDestroy } from "svelte";
 
     import { gameStore } from "$lib/gameStore.js";
+    import { TEXT, FILE } from "$lib/i18n.js";
+
+    console.log({ FILE });
 
     import {
         knockSound,
@@ -131,19 +134,19 @@
 >
     <div class="relative max-w-lg mb-8">
         <h1 class="text-6xl mb-4 font-creepster text-red-500 text-center">
-            Trick or Treat
+            {TEXT.knock.main_title}
         </h1>
 
-        <enhanced:img
-            src="/static/house3.jpeg"
-            alt="House 3D"
+        <img
+            src={FILE.house3Image}
+            alt="House"
             class="w-full object-contain"
             class:house-lightning-flicker={houseFlicker}
         />
 
         <div class="flex flex-col items-center mt-6">
             <p class="font-body text-amber-200/90 text-lg mb-2">
-                Ring The Doorbell
+                {TEXT.knock.doorbell_prompt}
             </p>
             <div class="doorbell-plate">
                 <button
@@ -161,15 +164,15 @@
         <h2
             class="text-2xl font-title text-amber-300/70 mb-1 uppercase tracking-wider engraved-text"
         >
-            Front Door
+            {TEXT.knock.panel_subtitle}
         </h2>
         <h1
             class="text-4xl md:text-5xl font-title text-amber-300 mb-2 uppercase tracking-wider engraved-text"
         >
-            Secret Knock
+            {TEXT.knock.panel_title}
         </h1>
         <p class="font-body text-amber-200/70 mb-8">
-            A specific pattern is required.
+            {TEXT.knock.panel_prompt}
         </p>
 
         <div class="flex flex-col gap-3 mb-8">
@@ -197,8 +200,8 @@
                             class:shadow-lg={isPlayingCell}
                             class:shadow-amber-400={isPlayingCell}
                         >
-                            <enhanced:img
-                                src="/static/knocker.png"
+                            <img
+                                src={FILE.knockerImage}
                                 alt="Knocker"
                                 class="knocker-image w-2/3 h-2/3 object-contain opacity-50"
                                 class:opacity-100={isHighlighted ||
@@ -217,14 +220,14 @@
                 disabled={isPlaying}
                 class="brass-button"
             >
-                Reset
+                {TEXT.knock.button_reset}
             </button>
             <button
                 on:click={handleSubmit}
                 disabled={isPlaying}
                 class="brass-button px-8"
             >
-                Knock
+                {TEXT.knock.button_knock}
             </button>
         </div>
 
@@ -242,7 +245,7 @@
                         on:click={handleOpenDoorClick}
                         class="brass-button mt-4"
                     >
-                        Open Door
+                        {TEXT.knock.button_open}
                     </button>
                 {/if}
             {/if}
@@ -252,8 +255,6 @@
 
 <style>
     @import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=EB+Garamond&family=Creepster&display=swap");
-
-    /* The timer's style has been moved to the GameTimer.svelte component */
 
     .font-title {
         font-family: "Cinzel Decorative", serif;

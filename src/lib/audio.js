@@ -1,10 +1,11 @@
 import { Howl } from "howler";
+import { FILE } from "./i18n";
 
 // NOTE: Make sure you place your audio files in the `static` folder.
 
 // Background music, configured to loop at a lower volume.
 export const moodMusic = new Howl({
-  src: ["/music.mp3"],
+  src: [FILE.music],
   loop: true,
   volume: 0.3,
   html5: true, // Important for broader mobile compatibility
@@ -13,74 +14,74 @@ export const moodMusic = new Howl({
 
 // A simple click sound for UI interactions.
 export const clickSound = new Howl({
-  src: ["/click.mp3"],
+  src: [FILE.click],
   volume: 0.7,
   preload: true,
 });
 
 // Sound for successfully solving a puzzle.
 export const successSound = new Howl({
-  src: ["/unlock.mp3"],
+  src: [FILE.unlock],
   volume: 0.8,
   preload: true,
 });
 
 // Sound for an incorrect answer.
 export const errorSound = new Howl({
-  src: ["/incorrect.mp3"],
+  src: [FILE.incorrect],
   volume: 0.6,
   preload: true,
 });
 
 export const suspiciousSound = new Howl({
-  src: ["/first.mp3"],
+  src: [FILE.first],
   preload: true,
 });
 
 export const courageSound = new Howl({
-  src: ["/deep.mp3"],
+  src: [FILE.deep],
   preload: true,
 });
 
 export const knockSound = new Howl({
-  src: ["/knock.mp3"],
+  src: [FILE.knock],
   preload: true,
 });
 
 export const dustySound = new Howl({
-  src: ["/dusty.mp3"],
+  src: [FILE.dusty],
   preload: true,
 });
 
 export const warningSound = new Howl({
-  src: ["/warning.mp3"],
+  src: [FILE.warning],
   preload: true,
 });
 
 export const beetleSound = new Howl({
-  src: ["/beetle.mp3"],
+  src: [FILE.beetle],
   preload: true,
 });
 
 export const buzzSound = new Howl({
-  src: ["/buzz.mp3"],
+  src: [FILE.buzz],
   volume: 0.4,
   preload: true,
 });
 
 export const creepyDoorSound = new Howl({
-  src: ["/creepydoor.mp3"],
+  src: [FILE.creepydoor],
   volume: 0.7,
   preload: true,
 });
 
 export const congratsSound = new Howl({
-  src: ["/congrats.wav"],
+  src: [FILE.congrats],
   preload: true,
 });
 
 export const dingDongSound = new Howl({
-  src: ["/dingdong.mp3"],
+  src: [FILE.dingdong],
   volume: 0.4,
   preload: true,
 });

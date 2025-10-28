@@ -3,7 +3,7 @@
     import { fade } from "svelte/transition";
     import SubmitButton from "./SubmitButton.svelte";
     import { gameStore } from "$lib/gameStore.js";
-    import Image from "svelte-image";
+    import { TEXT, FILE } from "$lib/i18n.js";
 
     // Import the BugController class from your new JS file.
     import Spider from "./Spider.svelte";
@@ -32,17 +32,17 @@
 >
     <div class="z-10">
         <div class="sticky top-8">
-            <h1 class="text-5xl md:text-2xl mb-4 font-serif text-yellow-400">
-                Peephole
+            <h1 class="text-6xl mb-4 font-creepster text-red-500">
+                {TEXT.bug.title}
             </h1>
 
-            <enhanced:img
-                src="/static/path6.png"
+            <img
+                src={FILE.pathImage}
                 alt="A winding path"
                 class="w-full h-auto mx-auto max-w-2xl"
             />
 
-            <p class="mt-6">Unlock Doorbell</p>
+            <p class="mt-6">{TEXT.bug.unlock_prompt}</p>
             <SubmitButton
                 {isCorrect}
                 inputType="directional"
@@ -55,6 +55,10 @@
 </div>
 
 <style>
+    .font-creepster {
+        font-family: "Creepster", cursive;
+    }
+
     /* Add this block */
     :global(body) {
         overflow-x: hidden;

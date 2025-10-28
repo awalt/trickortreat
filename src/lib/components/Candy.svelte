@@ -2,9 +2,9 @@
     import { gameStore } from "$lib/gameStore.js";
     import JumpScare from "$lib/components/JumpScare.svelte";
     import { fade } from "svelte/transition";
-
     import { onMount, onDestroy } from "svelte";
     import { congratsSound } from "$lib/audio.js";
+    import { TEXT, FILE } from "$lib/i18n.js"; // <-- IMPORT ADDED
 
     let playJumpScare = false;
 
@@ -42,26 +42,27 @@
     {/if}
 
     <div class="relative z-10 max-w-2xl mx-auto">
-        <enhanced:img
-            src="/static/candy.png"
-            alt="A pile of tempting Halloween candy"
+        <img
+            src={FILE.candy}
+            alt={TEXT.candy.alt_text}
             class="w-full h-auto max-w-2xl mx-auto mb-8"
             on:click={grabTheCandy}
         />
 
         <h1 class="text-4xl md:text-5xl font-creepster text-yellow-400 mb-4">
-            Congratulations, you’ve escaped your fears.
+            {TEXT.candy.title}
         </h1>
-        <p class="text-gray-300 text-xl mb-10">Claim the candy…if you dare.</p>
+        <p class="text-gray-300 text-xl mb-10">{TEXT.candy.subtitle}</p>
 
         <button
             on:click={grabTheCandy}
             disabled={playJumpScare}
             class="relative inline-block px-12 py-4 font-bold text-xl text-white uppercase tracking-widest transition-all duration-300
              bg-orange-600 border-4 border-yellow-400 rounded-full
-             hover:bg-orange-700 hover:shadow-[0_0_30px_rgba(255,255,0,0.8)] hover:scale-110 disabled:opacity-50"
+             hover:bg-orange-700 hover:shadow-[0_0_30px_rgba(255,255,0,0.8)]
+             hover:scale-110 disabled:opacity-50"
         >
-            Grab the candy
+            {TEXT.candy.button}
         </button>
     </div>
 </div>

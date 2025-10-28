@@ -8,6 +8,7 @@
     } from "$lib/video.js";
     import { fade } from "svelte/transition";
     import { onMount } from "svelte";
+    import { TEXT } from "$lib/i18n.js";
 
     let showInfoModal = false;
     let isPreloading = false;
@@ -178,7 +179,7 @@
                         class="text-6xl md:text-8xl landscape:text-5xl font-bold mb-4 landscape:mb-0 tracking-wider uppercase"
                         style="font-family: 'Creepster', cursive; text-shadow: 0 0 15px #ff6600, 0 0 25px #ff6600;"
                     >
-                        Where Trick or Treat Meets Escape&nbsp;Room
+                        {@html TEXT.title}
                     </h1>
                     <div
                         class="h-px bg-gradient-to-r from-transparent via-orange-700 to-transparent mt-4 landscape:hidden"
@@ -191,7 +192,7 @@
                        text-gray-200
                        animate-flicker text-center"
                     >
-                        Solve the puzzles. Claim the candy… if you dare.
+                        {TEXT.tagline}
                     </p>
                 </div>
             </div>
@@ -217,7 +218,7 @@
                             d="M7.11 12.822c-2.55.684-4.29 1.378-3.376 4.787.913 3.41 2.766 3.141 5.317 2.458l-.97-3.622zm9.78 0c2.55.684 4.29 1.378 3.376 4.787-.913 3.41-2.766 3.141-5.317 2.458l.97-3.622zm2.429.912a7.75 7.702 0 0 0-2.72-8.732 7.75 7.702 0 0 0-9.198 0 7.75 7.702 0 0 0-2.72 8.732"
                         ></path>
                     </svg>
-                    <span>Headphones Recommended</span>
+                    <span>{TEXT.headphones_recommended}</span>
                 </div>
 
                 <button
@@ -226,7 +227,7 @@
                        bg-black/50 border border-orange-800/50 rounded-tl-xl rounded-br-xl
                        hover:border-orange-600 hover:shadow-[0_0_20px_rgba(255,110,50,0.5)] hover:scale-110"
                 >
-                    Start
+                    {TEXT.start}
                 </button>
 
                 <div class="mt-12 pt-8 border-t border-gray-700/30 mb-3">
@@ -234,21 +235,20 @@
                         <button
                             on:click={toggleInfoModal}
                             class="text-orange-400 hover:text-orange-300 underline transition-colors duration-200 rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
-                            aria-label="Show game information"
+                            aria-label={TEXT.intro.footer_aria_label}
                         >
-                            This game
+                            {TEXT.intro.footer_button_text}
                         </button>
-                        was conjured by
+                        {TEXT.intro.footer_text_1}
                         <a
                             href="https://www.mobileescapes.ca/about-us"
                             target="_blank"
                             rel="noopener noreferrer"
                             class="inline-flex items-center gap-1 text-orange-400 hover:text-orange-300 underline transition-colors duration-200 rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
                         >
-                            Mobile Escapes
+                            {TEXT.intro.mobile_escapes}
                         </a>
-                        and AI
-
+                        {TEXT.intro.footer_text_2}
                         <svg
                             class="inline-block h-3.5 w-3.5"
                             viewBox="0 0 64 64"

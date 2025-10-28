@@ -10,6 +10,9 @@
     import { warningSound } from "$lib/audio.js";
     import { fade } from "svelte/transition";
 
+    // Import translation helpers
+    import { TEXT, FILE } from "$lib/i18n.js";
+
     const correctAnswer = "341";
     let isCorrect = null;
 
@@ -56,7 +59,7 @@
     class="w-full min-h-screen flex flex-col items-center justify-center px-0 py-4 sm:p-8 text-center bg-gray-900"
     in:fade={{ duration: 1000 }}
 >
-    <h1 class="text-6xl mb-4 font-creepster text-red-500">Look around</h1>
+    <h1 class="text-6xl mb-4 font-creepster text-red-500">{TEXT.door.title}</h1>
 
     <div class="w-full sm:max-w-md">
         <swiper-container init="false" bind:this={swiperEl}>
@@ -65,7 +68,7 @@
                     class="w-full aspect-square flex flex-col items-center justify-center"
                 >
                     <enhanced:img
-                        src="/static/window5b.jpeg"
+                        src={FILE.windowImage}
                         alt="Window"
                         class="max-h-full max-w-full object-contain"
                     />
@@ -73,7 +76,7 @@
                         class="text-3xl mt-3 font-creepster text-gray-300"
                         style="text-shadow: 1px 1px 3px #000;"
                     >
-                        Window
+                        {TEXT.door.slide_window}
                     </p>
                 </div>
             </swiper-slide>
@@ -83,7 +86,7 @@
                     class="w-full aspect-square flex flex-col items-center justify-center"
                 >
                     <enhanced:img
-                        src="/static/sign.jpeg"
+                        src={FILE.signImage}
                         alt="Sign"
                         class="max-h-full max-w-full object-contain"
                     />
@@ -91,7 +94,7 @@
                         class="text-3xl mt-3 font-creepster text-gray-300"
                         style="text-shadow: 1px 1px 3px #000;"
                     >
-                        Sign
+                        {TEXT.door.slide_sign}
                     </p>
                 </div>
             </swiper-slide>
@@ -100,7 +103,7 @@
                     class="w-full aspect-square flex flex-col items-center justify-center"
                 >
                     <enhanced:img
-                        src="/static/house3d.png"
+                        src={FILE.doorImage}
                         alt="Door"
                         class="max-h-full max-w-full object-contain"
                     />
@@ -108,7 +111,7 @@
                         class="text-3xl mt-3 font-creepster text-gray-300"
                         style="text-shadow: 1px 1px 3px #000;"
                     >
-                        Door
+                        {TEXT.door.slide_door}
                     </p>
                 </div>
             </swiper-slide>
@@ -116,7 +119,7 @@
     </div>
 
     <div class="flex flex-col items-center mt-4">
-        <p>Unlock Peephole</p>
+        <p>{TEXT.door.unlock_prompt}</p>
         <SubmitButton
             {isCorrect}
             maxLength={3}
