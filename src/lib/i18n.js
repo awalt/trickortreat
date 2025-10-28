@@ -129,7 +129,6 @@ const translations = {
     tagline: "Résolvez les énigmes. Réclamez les bonbons… si vous l'osez.",
     headphones_recommended: "Écouteurs Recommandés",
     start: "Commencer",
-    // ...
     doorScene: {
       question:
         "Toutes les autres maisons de cette rue ont été visitées. Serez-vous son premier visiteur?",
@@ -144,10 +143,10 @@ const translations = {
       slide_window: "Fenêtre",
       slide_sign: "Affiche",
       slide_door: "Porte",
-      unlock_prompt: "Déverrouiller le judas",
+      unlock_prompt: "Déverrouiller l'œilleton",
     },
     bug: {
-      title: "Œilleton ",
+      title: "Œilleton",
       unlock_prompt: "Déverrouiller la sonnette",
     },
     knock: {
