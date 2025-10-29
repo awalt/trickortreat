@@ -373,7 +373,7 @@
                 {:else}
                     <button
                         on:click={showHighscoreInput}
-                        class="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-lg text-lg font-bold transition-all duration-300 transform hover:scale-105 hover:shadow-lg shadow-purple-500/30 mb-26"
+                        class="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-lg text-lg font-bold transition-all duration-300 transform hover:scale-105 hover:shadow-lg shadow-purple-500/30 mb-6"
                     >
                         {TEXT.conclusion.leaderboard_button}
                     </button>
