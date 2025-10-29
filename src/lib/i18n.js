@@ -95,7 +95,7 @@ const translations = {
       promo_tag_3: "Corporate Events",
       promo_special: "🎃 Halloween Special!",
       promo_use_code: "Use code",
-      promo_offer: "50% off for up to 20 players",
+      promo_offer: "50% off for up to 20 players, valid until November 7",
       promo_button: "Book Now",
       score_submitted: "✅ Score submitted successfully!",
       leaderboard_prompt: "Enter Your Name for the Leaderboard",
@@ -108,6 +108,7 @@ const translations = {
       button_play_again: "🎃 Play Again",
       footer_made_by_1: "Made with ❤️ in Ottawa by",
       copy_button: "Copy Text",
+      blueMoonPoster: "https://virtual.mobileescapes.ca/blue-moon/promo_en.jpg",
     },
     submitButton: {
       continue: "Continue",
@@ -126,7 +127,7 @@ const translations = {
   // --- French Text ---
   fr: {
     title: "Évadez-vous cet Halloween",
-    tagline: "Résolvez les énigmes. Réclamez les bonbons… si vous l'osez.",
+    tagline: "Résolvez les énigmes. Réclamez les bonbons… si vous osez.",
     headphones_recommended: "Écouteurs Recommandés",
     start: "Commencer",
     doorScene: {
@@ -156,14 +157,14 @@ const translations = {
       panel_title: "Code Secret",
       panel_prompt: "Un motif spécifique est requis.",
       button_reset: "Réinitialiser",
-      button_knock: "Toquer",
+      button_knock: "Cogner",
       message_granted: "ACCÈS AUTORISÉ",
       message_denied: "ACCÈS REFUSÉ",
       button_open: "Ouvrir la porte",
     },
     intro: {
-      info1: `Ce jeu gratuit de 10 minutes a été créé par Alex, Eric et Nick pour célébrer l'Halloween 2025! Nous voulions vous donner un avant-goût des aventures sur mesure que nous pouvons créer chez Évasions&nbsp;Mobiles.`,
-      info2: `Notre objectif principal est que vous vous amusiez en résolvant ces énigmes épeurantes. Si vous avez aimé l'expérience, nous espérons que vous penserez à Évasions&nbsp;Mobiles pour votre prochaine aventure de jeu d'évasion, que ce soit en personne ou virtuellement!`,
+      info1: `Ce jeu gratuit de 10 minutes a été créé par Alex, Eric et Nick pour célébrer l'Halloween 2025! Nous voulions vous donner un avant-goût des aventures sur mesure que nous pouvons créer chez Évasions Mobiles.`,
+      info2: `Notre but? Que vous ayez du plaisir à résoudre ces énigmes aussi mystérieuses qu’effrayantes! Si vous avez aimé l’expérience, n’oubliez pas Évasions Mobiles pour votre prochaine aventure d’évasion, en personne ou virtuelle!`,
       footer_button_text: "Ce jeu",
       footer_aria_label: "Afficher les informations du jeu",
       footer_text_1: "a été conçu par",
@@ -173,7 +174,7 @@ const translations = {
     candy: {
       alt_text: "Un tas de bonbons d'Halloween tentants",
       title: "Félicitations, vous avez échappé à vos peurs.",
-      subtitle: "Réclamez les bonbons… si vous l'osez.",
+      subtitle: "Réclamez les bonbons… si vous osez.",
       button: "Prendre les bonbons",
     },
     submitButton: {
@@ -203,7 +204,7 @@ const translations = {
       time_subtitle: "Pas mal pour un mortel! 👻",
       button_share: "📱 Partager avec vos amis",
       share_prompt:
-        "Rejoignez la fête effrayante — défiez vos amis de battre votre temps!",
+        "Rejoignez la fête — défiez vos amis de battre votre temps!",
       promo_alt: "Promo du jeu d'évasion Sous la lune bleue",
       promo_title: "🌙 Sous la lune bleue",
       promo_desc:
@@ -213,7 +214,8 @@ const translations = {
       promo_tag_3: "Événements d'entreprise",
       promo_special: "🎃 Spécial Halloween!",
       promo_use_code: "Utilisez le code",
-      promo_offer: "50% de réduction jusqu'à 20 joueurs",
+      promo_offer:
+        "50% de rabais jusqu'à 20 joueurs, valide jusqu'au 7 novembre",
       promo_button: "Réservez maintenant",
       score_submitted: "✅ Score soumis avec succès!",
       leaderboard_prompt: "Entrez votre nom pour le classement",
@@ -221,11 +223,12 @@ const translations = {
       leaderboard_submitting: "Soumission...",
       leaderboard_submit: "Soumettre",
       leaderboard_button: "🏆 Ajouter au classement",
-      leaderboard_title: "🏆 Classement - Meilleurs Évadés",
+      leaderboard_title: "🏆 Classement - Meilleurs temps",
       leaderboard_you: "← Vous!",
       button_play_again: "🎃 Jouer à nouveau",
       footer_made_by_1: "Fait avec ❤️ à Ottawa par",
       copy_button: "Copier le texte",
+      blueMoonPoster: "https://virtual.mobileescapes.ca/blue-moon/promo_fr.jpg",
     },
   },
 };

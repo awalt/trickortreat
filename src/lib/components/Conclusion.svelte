@@ -10,7 +10,7 @@
     let finalTimeInSeconds = 0;
 
     // --- NEW VARIABLES ---
-    let shareMessage = ""; // This will be populated reactively
+    // let shareMessage = ""; // <-- FIX 1: REMOVE this line.
 
     // --- FIX 1: Initialize button text using the TEXT object ---
     // (Make sure you've added 'copy_button' to your i18n.js file!)
@@ -29,10 +29,10 @@
         { name: "BatSignal", time: "05:28" },
     ];
 
-    // --- FIX 2: Remove the '$' from $TEXT ---
-    // This dynamically builds your share message whenever finalTime changes
+    // --- FIX 2: Make this a REACTIVE declaration ($:) ---
+    // This now dynamically builds your share message whenever finalTime changes
     // (Make sure you've added 'copy_share_1' and 'copy_share_2' to i18n.js)
-    shareMessage = `${TEXT.conclusion.share_text_1 || "Hey! I solved this Trick or Treat game in "}${finalTime}${TEXT.conclusion.share_text_2 || "! 💀 Try to beat my time... if you dare. https://trick-or-treat-escape.netlify.app"}`;
+    $: shareMessage = `${TEXT.conclusion.share_text_1 || "Hey! I solved this Trick or Treat game in "}${finalTime}${TEXT.conclusion.share_text_2 || "! 💀 Try to beat my time... if you dare. https://trick-or-treat-escape.netlify.app"}`;
 
     // This helper function formats seconds into MM:SS
     function formatTimeFromSeconds(seconds) {
@@ -117,12 +117,8 @@
 
     // This is the updated function
     function shareGame() {
-        const shareText = `${TEXT.conclusion.share_text_1} ${finalTime}${TEXT.conclusion.share_text_2}`;
-        const shareUrl = window.location.origin;
-
-        // --- SOLUTION ---
-        // Combine your desired text and the URL into a single string
-        const combinedShareContent = `${shareText} ${shareUrl}`;
+        // --- NOTE: 'shareMessage' is now always up-to-date, so we can use it directly
+        const combinedShareContent = shareMessage;
 
         if (navigator.share) {
             navigator.share({
@@ -257,7 +253,7 @@
                     <div class="grid md:grid-cols-2 gap-8 items-center">
                         <div class="order-2 md:order-1">
                             <img
-                                src="https://virtual.mobileescapes.ca/blue-moon/promo_en.jpg"
+                                src={FILE.conclusion.blueMoonPoster}
                                 alt={TEXT.conclusion.promo_alt}
                                 class="w-full max-w-sm mx-auto rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
                             />
