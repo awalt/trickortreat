@@ -278,10 +278,10 @@ const baseFilePaths = {
 const translatedFilePaths = {
   en: {}, // English uses the base paths by default
   fr: {
-    first: "/fr/toutes.wav",
-    warning: "/fr/attention.wav",
-    deep: "/fr/tu.wav",
-    congrats: "/fr/fel.wav",
+    first: "/fr/toutes.mp3",
+    warning: "/fr/attention.mp3",
+    deep: "/fr/tu.mp3",
+    congrats: "/fr/fel.mp3",
 
     signImage: "/2/sign_fr.jpg",
     doorImage: "/2/door_fr.jpg",
