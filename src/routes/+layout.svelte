@@ -1,7 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import "../app.css";
-    import DebugMenu from "$lib/DebugMenu.svelte"; // Import the new component
+    //import DebugMenu from "$lib/DebugMenu.svelte"; // Import the new component
 
     let { children } = $props();
 
@@ -33,5 +33,3 @@
 </svelte:head>
 
 {@render children?.()}
-
-<DebugMenu />
