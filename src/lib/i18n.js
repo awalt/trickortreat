@@ -76,7 +76,7 @@ const translations = {
         "Sorry, there was an error submitting your score. Please try again.",
       alert_network_error:
         "A network error occurred. Please check your connection and try again.",
-      share_text_1: "Hey! I solved this Trick or Treat game in",
+      share_text_1: "Hey! I solved this Trick or Treat game in ",
       share_text_2: "! 💀 Try to beat my time… if you dare.",
       share_title: "Trick or Treat - Halloween Escape Room",
       alert_clipboard_copy: "Share link copied to clipboard!",
