@@ -11,7 +11,7 @@
 
     // The timer in JumpScare.svelte is set to 550ms, plus a 100ms fade.
     // We use 750ms here to ensure the transition completes before navigating.
-    const JUMPSCARE_DURATION = 3000;
+    const JUMPSCARE_DURATION = 1800;
 
     function grabTheCandy() {
         if (playJumpScare) return;
