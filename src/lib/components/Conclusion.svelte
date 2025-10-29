@@ -253,7 +253,7 @@
                     <div class="grid md:grid-cols-2 gap-8 items-center">
                         <div class="order-2 md:order-1">
                             <img
-                                src={FILE.conclusion.blueMoonPoster}
+                                src={TEXT.conclusion.blueMoonPoster}
                                 alt={TEXT.conclusion.promo_alt}
                                 class="w-full max-w-sm mx-auto rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
                             />

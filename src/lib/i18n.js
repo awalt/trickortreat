@@ -228,7 +228,8 @@ const translations = {
       button_play_again: "🎃 Jouer à nouveau",
       footer_made_by_1: "Fait avec ❤️ à Ottawa par",
       copy_button: "Copier le texte",
-      blueMoonPoster: "https://virtual.mobileescapes.ca/blue-moon/promo_fr.jpg",
+      blueMoonPoster:
+        "https://virtual.mobileescapes.ca/blue-moon/promo_fr.png?1",
     },
   },
 };
