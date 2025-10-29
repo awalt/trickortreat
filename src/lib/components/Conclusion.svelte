@@ -32,7 +32,7 @@
     // --- FIX 2: Make this a REACTIVE declaration ($:) ---
     // This now dynamically builds your share message whenever finalTime changes
     // (Make sure you've added 'copy_share_1' and 'copy_share_2' to i18n.js)
-    $: shareMessage = `${TEXT.conclusion.share_text_1 || "Hey! I solved this Trick or Treat game in "}${finalTime}${TEXT.conclusion.share_text_2 || "! 💀 Try to beat my time... if you dare. https://trick-or-treat-escape.netlify.app"}`;
+    $: shareMessage = `${TEXT.conclusion.share_text_1}${finalTime}${TEXT.conclusion.share_text_2} ${window.location.href}`;
 
     // This helper function formats seconds into MM:SS
     function formatTimeFromSeconds(seconds) {
