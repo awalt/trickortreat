@@ -2,7 +2,7 @@
     //This file is: Conclusion.svelte
     import { onMount } from "svelte";
     import { gameStore } from "$lib/gameStore.js";
-    import { TEXT } from "$lib/i18n.js";
+    import { TEXT, FILE } from "$lib/i18n.js";
 
     // finalTime is loaded from localStorage.
     let finalTime = "00:00";
