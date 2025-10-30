@@ -33,5 +33,3 @@
 </svelte:head>
 
 {@render children?.()}
-
-<DebugMenu />
