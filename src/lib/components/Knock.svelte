@@ -65,10 +65,10 @@
         }
 
         if (pattern === correctPattern) {
-            resultMessage = "ACCESS GRANTED";
+            resultMessage = TEXT.knock.message_granted;
             resultMessageType = "correct";
         } else {
-            resultMessage = "ACCESS DENIED";
+            resultMessage = TEXT.knock.message_denied;
             resultMessageType = "incorrect";
         }
 
