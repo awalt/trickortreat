@@ -32,7 +32,7 @@
     // --- FIX 2: Make this a REACTIVE declaration ($:) ---
     // This now dynamically builds your share message whenever finalTime changes
     // (Make sure you've added 'copy_share_1' and 'copy_share_2' to i18n.js)
-    $: shareMessage = `${TEXT.conclusion.share_text_1}${finalTime}${TEXT.conclusion.share_text_2} ${window.location.href}`;
+    $: shareMessage = `${TEXT.conclusion.share_text_1}${finalTime}${TEXT.conclusion.share_text_2} https://${window.location.host}`;
 
     // This helper function formats seconds into MM:SS
     function formatTimeFromSeconds(seconds) {
@@ -122,7 +122,7 @@
 
         if (navigator.share) {
             navigator.share({
-                title: "Trick or Treat - Halloween Escape Room",
+                //title: "Trick or Treat - Halloween Escape Room",
                 text: combinedShareContent, // Use the combined string here
                 // By omitting the 'url' field, apps are forced to use the 'text' field
                 // as the main body of the message.
