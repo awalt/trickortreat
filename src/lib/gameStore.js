@@ -26,6 +26,11 @@ function createGameStore() {
       ? localStorage.getItem("escapeGameState")
       : null;
 
+  console.log(
+    "GameStore: Initial load. Raw state from localStorage:",
+    savedState,
+  );
+
   const initialState = { ...defaultState, currentView: "Splash" };
 
   const { subscribe, set, update } = writable(initialState);
@@ -35,8 +40,16 @@ function createGameStore() {
     setTimeout(() => {
       if (savedState) {
         const parsedState = JSON.parse(savedState);
+        // --- DIAGNOSTIC LOG ---
+        console.log("GameStore: Restoring saved state:", parsedState);
+        // --- END LOG ---
         set(parsedState);
       } else {
+        // --- DIAGNOSTIC LOG ---
+        console.log(
+          "GameStore: No saved state found, starting new game at Intro.",
+        );
+        // --- END LOG ---
         update((state) => ({ ...state, currentView: "Intro" }));
       }
     }, 500); // Show splash for 0.5 seconds
@@ -101,13 +114,16 @@ function createGameStore() {
     },
     reset: () => {
       if (typeof window !== "undefined") {
-        // Clear all game-related localStorage items to start fresh.
+        console.log(
+          "Clear all game-related localStorage items to start fresh.",
+        );
         localStorage.removeItem("escapeGameState");
         localStorage.removeItem("gameStartTime");
         localStorage.removeItem("gameFinalTime");
         localStorage.removeItem("isGameTimerRunning");
       }
       // Reset the store to its default state, starting at the Intro page.
+      console.log("Set default state");
       set({ ...defaultState, currentView: "Intro" });
     },
     goToView: (view) => update((state) => ({ ...state, currentView: view })),

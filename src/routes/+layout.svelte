@@ -1,9 +1,15 @@
 <script>
     import { onMount } from "svelte";
     import "../app.css";
-    import DebugMenu from "$lib/DebugMenu.svelte"; // Import the new component
+    import DebugMenu from "$lib/DebugMenu.svelte";
+    import { browser } from "$app/environment"; // 1. Import browser
 
     let { children } = $props();
+
+    // 2. Check if in browser AND hostname is 'localhost'
+    // This is safe during SSR because 'browser' will be false.
+    // 'window.location.hostname' correctly ignores the port number.
+    let showDebugMenu = browser && window.location.hostname === "localhost";
 
     onMount(async () => {
         // Check if the FontFace API is supported
@@ -33,3 +39,7 @@
 </svelte:head>
 
 {@render children?.()}
+
+{#if showDebugMenu}
+    <DebugMenu />
+{/if}

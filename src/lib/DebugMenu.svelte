@@ -49,6 +49,7 @@
     }
 
     function resetGame() {
+        console.log("Resetting game...");
         gameStore.reset();
     }
 

@@ -16,6 +16,7 @@
     let loadingText = "Start";
     let isFadingToBlack = false;
     let showLoadingSpinner = false;
+    let videoElement;
 
     // This promise will hold the state of our critical video preloading.
     let criticalVideosPreloadPromise;
@@ -82,6 +83,11 @@
     }
 
     onMount(() => {
+        console.log(
+            "Intro.svelte: Component MOUNTED. Current $gameStore.introVideoReady:",
+            $gameStore.introVideoReady,
+        );
+
         document.body.style.overflow = "hidden";
 
         // Start preloading critical videos as soon as the component is mounted.
@@ -101,10 +107,45 @@
             );
         });
 
+        setTimeout(() => {
+            if (videoElement && videoElement.readyState >= 4) {
+                // 4 = HAVE_ENOUGH_DATA
+                console.log(
+                    "Intro.svelte: Video already ready on mount (readyState >= 4). Forcing introVideoReady = true.",
+                );
+                if (!$gameStore.introVideoReady) {
+                    gameStore.setIntroVideoReady();
+                }
+            } else {
+                console.log(
+                    "Intro.svelte: Video not ready on mount. Waiting for event. State:",
+                    videoElement ? videoElement.readyState : "no element",
+                );
+            }
+        }, 100);
+
         return () => {
             document.body.style.overflow = "auto";
         };
     });
+
+    $: if (!$gameStore.introVideoReady && typeof window !== "undefined") {
+        // We are in the skeleton state. Check if the video is already ready.
+        // We add a minimal delay to ensure `videoElement` is bound.
+        setTimeout(() => {
+            if (
+                videoElement &&
+                videoElement.readyState >= 4 &&
+                !$gameStore.introVideoReady
+            ) {
+                // video.readyState >= 4 means "HAVE_ENOUGH_DATA"
+                console.log(
+                    "Reactive Check: Video already ready. Forcing true.",
+                );
+                gameStore.setIntroVideoReady();
+            }
+        }, 100); // 100ms delay, same as your onMount
+    }
 </script>
 
 <div
@@ -112,6 +153,7 @@
     in:fade={{ duration: 500 }}
 >
     <video
+        bind:this={videoElement}
         class="absolute top-0 left-0 w-full h-full object-cover"
         src="/housestatic.mp4"
         autoplay

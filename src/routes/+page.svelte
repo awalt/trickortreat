@@ -16,6 +16,11 @@
     // Define which pages should display the persistent timer
     const pagesWithTimer = ["Door", "Knock", "Bug", "Candy"];
 
+    console.log(
+        "+page.svelte: currentView changed to:",
+        $gameStore.currentView,
+    );
+
     // Scroll to top whenever the current view changes
     $effect(() => {
         $gameStore.currentView; // Track this value
