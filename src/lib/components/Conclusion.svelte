@@ -22,11 +22,10 @@
     let nameSubmitted = false;
 
     let highscores = [
-        { name: "SpookMaster", time: "03:45" },
-        { name: "GhostHunter", time: "04:12" },
-        { name: "PumpkinKing", time: "04:33" },
-        { name: "WitchyWiz", time: "05:01" },
-        { name: "BatSignal", time: "05:28" },
+        { name: "Bloodchugger", time: "02:13" },
+        { name: "TiPet", time: "02:53" },
+        { name: "SpookyBaaaaahd", time: "03:11" },
+        { name: "Jdawg🩸", time: "03:54" },
     ];
 
     // --- FIX 2: Make this a REACTIVE declaration ($:) ---
