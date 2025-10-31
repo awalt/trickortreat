@@ -22,10 +22,12 @@
     let nameSubmitted = false;
 
     let highscores = [
+        { name: "HalloWinn", time: "01:51" },
         { name: "Bloodchugger", time: "02:13" },
         { name: "TiPet", time: "02:53" },
         { name: "SpookyBaaaaahd", time: "03:11" },
         { name: "Jdawg🩸", time: "03:54" },
+        { name: "ghost", time: "05:49" },
     ];
 
     // --- FIX 2: Make this a REACTIVE declaration ($:) ---
@@ -166,9 +168,21 @@
     onMount(() => {
         // Read the final time from localStorage
         const storedFinalTime = localStorage.getItem("gameFinalTime");
-        if (storedFinalTime) {
-            finalTimeInSeconds = parseInt(storedFinalTime, 10); // Store the raw seconds
+
+        // --- FIX: Parse the value first ---
+        const parsedSeconds = parseInt(storedFinalTime, 10);
+
+        // --- FIX: Check if the *parsed value* is a valid number ---
+        if (!isNaN(parsedSeconds)) {
+            finalTimeInSeconds = parsedSeconds; // Store the raw seconds
             finalTime = formatTimeFromSeconds(finalTimeInSeconds); // Format for display
+        } else {
+            // Optional: Log an error if the data is bad,
+            // finalTime will just stay "00:00" as initialized.
+            console.error(
+                "Could not parse final time from localStorage. Value was:",
+                storedFinalTime,
+            );
         }
 
         const elements = document.querySelectorAll(".animate-in");
